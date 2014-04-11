@@ -1,0 +1,3 @@
+
+%.img:
+	sudo livemedia-creator --make-disk --iso CentOS-6.5-x86_64-netinstall.iso --ks ovirt-appliance.ks --ram 1024 --vcpus 4 --name $@
