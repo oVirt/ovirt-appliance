@@ -1,41 +1,59 @@
 
-firstboot --reconfig --enable
-user --name=admin --plaintext --password=ovirt --groups=wheel
+firstboot --reconfig
+user --name=admin --plaintext --password=none --groups=wheel
 
-# Fedora
-#repo --name=fedora --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
-
-#repo --name=ovirt --baseurl=http://resources.ovirt.org/pub/ovirt-3.4/rpm/fc19/
-#repo --name=ovirt-snap --baseurl=http://resources.ovirt.org/pub/ovirt-3.5-pre/rpm/fc19/
-#repo --name=ovirt-snap-static --baseurl=http://resources.ovirt.org/pub/ovirt-3.4-snapshot-static/rpm/fc19/
-
-# CentOS
-#url                    --mirrorlist=http://mirrorlist.centos.org/?release=6&arch=x86_64&repo=os
-#url --url=http://mirror.netcologne.de/centos/6.5/os/x86_64/
-#repo --name=updates    --mirrorlist=http://mirrorlist.centos.org/?release=6&arch=x86_64&repo=updates
-#repo --name=epel       --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=x86_64
-#repo --name=ovirt      --baseurl=http://resources.ovirt.org/releases/stable/rpm/EL/6/
-#repo --name=gluster   --baseurl=http://download.gluster.org/pub/gluster/glusterfs/3.4/3.4.1/EPEL.repo/epel-6/x86_64/
-#repo --name=glusternoarch --baseurl=http://download.gluster.org/pub/gluster/glusterfs/3.4/3.4.1/EPEL.repo/epel-6/noarch
-
-# oVirt
-#repo --name=ovirt-repos --baseurl=http://resources.ovirt.org/pub/yum-repo/
+%packages
+initial-setup
+%end
 
 %post --erroronfail
 #
 echo "Preparing initial-setup"
 #
-yum install -y initial-setup
+yum install -y initial-setup plymouth
+touch /etc/reconfigSys
 systemctl enable initial-setup-text.service
 systemctl disable initial-setup-graphical.service
+
+# Default tty is ttyS0, to display initial-setup on tty0 we need to set this explicitly
+sed -i \
+  -e "/^StandardOutput/ a TTYPath=/dev/tty0" \
+  -e "/^Description/ a Before=cloud-init-local.service cloud-init.service" \
+  /usr/lib/systemd/system/initial-setup-text.service
 %end
 
 %post --erroronfail
 #
-echo "Installing oVirt stuff"
+echo "Pre-Installing oVirt stuff"
 #
 yum install -y http://resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
-###yum install -y ovirt-engine
+yum install -y ovirt-engine
+
+#
+echo "Creating a partial answer file"
+#
+cat > /root/ovirt-engine-answers <<__EOF__
+[environment:default]
+OVESETUP_CORE/engineStop=none:None
+OVESETUP_DIALOG/confirmSettings=bool:True
+OVESETUP_DB/database=str:engine
+OVESETUP_DB/fixDbViolations=none:None
+OVESETUP_DB/secured=bool:False
+OVESETUP_DB/securedHostValidation=bool:False
+OVESETUP_DB/host=str:localhost
+OVESETUP_DB/user=str:engine
+OVESETUP_DB/port=int:5432
+OVESETUP_SYSTEM/nfsConfigEnabled=bool:False
+OVESETUP_CONFIG/applicationMode=str:virt
+OVESETUP_CONFIG/firewallManager=str:firewalld
+OVESETUP_CONFIG/websocketProxyConfig=none:True
+OVESETUP_CONFIG/storageType=str:nfs
+OVESETUP_PROVISIONING/postgresProvisioningEnabled=bool:True
+OVESETUP_APACHE/configureRootRedirection=bool:True
+OVESETUP_APACHE/configureSsl=bool:True
+OSETUP_RPMDISTRO/requireRollback=none:None
+OSETUP_RPMDISTRO/enableUpgrade=none:None
+__EOF__
 %end
 
 #%post --nochroot
@@ -48,6 +66,9 @@ yum install -y http://resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
 echo "Enabling sudo for wheels"
 #
 sed -i "/%wheel.*NOPASSWD/ s/^#//" /etc/sudoers
+passwd --delete root
+passwd --expire root
 %end
 
-%include fedora-spin-kickstarts/fedora-x86_64-cloud.ks
+
+%include fedora-spin-kickstarts/fedora-cloud-base.ks
