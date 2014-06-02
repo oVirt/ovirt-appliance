@@ -7,3 +7,15 @@ Makefile
 *.log
 *.ks
 *~
+# IDE files
+###########################
+.settings
+.project
+.classpath
+.factorypath
+.externalToolBuilders
+maven-eclipse.xml
+*.ipr
+*.iml
+.idea
+.pydevproject
