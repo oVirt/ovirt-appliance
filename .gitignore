@@ -4,3 +4,6 @@
 *.tmp
 Makefile
 .gitignore
+*.log
+*.ks
+*~
