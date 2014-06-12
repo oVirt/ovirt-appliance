@@ -50,3 +50,9 @@ publish:
 		--disk-format qcow2 \
 		--container-format raw \
 		--file $(IMAGE)
+
+clean: clean-log
+	echo
+
+clean-log:
+	rm -f *.log
