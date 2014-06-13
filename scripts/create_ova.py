@@ -32,11 +32,10 @@ class OvaBuilder(object):
                                    "rhevm_default_display_type":
                                    rhevm_default_display_type,
                                    "rhevm_description": rhevm_description,
-                                   "rhevm_os_descriptor": rhevm_os_descriptor,
-                                   "path": "/var/tmp/bar"
+                                   "rhevm_os_descriptor": rhevm_os_descriptor
                                    })
 
-    def _generate_ova(self, dst, src, target, parameters):
+    def _generate_ova(self, dst, src, target, parameters=None):
         """Generate an OVA file from a disk image for some target
         Arguments:
             dst: Destination of the .ova file
@@ -50,6 +49,15 @@ class OvaBuilder(object):
 #            klass = VsphereOVFPackage
         else:
             raise RuntimeError("Only supporting rhevm and vsphere images")
+
+        
+        parameters = parameters or {}                                                                  
+        
+        parameters["path"] = tempfile.mkdtemp()
+        # this needs to be readable by others, e.g. the nfs user                                       
+        # when used in the RHEVHelper                                                                  
+        os.chmod(parameters["path"],
+                 S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH)
 
         klass_parameters = dict()
 
