@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 
-#from imagefactory_plugins.ovfcommon.ovfcommon import RHEVOVFPackage
-#from oz.ozutil import copyfile_sparse
+from imagefactory_plugins.ovfcommon.ovfcommon import RHEVOVFPackage
+from oz.ozutil import copyfile_sparse
 import argparse
 
 
@@ -32,10 +32,11 @@ class OvaBuilder(object):
                                    "rhevm_default_display_type":
                                    rhevm_default_display_type,
                                    "rhevm_description": rhevm_description,
-                                   "rhevm_os_descriptor": rhevm_os_descriptor
+                                   "rhevm_os_descriptor": rhevm_os_descriptor,
+                                   "path": "/var/tmp/bar"
                                    })
 
-    def _generate_ova(self, dst, src, target, params):
+    def _generate_ova(self, dst, src, target, parameters):
         """Generate an OVA file from a disk image for some target
         Arguments:
             dst: Destination of the .ova file
@@ -52,8 +53,10 @@ class OvaBuilder(object):
 
         klass_parameters = dict()
 
-        if self.parameters:
-            params = ['ovf_cpu_count', 'ovf_memory_mb',
+        print(parameters)
+        if parameters:
+            params = ['path',
+                      'ovf_cpu_count', 'ovf_memory_mb',
                       'rhevm_default_display_type', 'rhevm_description',
                       'rhevm_os_descriptor',
                       'vsphere_product_name', 'vsphere_product_vendor_name',
@@ -63,8 +66,8 @@ class OvaBuilder(object):
                 __contains__(x)
 
             for param in params:
-                if self.parameters.get(param) and klass_has(param):
-                    klass_parameters[param] = self.parameters.get(param)
+                if parameters.get(param) and klass_has(param):
+                    klass_parameters[param] = parameters.get(param)
 
         pkg = klass(disk=src, **klass_parameters)
         ova = pkg.make_ova_package()
@@ -80,10 +83,10 @@ if __name__ == "__main__":
                         default=2048,
                         help="Amount if virtual RAM in MB")
     parser.add_argument("SRC", type=str,
-                        nargs=1,
+                        nargs="?",
                         help="Path to raw image (qcow2, raw, ...)")
     parser.add_argument("DST", type=str,
-                        nargs=1,
+                        nargs="?",
                         help="Path to destination DIR FILE?")
 
     parser.epilog = """\
@@ -95,6 +98,10 @@ A common usage looks like:
 %prog --cpu 4 --mem 4096 -s fedora.qcow2 -d fedora.ova
 """
 
-    options, args = parser.parse_args()
+    args = parser.parse_args()
 
-    print (options, args)
+    print (args)
+
+    builder = OvaBuilder()
+    builder.generate_rhevm_ova(args.DST, args.SRC,
+                               str(args.cpu), str(args.mem))

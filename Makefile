@@ -33,6 +33,7 @@ boot.iso:
 %.qcow2: TMPDIR=/var/tmp
 %.qcow2: %.ks
 	$(SUDO) -E $(LMC) --make-disk --iso "$(BOOTISO)" --ks "$<" --image-name "$@" $(LMC_COMMON_ARGS)
+	$(SUDO) mv $(TMPDIR)/"$@" .
 	#$(SUDO) -E LANG=C LC_ALL=C image-creator -c $< --compression-type=xz -v -d --logfile $(shell pwd)/image.log
 
 post-process: IMAGE=
