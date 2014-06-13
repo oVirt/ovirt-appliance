@@ -4,6 +4,8 @@
 from imagefactory_plugins.ovfcommon.ovfcommon import RHEVOVFPackage
 from oz.ozutil import copyfile_sparse
 import argparse
+import tempfile
+import os
 
 
 class OvaBuilder(object):
@@ -52,16 +54,11 @@ class OvaBuilder(object):
 
         
         parameters = parameters or {}                                                                  
-        
         parameters["path"] = tempfile.mkdtemp()
-        # this needs to be readable by others, e.g. the nfs user                                       
-        # when used in the RHEVHelper                                                                  
-        os.chmod(parameters["path"],
-                 S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH)
+        print(parameters)
 
         klass_parameters = dict()
 
-        print(parameters)
         if parameters:
             params = ['path',
                       'ovf_cpu_count', 'ovf_memory_mb',
