@@ -48,7 +48,7 @@ boot.iso:
 		$@
 
 
-%.qcow2: %.ks boot.iso
+%.raw: %.ks boot.iso
 	$(SUDO) -E $(LMC) --make-disk --iso "$(BOOTISO)" --ks "$<" --image-name "$@" $(LMC_COMMON_ARGS)
 	$(SUDO) mv $(TMPDIR)/"$@" .
 
@@ -56,11 +56,11 @@ boot.iso:
 	#$(SUDO) -E LANG=C LC_ALL=C image-creator -c $< --compression-type=xz -v -d --logfile $(shell pwd)/image.log
 
 
-%.ova: %.qcow2
-	$(SUDO) -E virt-sysprep --add "$<" --selinux-relabel
-	$(SUDO) -E virt-sparsify --convert raw "$<" "$<.raw"
+%.ova: %.raw
+	$(SUDO) -E virt-sysprep --add "$<"
+	$(SUDO) -E virt-sparsify --compress --convert qcow2 "$<" "$*.sparse.qcow2"
 
-	$(SUDO) python scripts/create_ova.py -m $(VM_RAM) -c $(VM_CPUS) "$<.raw" "$@"
+	$(SUDO) python scripts/create_ova.py -m $(VM_RAM) -c $(VM_CPUS) "$*.sparse.qcow2" "$@"
 
 
 clean: clean-log
