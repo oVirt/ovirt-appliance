@@ -30,7 +30,7 @@ all: $(MAIN_NAME).ova
 
 
 boot.iso:
-	curl -O http://download.fedoraproject.org/pub/fedora/linux/releases/19/Fedora/x86_64/os/images/boot.iso
+	curl -L -O http://download.fedoraproject.org/pub/fedora/linux/releases/19/Fedora/x86_64/os/images/boot.iso
 
 
 %.ks: %.ks.tpl
