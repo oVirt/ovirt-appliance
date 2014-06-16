@@ -1,10 +1,5 @@
 Say Hello to the oVirt Virtual Appliance
-
-ovirtfedoraloraxpykickstartappliancevirtuallibvirtqemunodehosted-engine
-
-
-<a href="https://www.flickr.com/photos/quikchange/1381233732/" title="Virtual Appliance von Random Tony bei Flickr"><img src="https://farm2.staticflickr.com/1399/1381233732_39d16017fa.jpg" width="500" height="375" alt="Virtual Appliance"></a>
-
+========================================
 
 One of the things on the list for oVirt 3.5 was the
 [oVirt Virtual Appliance][virtual-appliance].
@@ -103,14 +98,15 @@ image (also available in the current workingdir) and something like:
 
     $ qemu-kvm -snapshot -m 4096 -smp 4 -hda ovirt-appliance-fedora.raw
 
+Once you boot into the image, the `initial-setup` dialog will pop-up to guide
+you through some initial steps.
+
 
 Finishing the `ovirt-engine-setup`
 ----------------------------------
 
-Once you boot into the image, the `initial-setup` dialog will pop-up to guide
-you through some initial steps.
-Once you finished this dialog (which should be self describing), login as root
-and run:
+Once you finished the `initial-setup` (which should be self describing),
+login as root and run:
 
     $ ovirt-engine-setup -answers ~/ovirt-engine-answers
 
@@ -178,9 +174,8 @@ the [oVirt 3.5 TestDays][test-days].
 
 Open items include:
 
-* Fix OVA wrapper script, to also handle qcow images correctly
-* Once done, increase the rootfs size to ~40GB
 * Heavy testing
+* …
 
 So feel enlighted to try out the <del>ready to use image or</del>
 [build the appliance yourself][git-readme].
