@@ -28,7 +28,7 @@ sed -i \
 echo "Pre-Installing oVirt stuff"
 #
 yum install -y http://resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
-yum install -y ovirt-engine
+yum install -y ovirt-engine ovirt-guest-agent
 
 #
 echo "Creating a partial answer file"
