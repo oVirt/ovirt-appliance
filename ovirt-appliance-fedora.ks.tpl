@@ -4,6 +4,7 @@ user --name=admin --plaintext --password=none --groups=wheel
 
 %packages
 initial-setup
+dracut-modules-growroot
 %end
 
 %post --erroronfail

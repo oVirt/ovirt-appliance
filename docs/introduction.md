@@ -47,11 +47,12 @@ Build <del>Download</del> the appliance yourself
 
 Inside the VM:
 
+  * Wait a bit
   * Finish the `initial-setup` (set a root password and optionally add a user)
 
 and run:
 
-    $ engine-setup -answers ovirt-engine-answers
+    $ engine-setup --config-append=ovirt-engine-answers
 
 
 Building the virtual appliance
@@ -79,7 +80,7 @@ The `.ova` build will actually go through the following steps:
 
 * Create a kickstart from the provided template
 * Pass the boot iso and kickstart to `livemedia-creator` (part of `lorax`)
-* sysprep, sparsify and convert the intermediate image to the OVA format
+* sysprep, resize, sparsify and convert the intermediate image to OVA
 
 The `.ova` file now contains some metadata and the qcow2 image, to extarct the
 image run:

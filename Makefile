@@ -10,8 +10,11 @@
 MAIN_NAME ?= ovirt-appliance-fedora
 
 VM_CPUS ?= 4
-VM_RAM ?= 4096
+VM_RAM ?= 16384
 VM_DISK ?= 4000
+
+# Units can be used here
+VM_GROWSIZE ?= 50GB
 
 LMC ?= livemedia-creator
 LMC_COMMON_ARGS = --ram=$(VM_RAM) --vcpus=$(VM_CPUS)
@@ -56,11 +59,15 @@ boot.iso:
 	#$(SUDO) -E LANG=C LC_ALL=C image-creator -c $< --compression-type=xz -v -d --logfile $(shell pwd)/image.log
 
 
-%.ova: %.raw
-	$(SUDO) -E virt-sysprep --add "$<"
-	$(SUDO) -E virt-sparsify --compress --convert qcow2 "$<" "$*.sparse.qcow2"
+%.qcow2: %.raw
+	$(SUDO) -E virt-sparsify --compress --convert qcow2 "$<" "$@"
+	# FIXME selinux relable must hapen before init-label, before we cna enable
+	# relable
+	$(SUDO) -E virt-sysprep --no-selinux-relabel --add "$@"
+	$(SUDO) qemu-img resize "$@" $(VM_GROWSIZE)
 
-	$(SUDO) python scripts/create_ova.py -m $(VM_RAM) -c $(VM_CPUS) "$*.sparse.qcow2" "$@"
+%.ova: %.qcow2
+	$(SUDO) python scripts/create_ova.py -m $(VM_RAM) -c $(VM_CPUS) "$*.qcow2" "$@"
 
 
 clean: clean-log
