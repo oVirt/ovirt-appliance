@@ -33,6 +33,7 @@ Build <del>Download</del> the appliance yourself
     # Get the sources
     $ git clone git://gerrit.ovirt.org/ovirt-appliance
     $ cd ovirt-appliance
+    $ git submodule update --init
 
     # To only build the `.raw` image use:
     $ make ovirt-appliance-fedora.raw
