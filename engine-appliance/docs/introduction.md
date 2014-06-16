@@ -112,7 +112,7 @@ Finishing the `ovirt-engine-setup`
 Once you finished the `initial-setup` (which should be self describing),
 login as root and run:
 
-    $ ovirt-engine-setup -answers ~/ovirt-engine-answers
+    $ engine-setup --config-append=ovirt-engine-answers
 
 
 Comments on some design decisions
