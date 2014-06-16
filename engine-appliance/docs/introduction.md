@@ -32,8 +32,9 @@ Build <del>Download</del> the appliance yourself
 
     # Get the sources
     $ git clone git://gerrit.ovirt.org/ovirt-appliance
-    $ cd ovirt-appliance/engine-appliance
+    $ cd ovirt-appliance
     $ git submodule update --init
+    $ cd engine-appliance
 
     # To only build the `.raw` image use:
     $ make ovirt-appliance-fedora.raw
@@ -64,8 +65,9 @@ The build process can then be initiated by running:
 
     $ yum install lorax pykickstart
     $ git clone git://gerrit.ovirt.org/ovirt-appliance
-    $ cd ovirt-appliance/engine-appliance
+    $ cd ovirt-appliance
     $ git submodule update --init
+    $ cd engine-appliance
 
     # Build the .ova
     $ make

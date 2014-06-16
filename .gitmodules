@@ -1,3 +1,3 @@
-[submodule "fedora-spin-kickstarts"]
+[submodule "engine-appliance/fedora-spin-kickstarts"]
 	path = engine-appliance/fedora-spin-kickstarts
 	url = https://git.fedorahosted.org/git/spin-kickstarts.git
