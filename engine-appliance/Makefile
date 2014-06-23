@@ -24,6 +24,8 @@ BOOTISO ?= boot.iso
 SUDO := sudo 
 TMPDIR := /var/tmp
 
+.SECONDARY:
+
 
 all: $(MAIN_NAME).ova
 	echo "$(MAIN_NAME)" appliance done
@@ -48,6 +50,8 @@ boot.iso:
 		-e "/remove firewalld/ s/^/#/" \
 		-e "/^bootloader/ s/bootloader .*/bootloader --location=mbr --timeout=1/" \
 		-e "/dummy/ s/^/#/" \
+		-e "/rawhide/ s/^/#/" \
+		-e "/repo --name=\"fedora\"/ s/^repo/url/" \
 		$@
 
 

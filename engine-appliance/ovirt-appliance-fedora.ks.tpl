@@ -1,4 +1,7 @@
 
+
+%include fedora-spin-kickstarts/fedora-repo-not-rawhide.ks
+
 firstboot --reconfig
 user --name=admin --plaintext --password=none --groups=wheel
 
