@@ -113,6 +113,9 @@ iptables -A INPUT -j REJECT --reject-with icmp-host-prohibited
 iptables-save > /tmp/iptables.rules
 /bin/cp -f /tmp/iptables.rules /etc/sysconfig/iptables.ozbackup
 
+# Disable rdo repository
+sed -i "s/^enabled=.*$/enabled=0/" /etc/yum.repos.d/rdo-release.repo
+
 passwd -l root
    </command>
 
