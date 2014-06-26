@@ -10,11 +10,14 @@
 MAIN_NAME ?= ovirt-appliance-fedora
 
 VM_CPUS ?= 4
-VM_RAM ?= 16384
+VM_RAM ?= 4096
 VM_DISK ?= 4000
 
 # Units can be used here
 VM_GROWSIZE ?= 50GB
+
+OVA_RAM ?= 16384
+OVA_CPUS ?= $(VM_CPUS)
 
 LMC ?= livemedia-creator
 LMC_COMMON_ARGS = --ram=$(VM_RAM) --vcpus=$(VM_CPUS)
@@ -71,7 +74,7 @@ boot.iso:
 	$(SUDO) qemu-img resize "$@" $(VM_GROWSIZE)
 
 %.ova: %.qcow2
-	$(SUDO) python scripts/create_ova.py -m $(VM_RAM) -c $(VM_CPUS) "$*.qcow2" "$@"
+	$(SUDO) python scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
 
 
 clean: clean-log
