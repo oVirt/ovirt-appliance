@@ -52,9 +52,8 @@ boot.iso:
 		-e "/remove linux-firmware/ s/^/#/" \
 		-e "/remove firewalld/ s/^/#/" \
 		-e "/^bootloader/ s/bootloader .*/bootloader --location=mbr --timeout=1/" \
-		-e "/dummy/ s/^/#/" \
 		-e "/rawhide/ s/^/#/" \
-		-e "/repo --name=\"fedora\"/ s/^repo/url/" \
+		-e "/repo --name=\"fedora\"/ s/^repo.*http:/url --mirrorlist=http:/" \
 		$@
 
 
