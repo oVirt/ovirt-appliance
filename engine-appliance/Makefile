@@ -20,11 +20,11 @@ OVA_RAM ?= 16384
 OVA_CPUS ?= $(VM_CPUS)
 
 SUDO := sudo
-WORKDIR := $(shell pwd)
+TMPDIR := result-$(shell date +%Y%m%d%H%M%S)
 
 LMC ?= livemedia-creator
 LMC_COMMON_ARGS := --ram=$(VM_RAM) --vcpus=$(VM_CPUS)
-LMC_COMMON_ARGS += --tmp="$(WORKDIR)" --resultdir="$(WORKDIR)"
+LMC_COMMON_ARGS += --tmp="$(TMPDIR)"
 
 BOOTISO ?= boot.iso
 
@@ -60,7 +60,10 @@ boot.iso:
 
 
 %.raw: %.ks boot.iso
-	$(SUDO) -E $(LMC) --make-disk --iso "$(BOOTISO)" --ks "$<" --image-name "$@" $(LMC_COMMON_ARGS)
+	mkdir $(TMPDIR)
+	chmod a+rw $(TMPDIR)
+	$(SUDO) $(LMC) --make-disk --iso "$(BOOTISO)" --ks "$<" --image-name "$@" $(LMC_COMMON_ARGS)
+	mv -v $(TMPDIR)/"$@" .
 
 	# Legacy way:
 	#$(SUDO) -E LANG=C LC_ALL=C image-creator -c $< --compression-type=xz -v -d --logfile $(shell pwd)/image.log
