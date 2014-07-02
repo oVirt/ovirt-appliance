@@ -24,6 +24,7 @@ You will need
 
 Then:
 
+    setenforce 0
     yum install -y lorax pykickstart oz imagefactory
     make
 

@@ -36,6 +36,8 @@ Build <del>Download</del> the appliance yourself
     $ git submodule update --init
     $ cd engine-appliance
 
+    $ setenforce 0
+
     # To only build the `.raw` image use:
     $ make ovirt-appliance-fedora.raw
 
@@ -68,6 +70,8 @@ The build process can then be initiated by running:
     $ cd ovirt-appliance
     $ git submodule update --init
     $ cd engine-appliance
+
+    $ setenforce 0
 
     # Build the .ova
     $ make
