@@ -19,13 +19,15 @@ VM_GROWSIZE ?= 50GB
 OVA_RAM ?= 16384
 OVA_CPUS ?= $(VM_CPUS)
 
+SUDO := sudo
+WORKDIR := $(shell pwd)
+
 LMC ?= livemedia-creator
-LMC_COMMON_ARGS = --ram=$(VM_RAM) --vcpus=$(VM_CPUS)
+LMC_COMMON_ARGS := --ram=$(VM_RAM) --vcpus=$(VM_CPUS)
+LMC_COMMON_ARGS += --tmp="$(WORKDIR)" --resultdir="$(WORKDIR)"
 
 BOOTISO ?= boot.iso
 
-SUDO := sudo 
-TMPDIR := /var/tmp
 
 .SECONDARY:
 
@@ -59,7 +61,6 @@ boot.iso:
 
 %.raw: %.ks boot.iso
 	$(SUDO) -E $(LMC) --make-disk --iso "$(BOOTISO)" --ks "$<" --image-name "$@" $(LMC_COMMON_ARGS)
-	$(SUDO) mv $(TMPDIR)/"$@" .
 
 	# Legacy way:
 	#$(SUDO) -E LANG=C LC_ALL=C image-creator -c $< --compression-type=xz -v -d --logfile $(shell pwd)/image.log
