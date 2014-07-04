@@ -27,7 +27,7 @@ LMC_COMMON_ARGS := --ram=$(VM_RAM) --vcpus=$(VM_CPUS)
 LMC_COMMON_ARGS += --tmp="$(TMPDIR)"
 
 BOOTISO ?= boot.iso
-
+RELEASEVER := 19
 
 .SECONDARY:
 
@@ -37,7 +37,7 @@ all: $(MAIN_NAME).ova
 
 
 boot.iso:
-	curl -L -O http://download.fedoraproject.org/pub/fedora/linux/releases/19/Fedora/x86_64/os/images/boot.iso
+	curl -L -O http://download.fedoraproject.org/pub/fedora/linux/releases/$(RELEASEVER)/Fedora/x86_64/os/images/boot.iso
 
 
 %.ks: %.ks.tpl
@@ -55,7 +55,6 @@ boot.iso:
 		-e "/remove firewalld/ s/^/#/" \
 		-e "/^bootloader/ s/bootloader .*/bootloader --location=mbr --timeout=1/" \
 		-e "/rawhide/ s/^/#/" \
-		-e "/repo --name=\"fedora\"/ s/^repo.*http:/url --mirrorlist=http:/" \
 		$@
 
 

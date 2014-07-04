@@ -25,7 +25,7 @@ You will need
 Then:
 
     setenforce 0
-    yum install -y lorax pykickstart virt-install
+    yum install -y lorax pykickstart virt-install libguestfs-tools imagefactory
     make
 
 This will create an ova by:
