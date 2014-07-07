@@ -1,3 +1,6 @@
 [submodule "engine-appliance/fedora-spin-kickstarts"]
 	path = engine-appliance/fedora-spin-kickstarts
 	url = https://git.fedorahosted.org/git/spin-kickstarts.git
+[submodule "engine-appliance/imagefactory"]
+	path = engine-appliance/imagefactory
+	url = https://github.com/redhat-imaging/imagefactory.git

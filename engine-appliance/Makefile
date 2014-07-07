@@ -29,6 +29,8 @@ LMC_COMMON_ARGS += --tmp="$(TMPDIR)"
 BOOTISO ?= boot.iso
 RELEASEVER := 19
 
+PYTHON := PYTHONPATH="$(PWD)/imagefactory/" python
+
 .SECONDARY:
 
 
@@ -76,7 +78,7 @@ boot.iso:
 	$(SUDO) qemu-img resize "$@" $(VM_GROWSIZE)
 
 %.ova: %.qcow2
-	$(SUDO) python scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
+	$(SUDO) $(PYTHON) scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
 
 
 clean: clean-log
