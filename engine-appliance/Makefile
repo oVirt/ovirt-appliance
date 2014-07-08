@@ -74,7 +74,8 @@ boot.iso:
 	$(SUDO) -E virt-sparsify --compress --convert qcow2 "$<" "$@"
 	# FIXME selinux relable must hapen before init-label, before we cna enable
 	# relable
-	$(SUDO) -E virt-sysprep --no-selinux-relabel --add "$@"
+	# The options also need to be given explicitly, because some others destroy the firstboot/initial-setup
+	$(SUDO) -E virt-sysprep --no-selinux-relabel --add "$@" --enable abrt-data,bash-history,blkid-tab,ca-certificates,crash-data,cron-spool,dhcp-client-state,dovecot-data,hostname,lvm-uuids,machine-id,mail-spool,net-hostname,net-hwaddr,pacct-log,package-manager-cache,random-seed,smolt-uuid,ssh-hostkeys,ssh-userdir,sssd-db-log,udev-persistent-net,utmp,yum-uuid
 	$(SUDO) qemu-img resize "$@" $(VM_GROWSIZE)
 
 %.ova: %.qcow2
