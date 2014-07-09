@@ -30,6 +30,7 @@ BOOTISO ?= boot.iso
 RELEASEVER := 19
 
 PYTHON := PYTHONPATH="$(PWD)/imagefactory/" python
+CURL := curl
 
 .SECONDARY:
 
@@ -39,7 +40,7 @@ all: $(MAIN_NAME).ova
 
 
 boot.iso:
-	curl -L -O http://download.fedoraproject.org/pub/fedora/linux/releases/$(RELEASEVER)/Fedora/x86_64/os/images/boot.iso
+	$(CURL) -L -O http://download.fedoraproject.org/pub/fedora/linux/releases/$(RELEASEVER)/Fedora/x86_64/os/images/boot.iso
 
 
 %.ks: %.ks.tpl
