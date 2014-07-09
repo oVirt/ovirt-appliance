@@ -29,8 +29,8 @@ LMC_COMMON_ARGS += --tmp="$(TMPDIR)"
 BOOTISO ?= boot.iso
 RELEASEVER := 19
 
-PYTHON := PYTHONPATH="$(PWD)/imagefactory/" python
-CURL := curl
+PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
+CURL ?= curl
 
 .SECONDARY:
 
