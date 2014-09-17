@@ -4,3 +4,6 @@
 [submodule "engine-appliance/imagefactory"]
 	path = engine-appliance/imagefactory
 	url = https://github.com/redhat-imaging/imagefactory.git
+[submodule "engine-appliance/imgbased"]
+	path = engine-appliance/imgbased
+	url = https://github.com/fabiand/imgbased.git

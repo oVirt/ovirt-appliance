@@ -1,4 +1,5 @@
 
+poweroff
 
 url --url=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Everything/$basearch/os/
 repo --name="fedora" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Fedora/$basearch/os/

@@ -27,6 +27,7 @@ LMC_COMMON_ARGS := --ram=$(VM_RAM) --vcpus=$(VM_CPUS)
 LMC_COMMON_ARGS += --tmp="$(TMPDIR)"
 
 BOOTISO ?= boot.iso
+ARCH := x86_64
 RELEASEVER := 19
 
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
@@ -40,7 +41,8 @@ all: $(MAIN_NAME).ova
 
 
 boot.iso:
-	$(CURL) -L -O http://download.fedoraproject.org/pub/fedora/linux/releases/$(RELEASEVER)/Fedora/x86_64/os/images/boot.iso
+	$(CURL) -L -O http://download.fedoraproject.org/pub/fedora/linux/releases/$(RELEASEVER)/Fedora/$(ARCH)/os/images/boot.iso
+
 
 
 %.ks: %.ks.tpl
@@ -58,14 +60,18 @@ boot.iso:
 		-e "/remove firewalld/ s/^/#/" \
 		-e "/^bootloader/ s/bootloader .*/bootloader --location=mbr --timeout=1/" \
 		-e "/rawhide/ s/^/#/" \
+		-e "/^reboot/ s/reboot/poweroff/" \
 		$@
 
 
-%.raw: %.ks boot.iso
-	mkdir $(TMPDIR)
-	chmod a+rw $(TMPDIR)
-	$(SUDO) $(LMC) --make-disk --iso "$(BOOTISO)" --ks "$<" --image-name "$@" $(LMC_COMMON_ARGS)
-	mv -v $(TMPDIR)/"$@" .
+%.raw: %.ks
+	make -f imgbased/data/kickstarts/poor-mans-lmc.makefile run-install KICKSTART="$<" FEDORA_RELEASEVER=$(RELEASEVER) QEMU_APPEND="cmdline" DISK_SIZE=20G
+	qemu-img convert -O raw hda.qcow2 "$@"
+
+#	mkdir $(TMPDIR)
+#	chmod a+rw $(TMPDIR)
+#	$(SUDO) $(LMC) --make-disk --iso "$(BOOTISO)" --ks "$<" --image-name "$@" $(LMC_COMMON_ARGS)
+#	mv -v $(TMPDIR)/"$@" .
 
 	# Legacy way:
 	#$(SUDO) -E LANG=C LC_ALL=C image-creator -c $< --compression-type=xz -v -d --logfile $(shell pwd)/image.log
