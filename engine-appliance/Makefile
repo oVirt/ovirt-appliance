@@ -11,7 +11,7 @@ MAIN_NAME ?= ovirt-appliance-fedora
 
 VM_CPUS ?= 4
 VM_RAM ?= 4096
-VM_DISK ?= 4000
+VM_DISK ?= 5000
 
 # Units can be used here
 VM_GROWSIZE ?= 50GB
@@ -34,7 +34,7 @@ PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 CURL ?= curl
 
 .SECONDARY:
-
+.PHONY:$(MAIN_NAME).ks.tpl
 
 all: $(MAIN_NAME).ova
 	echo "$(MAIN_NAME)" appliance done
@@ -61,12 +61,15 @@ boot.iso:
 		-e "/^bootloader/ s/bootloader .*/bootloader --location=mbr --timeout=1/" \
 		-e "/rawhide/ s/^/#/" \
 		-e "/^reboot/ s/reboot/poweroff/" \
+		-e "/^services/ s/sshd/sshd,initial-setup-text/" \
+		-e "s#\$$basearch#$(ARCH)#g" \
+		-e "s#\$$releasever#$(RELEASEVER)#g" \
 		$@
 
 
 %.raw: %.ks
-	make -f imgbased/data/images/poor-mans-lmc.makefile run-install KICKSTART="$<" FEDORA_RELEASEVER=$(RELEASEVER) QEMU_APPEND="cmdline" DISK_SIZE=20G
-	qemu-img convert -O raw hda.qcow2 "$@"
+	make -f imgbased/data/images/poor-mans-lmc.makefile run-install KICKSTART="$<" FEDORA_RELEASEVER=$(RELEASEVER) FEDORA_ANACONDA_RELEASEVER=$(RELEASEVER) QEMU_APPEND="cmdline $(QEMU_APPEND)" DISK_SIZE=20G
+	qemu-img convert -O qcow2 hda.qcow2 "$@"
 
 #	mkdir $(TMPDIR)
 #	chmod a+rw $(TMPDIR)
