@@ -68,7 +68,7 @@ boot.iso:
 
 
 %.raw: %.ks
-	make -f imgbased/data/images/poor-mans-lmc.makefile run-install KICKSTART="$<" FEDORA_RELEASEVER=$(RELEASEVER) FEDORA_ANACONDA_RELEASEVER=$(RELEASEVER) QEMU_APPEND="cmdline $(QEMU_APPEND)" DISK_SIZE=20G
+	make -f imgbased/data/images/poor-mans-lmc.makefile run-install KICKSTART="$<" FEDORA_RELEASEVER=$(RELEASEVER) FEDORA_ANACONDA_RELEASEVER=$(RELEASEVER) QEMU_APPEND="cmdline $(QEMU_APPEND)" DISK_SIZE=$(VM_DISK)
 	qemu-img convert -O qcow2 hda.qcow2 "$@"
 
 #	mkdir $(TMPDIR)
