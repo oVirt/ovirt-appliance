@@ -11,7 +11,7 @@ MAIN_NAME ?= ovirt-appliance-fedora
 
 VM_CPUS ?= 4
 VM_RAM ?= 4096
-VM_DISK ?= 5000
+VM_DISK ?= 50G
 
 # Units can be used here
 VM_GROWSIZE ?= 50GB
@@ -40,11 +40,6 @@ all: $(MAIN_NAME).ova
 	echo "$(MAIN_NAME)" appliance done
 
 
-boot.iso:
-	$(CURL) -L -O http://download.fedoraproject.org/pub/fedora/linux/releases/$(RELEASEVER)/Fedora/$(ARCH)/os/images/boot.iso
-
-
-
 %.ks: %.ks.tpl
 	ksflatten $< > $@
 	sed -i \
@@ -68,7 +63,12 @@ boot.iso:
 
 
 %.raw: %.ks
-	make -f imgbased/data/images/poor-mans-lmc.makefile run-install KICKSTART="$<" FEDORA_RELEASEVER=$(RELEASEVER) FEDORA_ANACONDA_RELEASEVER=$(RELEASEVER) QEMU_APPEND="cmdline $(QEMU_APPEND)" DISK_SIZE=$(VM_DISK)
+	make -f imgbased/data/images/poor-mans-lmc.makefile \
+		KICKSTART="$<" \
+		RELEASEVER=$(RELEASEVER) \
+		QEMU_APPEND="cmdline $(QEMU_APPEND)" \
+		DISK_SIZE=$(VM_DISK) \
+		run-install
 	qemu-img convert -O qcow2 hda.qcow2 "$@"
 
 #	mkdir $(TMPDIR)
