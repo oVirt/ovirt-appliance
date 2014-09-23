@@ -11,7 +11,7 @@ MAIN_NAME ?= ovirt-appliance-fedora
 
 VM_CPUS ?= 4
 VM_RAM ?= 4096
-VM_DISK ?= 50G
+VM_DISK ?= 8000
 
 # Units can be used here
 VM_GROWSIZE ?= 50GB
@@ -67,7 +67,7 @@ all: $(MAIN_NAME).ova
 		KICKSTART="$<" \
 		RELEASEVER=$(RELEASEVER) \
 		QEMU_APPEND="cmdline $(QEMU_APPEND)" \
-		DISK_SIZE=$(VM_DISK) \
+		DISK_SIZE=$$( $(VM_DISK) / 1000 ))G \
 		run-install
 	qemu-img convert -O qcow2 hda.qcow2 "$@"
 
