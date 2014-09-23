@@ -67,7 +67,7 @@ all: $(MAIN_NAME).ova
 		KICKSTART="$<" \
 		RELEASEVER=$(RELEASEVER) \
 		QEMU_APPEND="cmdline $(QEMU_APPEND)" \
-		DISK_SIZE=$$( $(VM_DISK) / 1000 ))G \
+		DISK_SIZE=$$(( $(VM_DISK) / 1000 ))G \
 		run-install
 	qemu-img convert -O qcow2 hda.qcow2 "$@"
 
