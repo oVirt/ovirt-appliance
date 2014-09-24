@@ -1,15 +1,27 @@
 
-poweroff
+%include fedora-spin-kickstarts/fedora-cloud-base.ks
 
+#
+# Repos
+#
 url --url=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Everything/$basearch/os/
 repo --name="fedora" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Fedora/$basearch/os/
 repo --name="updates" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/$releasever/$basearch/
 # Does not work with F19: --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
 # Does not work with F19: --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
 
+#
+# Configuration
+#
+selinux --permissive
 firstboot --reconfig
+rootpw --plaintext none --lock
+poweroff
 user --name=admin --plaintext --password=none --groups=wheel
 
+#
+# Packages
+#
 %packages
 initial-setup
 dracut-modules-growroot
@@ -63,12 +75,8 @@ OVESETUP_APACHE/configureSsl=bool:True
 OSETUP_RPMDISTRO/requireRollback=none:None
 OSETUP_RPMDISTRO/enableUpgrade=none:None
 __EOF__
-%end
 
-#%post --nochroot
-# echo "Copy local stuff into the rootfs"
-#cp -r oVirtLiveFiles $INSTALL_ROOT/root
-#%end
+%end
 
 %post --erroronfail
 #
@@ -79,5 +87,3 @@ passwd --delete root
 passwd --expire root
 %end
 
-
-%include fedora-spin-kickstarts/fedora-cloud-base.ks
