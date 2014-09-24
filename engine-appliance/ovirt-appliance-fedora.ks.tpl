@@ -4,11 +4,12 @@
 #
 # Repos
 #
-url --url=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Everything/$basearch/os/
-repo --name="fedora" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Fedora/$basearch/os/
-repo --name="updates" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/$releasever/$basearch/
-# Does not work with F19: --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
-# Does not work with F19: --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
+#url --url=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Everything/$basearch/os/
+url --url=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Fedora/$basearch/os/
+#repo --name="fedora" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Fedora/$basearch/os/
+#repo --name="updates" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/$releasever/$basearch/
+repo --name="fedora" --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
+repo --name="updates" --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
 
 #
 # Configuration
