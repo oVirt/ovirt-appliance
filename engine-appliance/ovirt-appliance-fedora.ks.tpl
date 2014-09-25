@@ -4,11 +4,13 @@
 #
 # Repos
 #
-#url --url=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Everything/$basearch/os/
-url --url=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Fedora/$basearch/os/
+# baseurl variant
+#url --url=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Fedora/$basearch/os/
 #repo --name="fedora" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Fedora/$basearch/os/
 #repo --name="updates" --baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/$releasever/$basearch/
-repo --name="fedora" --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
+
+# mirrorlist variant
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
 repo --name="updates" --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
 
 #
