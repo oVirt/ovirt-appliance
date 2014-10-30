@@ -36,8 +36,8 @@ echo "Preparing initial-setup"
 #
 yum install -y initial-setup plymouth
 touch /etc/reconfigSys
-systemctl enable initial-setup-text.service
-systemctl disable initial-setup-graphical.service
+systemctl enable initial-setup-text.service || :
+systemctl disable initial-setup-graphical.service || :
 
 # Default tty is ttyS0, to display initial-setup on tty0 we need to set this explicitly
 sed -i \
