@@ -65,7 +65,7 @@ To build the appliance you need three ingredients:
 
 The build process can then be initiated by running:
 
-    $ yum install lorax pykickstart virt-install
+    $ yum install lorax pykickstart virt-install oz
     $ git clone git://gerrit.ovirt.org/ovirt-appliance
     $ cd ovirt-appliance
     $ git submodule update --init
