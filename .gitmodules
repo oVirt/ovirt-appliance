@@ -7,3 +7,6 @@
 [submodule "engine-appliance/imgbased"]
 	path = engine-appliance/imgbased
 	url = https://github.com/fabiand/imgbased.git
+[submodule "engine-appliance/image-tools"]
+	path = engine-appliance/image-tools
+	url = https://github.com/fabiand/image-tools.git
