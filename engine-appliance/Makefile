@@ -11,7 +11,7 @@ MAIN_NAME ?= ovirt-appliance-fedora
 
 VM_CPUS ?= 4
 VM_RAM ?= 4096
-VM_DISK ?= 8000
+VM_DISK ?= 3000
 
 OVA_RAM ?= 16384
 OVA_CPUS ?= $(VM_CPUS)
@@ -30,7 +30,7 @@ all: $(MAIN_NAME).ova
 	echo "$(MAIN_NAME)" appliance done
 
 %.ks: %.ks.tpl
-	ksflatten $< > $@
+	ksflatten -c $< > $@
 	sed -i \
 		-e "/^[-]/ d" \
 		-e "/^text/ d" \
