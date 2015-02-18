@@ -40,7 +40,7 @@ all: ovirt-engine-appliance.ova
 	make -f image-tools/build.mk $@ RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( $(VM_DISK) / 1000 ))G
 	ls -shal $@
 
-%.squashfs.img:
+%.squashfs.img: %.qcow2
 	make -f image-tools/build.mk $@
 	ls -shal $@
 
