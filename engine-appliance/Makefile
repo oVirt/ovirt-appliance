@@ -38,12 +38,15 @@ all: ovirt-engine-appliance.ova
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( $(VM_DISK) / 1000 ))G
+	ls -shal $@
 
 %.squashfs.img:
 	make -f image-tools/build.mk $@
+	ls -shal $@
 
 %.ova: %.qcow2
 	$(SUDO) $(PYTHON) scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
+	ls -shal $@
 
 verrel:
 	@bash image-tools/image-verrel rootfs oVirtEngineAppliance org.ovirt.engine
