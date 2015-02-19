@@ -7,12 +7,10 @@
 # 4. sysprep, sparsify and comvert runtime image to ova
 #
 
-VM_CPUS ?= 4
-VM_RAM ?= 4096
-VM_DISK ?= 3000
+VM_DISK ?= 10000
 
 OVA_RAM ?= 16384
-OVA_CPUS ?= $(VM_CPUS)
+OVA_CPUS ?= 4
 
 ARCH=x86_64
 RELEASEVER=19
@@ -37,7 +35,7 @@ all: ovirt-engine-appliance.ova
 
 
 %.qcow2: %.ks
-	make -f image-tools/build.mk $@ RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( $(VM_DISK) / 1000 ))G
+	make -f image-tools/build.mk $@ RELEASEVER=$(RELEASEVER)
 	ls -shal $@
 
 %.squashfs.img: %.qcow2
