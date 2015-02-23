@@ -2,18 +2,14 @@
 %include http://jenkins.ovirt.org/job/fabiand_ovirt-node-tng_image_build_daily_testing/lastSuccessfulBuild/artifact/exported-artifacts/rootfs.ks
 
 user --name=admin --plaintext --password=none --groups=wheel
+firstboot --disable
 
 %packages
-initial-setup
 dracut-modules-growroot
 cloud-init
 %end
 
-%post --erroronfail
-set -x
-systemctl enable initial-setup-text.service || :
-systemctl disable initial-setup-graphical.service || :
-
+%post
 sed -i "/%wheel.*NOPASSWD/ s/^#//" /etc/sudoers
 %end
 
