@@ -1,23 +1,37 @@
+lang en_US.UTF-8
+keyboard us
+timezone --utc Etc/UTC
+auth --enableshadow --passalgo=sha512
+selinux --permissive
+rootpw --lock
+user --name=node --lock
+poweroff
+firstboot --reconfig
 
-%include http://jenkins.ovirt.org/job/fabiand_ovirt-node-tng_image_build_daily_testing/lastSuccessfulBuild/artifact/exported-artifacts/rootfs.ks
+clearpart --all --initlabel
+bootloader --timeout=1
+autopart --type=plain
 
-user --name=admin --plaintext --password=none --groups=wheel
-firstboot --disable
-
-%packages
-dracut-modules-growroot
-cloud-init
+%packages --ignoremissing
+initial-setup
 %end
 
+
+#
+# CentOS repositories
+#
+url --mirrorlist=http://mirrorlist.centos.org/?repo=os&release=$releasever&arch=$basearch
+repo --name=updates --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
+repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
+
+#
+# Adding upstream oVirt vdsm
+#
 %post
-sed -i "/%wheel.*NOPASSWD/ s/^#//" /etc/sudoers
-%end
-
-
-%post --erroronfail
 set -x
-yum install -y http://resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
-yum install -y ovirt-engine ovirt-guest-agent
+yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
+yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
+yum install -y ovirt-engine
 
 #
 echo "Creating a partial answer file"

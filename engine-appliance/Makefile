@@ -23,19 +23,19 @@ PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
 
-%.ks: %.ks.tpl
-	ksflatten -c $< > $@
-	-[ -n "$$http_proxy" ] && sed -i "s/--proxy\S*/--proxy=$$http_proxy/g" $@
-	-[ -z "$$http_proxy" ] && sed -i "s/--proxy\S*//g" $@
-	sed -i \
-	 -e "s/^part .*/part \/ --size $(VM_DISK) --fstype ext4 --fsoptions discard/" \
-	 -e "s/^%packages.*/%packages --ignoremissing/" \
-	 -e "/^reboot/ s/reboot/poweroff/" \
-	 $@
+#%.ks: %.ks.tpl
+#	ksflatten -c $< > $@
+#	-[ -n "$$http_proxy" ] && sed -i "s/--proxy\S*/--proxy=$$http_proxy/g" $@
+#	-[ -z "$$http_proxy" ] && sed -i "s/--proxy\S*//g" $@
+#	sed -i \
+#	 -e "s/^part .*/part \/ --size $(VM_DISK) --fstype ext4 --fsoptions discard/" \
+#	 -e "s/^%packages.*/%packages --ignoremissing/" \
+#	 -e "/^reboot/ s/reboot/poweroff/" \
+#	 $@
 
 
 %.qcow2: %.ks
-	make -f image-tools/build.mk $@ DISTRO=centos RELEASEVER=$(RELEASEVER)
+	make -f image-tools/build.mk $@ DISTRO=centos RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
 	ls -shal $@
 
 %.squashfs.img: %.qcow2

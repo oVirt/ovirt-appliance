@@ -5,7 +5,6 @@
 Makefile
 .gitignore
 *.log
-*.ks
 *~
 # IDE files
 ###########################
