@@ -6,14 +6,13 @@ selinux --permissive
 rootpw --lock
 user --name=node --lock
 poweroff
-firstboot --reconfig
 
 clearpart --all --initlabel
 bootloader --timeout=1
 autopart --type=plain
 
 %packages --ignoremissing
-initial-setup
+cloud-init
 %end
 
 
