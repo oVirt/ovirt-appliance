@@ -13,7 +13,8 @@ OVA_RAM ?= 16384
 OVA_CPUS ?= 4
 
 ARCH=x86_64
-RELEASEVER=7
+DISTRO=fedora
+RELEASEVER=20
 
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
@@ -35,7 +36,7 @@ all: ovirt-engine-appliance.ova
 
 
 %.qcow2: %.ks
-	make -f image-tools/build.mk $@ DISTRO=centos RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
+	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
 	ls -shal $@
 
 %.squashfs.img: %.qcow2
