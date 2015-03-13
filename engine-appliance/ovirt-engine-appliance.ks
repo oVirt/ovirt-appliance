@@ -10,7 +10,7 @@ poweroff
 
 clearpart --all --initlabel
 bootloader --timeout=1
-autopart --type=plain
+part / --size=10240 --fstype=ext4 --fsoptions=discard
 
 %packages --ignoremissing
 cloud-init
