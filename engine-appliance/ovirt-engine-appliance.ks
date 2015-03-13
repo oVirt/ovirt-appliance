@@ -5,6 +5,7 @@ auth --enableshadow --passalgo=sha512
 selinux --permissive
 rootpw --lock
 user --name=node --lock
+firstboot --disabled
 poweroff
 
 clearpart --all --initlabel
@@ -13,6 +14,7 @@ autopart --type=plain
 
 %packages --ignoremissing
 cloud-init
+initial-setup
 %end
 
 
