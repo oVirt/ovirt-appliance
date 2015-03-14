@@ -5,7 +5,7 @@ export PATH=$PATH:/sbin:/usr/sbin
 export TMPDIR=/var/tmp/
 
 # Create the OVA
-#make
+make
 
 # Create the squashfs for liveimg installation
 make ovirt-engine-appliance.squashfs.img
