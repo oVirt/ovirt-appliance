@@ -6,9 +6,6 @@ export PATH=$PATH:/sbin/:/usr/sbin/
 
 [[ -n "$SQUASHFS_URL" ]]
 
-./autogen.sh
-./configure
-
 make rootfs.squashfs.img
 make image-install SQUASHFS_URL=$SQUASHFS_URL
 
