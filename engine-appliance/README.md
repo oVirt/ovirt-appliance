@@ -5,20 +5,55 @@ Virt Virtual Appliance
 Kickstart files to build the oVirt Engine Virtual Appliance.
 
 
-Design
-------
+Cloud init support
+------------------
 
-Initially the image will be based on the Fedora Cloud base.
+Cloud init is a service that allows to pre configure the image on first run using external file
 
-Later on a CentOS based image can also be considered.
+The big all reference for the advanced staff and what cloud init is :
 
+<https://cloudinit.readthedocs.org/en/latest/index.html>
+
+Setting hostname and root password in a nutshell
+------------------------------------------------
+
+
+The following is only a simple example , please make your own and use your own password
+
+Create the user-data and meta-data files
+```
+cat <<EOF > user-data
+#cloud-config
+chpasswd:
+  list: |
+    root: yourpassword
+    expire: False
+EOF
+cat <<EOF > meta-data
+instance-id: ovirt-engine
+local-hostname: ovirt-engine
+EOF
+```
+
+
+You should change the root password in the user-data file (clear text)
+
+Create an iso from those two files:
+
+    $ genisoimage  -output seed.iso -volid cidata -joliet -rock user-data meta-data
+
+Attach the iso to the ovirt-appliance VM on first boot.
+
+Boot
+
+Your root password is now "yourpassword"
 
 Build
 -----
 You will need
 
 * an internet connection
-* at least Fedora 19.
+* at least Fedora 19+ or CentOS 7+
 * 5 GB of ram
 * 10 GB of disk
 
