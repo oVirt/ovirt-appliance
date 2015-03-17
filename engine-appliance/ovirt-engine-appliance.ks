@@ -10,7 +10,7 @@ poweroff
 
 clearpart --all --initlabel
 bootloader --timeout=1
-part / --size=1024 --grow --fstype=ext4 --fsoptions=discard
+part / --size=10240 --grow --fstype=ext4 --fsoptions=discard
 
 %packages --ignoremissing
 cloud-init
@@ -25,15 +25,16 @@ initial-setup
 #repo --name=updates --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
 #repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
 
-url --proxy=proxy.phx.ovirt.org:3128 --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
-repo --proxy=proxy.phx.ovirt.org:3128 --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
+repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
 
 #
 # Adding upstream oVirt
 #
-%post
+%post --erroronfail
 set -x
-yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
+grep -i fedora /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/Fedora/glusterfs-fedora.repo"
+grep -i centos /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
 yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
 yum install -y ovirt-engine
 
