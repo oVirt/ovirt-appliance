@@ -6,11 +6,11 @@ export PATH=$PATH:/sbin/:/usr/sbin/
 
 [[ -n "$SQUASHFS_URL" ]]
 
-make rootfs.squashfs.img
+make ovirt-node-appliance.squashfs.img
 make image-install SQUASHFS_URL=$SQUASHFS_URL
 
 IMG="$(make verrel).squashfs.img"
-ln -v rootfs.squashfs.img $IMG
+ln -v ovirt-node-appliance.squashfs.img $IMG
 
 # Create an index file for imgbase remote
 ls -1 > .index

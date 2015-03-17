@@ -1,16 +1,14 @@
-.SECONDARY: rootfs.qcow2 rootfs.ks
-
 # FIXME Stick to Fedora until this is solved: http://bugs.centos.org/view.php?id=8239
 DISTRO=fedora
 RELEASEVER=21
 
 # Builds the rootfs
-image-build: rootfs.qcow2
+image-build: ovirt-node-appliance.qcow2
 
 # Simulates an auto-installation
-image-install: SQUASHFS_URL="@HOST_HTTP@/rootfs.squashfs.img"
+image-install: SQUASHFS_URL="@HOST_HTTP@/ovirt-node-appliance.squashfs.img"
 image-install: auto-installation.ks.in
-	[[ -f rootfs.squashfs.img ]]
+	[[ -f ovirt-node-appliance.squashfs.img ]]
 	sed "s#@ROOTFS_URL@#$(SQUASHFS_URL)#" auto-installation.ks.in > auto-installation.ks
 	$(MAKE) -f image-tools/build.mk DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( 10 * 1024 )) SPARSE= auto-installation.qcow2
 
