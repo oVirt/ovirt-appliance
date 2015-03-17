@@ -13,8 +13,8 @@ OVA_RAM ?= 16384
 OVA_CPUS ?= 4
 
 ARCH=x86_64
-DISTRO=fedora
-RELEASEVER=21
+DISTRO=centos
+RELEASEVER=7
 
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
@@ -23,17 +23,6 @@ PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
 all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
-
-#%.ks: %.ks.tpl
-#	ksflatten -c $< > $@
-#	-[ -n "$$http_proxy" ] && sed -i "s/--proxy\S*/--proxy=$$http_proxy/g" $@
-#	-[ -z "$$http_proxy" ] && sed -i "s/--proxy\S*//g" $@
-#	sed -i \
-#	 -e "s/^part .*/part \/ --size $(VM_DISK) --fstype ext4 --fsoptions discard/" \
-#	 -e "s/^%packages.*/%packages --ignoremissing/" \
-#	 -e "/^reboot/ s/reboot/poweroff/" \
-#	 $@
-
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
