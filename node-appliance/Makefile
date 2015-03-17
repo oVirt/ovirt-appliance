@@ -12,7 +12,7 @@ image-install: SQUASHFS_URL="@HOST_HTTP@/rootfs.squashfs.img"
 image-install: auto-installation.ks.in
 	[[ -f rootfs.squashfs.img ]]
 	sed "s#@ROOTFS_URL@#$(SQUASHFS_URL)#" auto-installation.ks.in > auto-installation.ks
-	$(MAKE) -f image-tools/build.mk DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( 10 * 1024 )) SPARSE= installed.qcow2
+	$(MAKE) -f image-tools/build.mk DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( 10 * 1024 )) SPARSE= auto-installation.qcow2
 
 verrel:
 	@bash image-tools/image-verrel rootfs NodeAppliance org.ovirt.node

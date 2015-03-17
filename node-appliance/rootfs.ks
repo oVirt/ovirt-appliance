@@ -67,7 +67,7 @@ yum clean all
 #
 # Adds the latest cockpit bits
 #
-%post
+%post --erroronfail
 set -x
 grep -i fedora /etc/system-release && yum-config-manager --add-repo="https://copr.fedoraproject.org/coprs/sgallagh/cockpit-preview/repo/fedora-21/sgallagh-cockpit-preview-fedora-21.repo"
 grep -i centos /etc/system-release && ( yum-config-manager --add-repo="https://copr.fedoraproject.org/coprs/sgallagh/cockpit-preview/repo/epel-7/sgallagh-cockpit-preview-epel-7.repo" ; yum-config-manager --add-repo="http://cbs.centos.org/repos/virt7-testing/$basearch/os/" ; )
@@ -75,20 +75,11 @@ yum install -y cockpit
 %end
 
 
-#
-# Add docker
-#
-%post
-set -x
-grep -i fedora /etc/system-release && yum install -y docker-io
-grep -i centos /etc/system-release && yum install -y docker
-%end
-
 
 #
 # Adding gluster from upstream
 #
-%post
+%post --erroronfail
 set -x
 grep -i fedora /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/Fedora/glusterfs-fedora.repo"
 grep -i centos /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
@@ -99,8 +90,18 @@ yum install -y glusterfs glusterfs-server glusterfs-fuse glusterfs-geo-replicati
 #
 # Adding upstream oVirt vdsm
 #
-%post
+%post --erroronfail
 set -x
 yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
 yum install -y vdsm
+%end
+
+
+#
+# Add docker
+#
+%post
+set -x
+grep -i fedora /etc/system-release && yum install -y docker-io
+grep -i centos /etc/system-release && yum install -y docker
 %end
