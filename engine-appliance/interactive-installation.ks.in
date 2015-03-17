@@ -1,0 +1,9 @@
+selinux --permissive
+network --bootproto=dhcp
+
+firstboot --disable
+services --disable=cloud-init
+
+reboot
+
+liveimg --url=@SQUASHFS_URL@
