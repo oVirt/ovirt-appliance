@@ -14,7 +14,7 @@ OVA_CPUS ?= 4
 
 ARCH=x86_64
 DISTRO=fedora
-RELEASEVER=20
+RELEASEVER=21
 
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
