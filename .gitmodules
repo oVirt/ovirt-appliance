@@ -4,3 +4,6 @@
 [submodule "engine-appliance/image-tools"]
 	path = engine-appliance/image-tools
 	url = https://github.com/fabiand/image-tools.git
+[submodule "node-appliance/image-tools"]
+	path = node-appliance/image-tools
+	url = https://github.com/fabiand/image-tools.git
