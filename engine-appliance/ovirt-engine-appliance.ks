@@ -10,7 +10,8 @@ poweroff
 
 clearpart --all --initlabel
 bootloader --timeout=1
-part / --size=10240 --grow --fstype=ext4 --fsoptions=discard
+# Size needs to be something smaller than the disk size, grow ensures that the whole disk is used
+part / --size=2048 --grow --fstype=ext4 --fsoptions=discard
 
 %packages --ignoremissing
 cloud-init
