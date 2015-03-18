@@ -1,8 +1,12 @@
 #
-# Fedora repositories
+# Platform repositories
 #
-url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
-repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
+url --mirrorlist=http://mirrorlist.centos.org/?repo=os&release=$releasever&arch=$basearch
+repo --name=updates --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
+repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
+
+#url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
+#repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
 #repo --name=updates-testing --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-testing-f$releasever&arch=$basearch
 
 
@@ -71,11 +75,12 @@ yum clean all
 #
 # Adds the latest cockpit bits
 #
-%post --erroronfail
+%post
 set -x
 grep -i fedora /etc/system-release && yum-config-manager --add-repo="https://copr.fedoraproject.org/coprs/sgallagh/cockpit-preview/repo/fedora-21/sgallagh-cockpit-preview-fedora-21.repo"
-grep -i centos /etc/system-release && ( yum-config-manager --add-repo="https://copr.fedoraproject.org/coprs/sgallagh/cockpit-preview/repo/epel-7/sgallagh-cockpit-preview-epel-7.repo" ; yum-config-manager --add-repo="http://cbs.centos.org/repos/virt7-testing/$basearch/os/" ; )
-yum install -y cockpit
+grep -i centos /etc/system-release && yum-config-manager --add-repo="https://copr.fedoraproject.org/coprs/sgallagh/cockpit-preview/repo/epel-7/sgallagh-cockpit-preview-epel-7.repo"
+grep -i centos /etc/system-release && yum-config-manager --add-repo="http://cbs.centos.org/repos/virt7-testing/x86_64/os/"
+yum install --nogpgcheck -y cockpit
 %end
 
 
@@ -83,11 +88,11 @@ yum install -y cockpit
 #
 # Adding gluster from upstream
 #
-%post --erroronfail
+%post
 set -x
 grep -i fedora /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/Fedora/glusterfs-fedora.repo"
 grep -i centos /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
-yum install -y glusterfs glusterfs-server glusterfs-fuse glusterfs-geo-replication glusterfs-api glusterfs-cli
+yum install --nogpgcheck -y glusterfs glusterfs-server glusterfs-fuse glusterfs-geo-replication glusterfs-api glusterfs-cli
 %end
 
 
@@ -97,7 +102,7 @@ yum install -y glusterfs glusterfs-server glusterfs-fuse glusterfs-geo-replicati
 %post --erroronfail
 set -x
 yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
-yum install -y vdsm
+yum install --nogpgcheck -y vdsm
 %end
 
 

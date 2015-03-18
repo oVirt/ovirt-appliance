@@ -1,6 +1,6 @@
 # FIXME Stick to Fedora until this is solved: http://bugs.centos.org/view.php?id=8239
-DISTRO=fedora
-RELEASEVER=21
+DISTRO=centos
+RELEASEVER=7
 
 # Builds the rootfs
 image-build: ovirt-node-appliance.qcow2
