@@ -4,6 +4,7 @@ timezone --utc Etc/UTC
 auth --enableshadow --passalgo=sha512
 selinux --permissive
 network --bootproto=dhcp
+firstboot --reconfig
 
 rootpw --lock
 user --name=node --lock
