@@ -7,4 +7,4 @@ user --name=node --lock
 
 bootloader --timeout=1
 
-liveimg --url=@ROOTFS_URL@
+liveimg --url=@SQUASHFS_URL@

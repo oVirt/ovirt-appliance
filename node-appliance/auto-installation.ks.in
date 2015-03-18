@@ -12,6 +12,6 @@ clearpart --all --initlabel # --disklabel=gpt
 bootloader --timeout=1
 autopart --type=thinp
 
-liveimg --url=@ROOTFS_URL@
+liveimg --url=@SQUASHFS_URL@
 
-reboot
+poweroff
