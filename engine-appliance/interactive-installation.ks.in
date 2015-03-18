@@ -7,3 +7,11 @@ services --disable=cloud-init
 reboot
 
 liveimg --url=@SQUASHFS_URL@
+
+%post
+# services (above) does not seem to work correctly
+# We assume that cloud-init is not needed when we do
+# an interactive installation.
+systemctl stop cloud-init
+systemctl disable cloud-init
+%end
