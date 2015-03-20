@@ -17,6 +17,10 @@ image-install: auto-installation.ks.in
 verrel:
 	@bash image-tools/image-verrel rootfs NodeAppliance org.ovirt.node
 
+# Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
+export LIBGUESTFS_BACKEND=direct
+# Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
+export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
 check:
 	nosetests -v tests/testImage.py --with-xunit
 
