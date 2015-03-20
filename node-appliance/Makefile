@@ -17,9 +17,8 @@ image-install: auto-installation.ks.in
 verrel:
 	@bash image-tools/image-verrel rootfs NodeAppliance org.ovirt.node
 
-#check: QCOW_CHECK=installation.qcow2
-#check:
-#	[[ -f "$(QCOW_CHECK)" ]] && make -f tests/runtime/Makefile check-local IMAGE=$(QCOW_CHECK) || :
+check:
+	nosetests -v tests/testImage.py --with-xunit
 
 
 %.qcow2: %.ks
