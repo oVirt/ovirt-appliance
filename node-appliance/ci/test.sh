@@ -15,5 +15,4 @@ ln -v ovirt-node-appliance.squashfs.img $IMG
 # Create an index file for imgbase remote
 ls -1 > .index
 
-# FIXME No intergration tests available for now
-#make check
+make check
