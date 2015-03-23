@@ -86,8 +86,9 @@ class TestRootfsSquashfsImage(unittest.TestCase):
         log("Found filetype: %s" % filetype)
         assert "filesystem" in filetype
 
-    def test_fstree(self):
-        """Check if the squashfs tree is valid
-        """
+    def test_fsck(self):
+        sh.fsck("-nvf", self.img)
+
+    def test_valid_fstree(self):
         raise SkipTest("Not implemented")
         # FIXME check if /boot /sbin etc exists
