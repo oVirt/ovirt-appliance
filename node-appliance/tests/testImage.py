@@ -7,6 +7,7 @@ from sh import guestfish
 import tempfile
 import os
 import shutil
+import re
 from unittest import SkipTest
 
 
@@ -33,12 +34,18 @@ class TestRootfsQcow2Image(unittest.TestCase):
     sh = _fish.bake("sh")
 
     def test_package(self):
-        missing_pkgs = []
-        all_pkgs = lines(self.sh("rpm -qa --qf '%{NAME}\\n'"))
+        req_pkgs = ["vdsm", "cockpit", "glusterfs-server", "vdsm-cli", "ovirt-engine-cli"]
 
-        for rpkg in ["vdsm", "cockpit", "glusterfs-server"]:
+        missing_pkgs = []
+        all_builds = lines(self.sh("rpm -qa"))
+
+        def name_from_build(build):
+            return re.sub(r"-[^-]+-[^-]+$", "", build)
+
+        all_pkgs = dict((name_from_build(b), b) for b in all_builds)
+        for rpkg in req_pkgs:
             if rpkg in all_pkgs:
-                log("%s is in the image" % rpkg)
+                log("'%s' is in the image" % all_pkgs[rpkg])
             else:
                 missing_pkgs.append(rpkg)
 
@@ -65,10 +72,9 @@ class TestRootfsSquashfsImage(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        from sh import unsquashfs
         cls.dest = tempfile.mktemp(dir=os.getcwd())
         log("Using dest: %s" % cls.dest)
-        unsquashfs("-li", "-d", cls.dest, squashfsimg)
+        sh.unsquashfs("-li", "-d", cls.dest, squashfsimg)
         cls.img = "%s/LiveOS/rootfs.img" % cls.dest
 
     @classmethod
@@ -77,11 +83,8 @@ class TestRootfsSquashfsImage(unittest.TestCase):
         assert os.getcwd() in cls.dest
         shutil.rmtree(cls.dest)
 
-    def test_partition(self):
-        """Check if the squashfs contains a partition
-        """
+    def test_one_partition(self):
         from sh import file as _file
-        log("Using: %s" % self.img)
         filetype = _file(self.img)
         log("Found filetype: %s" % filetype)
         assert "filesystem" in filetype
