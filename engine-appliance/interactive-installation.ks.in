@@ -1,10 +1,8 @@
 selinux --permissive
-network --bootproto=dhcp
+network --bootproto=dhcp --hostname=engine
 
 firstboot --disable
 services --disable=cloud-init
-
-reboot
 
 liveimg --url=@SQUASHFS_URL@
 
