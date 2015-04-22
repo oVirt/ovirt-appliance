@@ -7,7 +7,8 @@
 # 4. sysprep, sparsify and comvert runtime image to ova
 #
 
-VM_DISK ?= 10000
+# This size must be full GB, in MB
+VM_DISK ?= $(shell expr 10 * 1024)
 
 OVA_RAM ?= 16384
 OVA_CPUS ?= 4
