@@ -8,7 +8,7 @@
 #
 
 # This size must be full GB, in MB
-VM_DISK ?= $(shell expr 10 * 1024)
+VM_DISK ?= $(shell expr 10 \* 1024)
 
 OVA_RAM ?= 16384
 OVA_CPUS ?= 4
