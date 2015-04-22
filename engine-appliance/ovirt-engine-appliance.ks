@@ -36,7 +36,7 @@ repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release
 set -x
 grep -i fedora /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/Fedora/glusterfs-fedora.repo"
 grep -i centos /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
-yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
+yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm
 yum install -y ovirt-engine
 
 #
