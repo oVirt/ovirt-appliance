@@ -1,0 +1,32 @@
+Name:       ovirt-engine-appliance
+Version:    @VERSION@
+Release:    @RELEASE@
+License:    GPLv2
+Summary:    The oVirt Engine Appliance image (OVA)
+Group:      Applications/System
+URL:        http://www.ovirt.org/
+Source0:    @OVAFILENAME@
+BuildArch:  noarch
+
+%description
+This package contains the prebuild oVirt Engine appliance image. It is intended to
+be used with hosted-engine setup.
+
+%prep
+
+%build
+
+%install
+rm -rf %{buildroot}
+/usr/bin/install -d %{buildroot}/usr/share/%{name}-%{version}-%{release}
+/usr/bin/install -m 644 %{SOURCE0} %{buildroot}/usr/share/%{name}-%{version}-%{release}/%{name}-%{version}-%{release}.ova
+
+%clean
+rm -rf %{buildroot}
+
+%files
+/usr/share/%{name}-%{version}-%{release}
+
+%changelog
+* Wed Apr 29 2015 Fabian Deutsch <fdeutsch@redhat.com>
+- Initial build
