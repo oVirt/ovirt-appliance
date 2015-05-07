@@ -6,6 +6,7 @@ selinux --permissive
 rootpw --lock
 user --name=node --lock
 firstboot --disabled
+services --enabled=ssh
 poweroff
 
 clearpart --all --initlabel
