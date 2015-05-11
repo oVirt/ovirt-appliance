@@ -25,7 +25,7 @@ rm -rf %{buildroot}
 rm -rf %{buildroot}
 
 %files
-/usr/share/%{name}-%{version}-%{release}
+/usr/share/%{name}
 
 %changelog
 * Wed Apr 29 2015 Fabian Deutsch <fdeutsch@redhat.com>
