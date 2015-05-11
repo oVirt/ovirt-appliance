@@ -18,8 +18,8 @@ be used with hosted-engine setup.
 
 %install
 rm -rf %{buildroot}
-/usr/bin/install -d %{buildroot}/usr/share/%{name}-%{version}-%{release}
-/usr/bin/install -m 644 %{SOURCE0} %{buildroot}/usr/share/%{name}-%{version}-%{release}/%{name}-%{version}-%{release}.ova
+/usr/bin/install -d %{buildroot}/usr/share/%{name}
+/usr/bin/install -m 644 %{SOURCE0} %{buildroot}/usr/share/%{name}/%{name}-%{version}-%{release}.ova
 
 %clean
 rm -rf %{buildroot}
