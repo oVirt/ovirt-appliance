@@ -8,6 +8,16 @@ URL:        http://www.ovirt.org/
 Source0:    @OVAFILENAME@
 BuildArch:  noarch
 
+BuildRequires: grep
+
+Requires:   ovirt-hosted-engine-setup
+
+%global _he_discovery_dir /etc/ovirt-hosted-engine/
+%global _he_discovery_file %{_he_discovery_dir}/10-appliance.conf
+
+%global _appliance_dir /usr/share/ovirt-engine-appliance
+%global _appliance_file %{_appliance_dir}/%{name}-%{version}-%{release}.ova
+
 %description
 This package contains the prebuild oVirt Engine appliance image. It is intended to
 be used with hosted-engine setup.
@@ -18,15 +28,29 @@ be used with hosted-engine setup.
 
 %install
 rm -rf %{buildroot}
-/usr/bin/install -d %{buildroot}/usr/share/%{name}
-/usr/bin/install -m 644 %{SOURCE0} %{buildroot}/usr/share/%{name}/%{name}-%{version}-%{release}.ova
+# Install the appliance image
+/usr/bin/install -d %{buildroot}/%{_appliance_dir}
+/usr/bin/install -m 644 %{SOURCE0} %{buildroot}/%{_appliance_file}
+
+# Install the snippet for the discovery by hosted-engine-setup
+/usr/bin/install -d %{buildroot}/%{_he_discovery_dir}
+cat > %{buildroot}/%{_he_discovery_file} <<EOF
+description=%{summary}
+version=%{version}-%{release}
+path=%{_appliance_file}
+sha1sum=$(sha1sum %{buildroot}/%{_appliance_file} | egrep -o "^[0-9a-f]+")
+EOF
 
 %clean
 rm -rf %{buildroot}
 
 %files
-/usr/share/%{name}
+%{_appliance_dir}
+%{_he_discovery_file}
 
 %changelog
+* Tue May 12 2015 Fabian Deutsch <fdeutsch@redhat.com>
+- Include the snippet for hosted-engine-setup
+
 * Wed Apr 29 2015 Fabian Deutsch <fdeutsch@redhat.com>
 - Initial build
