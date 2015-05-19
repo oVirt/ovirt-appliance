@@ -1,6 +1,6 @@
 Name:       ovirt-engine-appliance
 Version:    @VERSION@
-Release:    @RELEASE@
+Release:    @RELEASE@%{?dist}%{?extra_release}
 License:    GPLv2
 Summary:    The oVirt Engine Appliance image (OVA)
 Group:      Applications/System
