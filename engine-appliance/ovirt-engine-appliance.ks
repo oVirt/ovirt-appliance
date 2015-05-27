@@ -70,4 +70,11 @@ OSETUP_RPMDISTRO/requireRollback=none:None
 OSETUP_RPMDISTRO/enableUpgrade=none:None
 __EOF__
 
+echo "Enabling ssh_pwauth in cloud.cfg.d"
+cat > /etc/cloud/cloud.cfg.d/42_ovirt_appliance.cfg <<__EOF__
+# Enable ssh pwauth by default. This ensures that ssh_pwauth is
+# even enabled when cloud-init does not find a seed.
+ssh_pwauth: True
+__EOF__
+
 %end
