@@ -25,6 +25,9 @@ PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
 
+check: ovirt-engine-appliance-manifest-rpm
+	egrep "^ovirt-engine" ovirt-engine-appliance-manifest-rpm
+
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
 	ls -shal $@
@@ -63,3 +66,6 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 
 verrel:
 	@bash image-tools/image-verrel rootfs oVirtEngineAppliance org.ovirt.engine
+
+%-manifest-rpm: %.qcow2
+	 make -f image-tools/build.mk $@
