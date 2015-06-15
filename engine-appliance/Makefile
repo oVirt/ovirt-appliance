@@ -32,10 +32,6 @@ check: ovirt-engine-appliance-manifest-rpm
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
 	ls -shal $@
 
-%.squashfs.img: %.qcow2
-	make -f image-tools/build.mk $@
-	ls -shal $@
-
 %.ova: %.qcow2
 	$(SUDO) $(PYTHON) scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
 	ls -shal $@
@@ -63,9 +59,6 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 	@echo
 	@echo "srpm and rpm(s) available at '$(TMPREPOS)'"
 	@echo
-
-verrel:
-	@bash image-tools/image-verrel rootfs oVirtEngineAppliance org.ovirt.engine
 
 %-manifest-rpm: %.qcow2
 	 make -f image-tools/build.mk $@
