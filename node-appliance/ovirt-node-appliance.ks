@@ -127,4 +127,12 @@ cat > /etc/imgbased.conf.d/50-ovirt.conf <<EOF
 [remote ovirt-node-ci]
 url = http://jenkins.ovirt.org/job/ovirt-appliance-node_master_create-imgbased-index/lastSuccessfulBuild/artifact/
 EOF
+
+yum install -y git automake autoconf
+git clone https://github.com/fabiand/imgbased.git
+pushd imgbased
+ ./autogen.sh && ./configure
+ yum install -y $(make --silent rpm-build-deps)
+ make install
+popd
 %end
