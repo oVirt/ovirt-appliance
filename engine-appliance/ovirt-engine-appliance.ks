@@ -77,4 +77,9 @@ cat > /etc/cloud/cloud.cfg.d/42_ovirt_appliance.cfg <<__EOF__
 ssh_pwauth: True
 __EOF__
 
+
+# Enable the guest agent
+#
+yum install -y ovirt-guest-agent-common
+systemctl enable ovirt-guest-agent.service
 %end
