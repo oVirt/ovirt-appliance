@@ -85,26 +85,16 @@ yum install --nogpgcheck -y cockpit
 %end
 
 
-
-#
-# Adding gluster from upstream
-#
-%post --erroronfail
-set -x
-grep -i fedora /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/Fedora/glusterfs-fedora.repo"
-grep -i centos /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
-yum install --nogpgcheck -y glusterfs glusterfs-server glusterfs-fuse glusterfs-geo-replication glusterfs-api glusterfs-cli
-%end
-
-
 #
 # Adding upstream oVirt vdsm
 #
 %post --erroronfail
 set -x
-yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
+yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release36.rpm
 yum install --nogpgcheck -y vdsm
 yum install --nogpgcheck -y vdsm-cli ovirt-engine-cli
+
+yum install --nogpgcheck -y glusterfs glusterfs-server glusterfs-fuse glusterfs-geo-replication glusterfs-api glusterfs-cli
 %end
 
 
@@ -113,8 +103,7 @@ yum install --nogpgcheck -y vdsm-cli ovirt-engine-cli
 #
 %post
 set -x
-grep -i fedora /etc/system-release && yum install -y docker-io
-grep -i centos /etc/system-release && yum install -y docker
+yum install -y docker docker-io || :
 %end
 
 #
