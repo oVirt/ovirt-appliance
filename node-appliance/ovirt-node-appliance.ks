@@ -127,4 +127,6 @@ pushd imgbased
  yum install -y $(make --silent rpm-build-deps)
  make install
 popd
+
+imgbase update --set-upstream node-unstable/org.ovirt.node.NodeAppliance
 %end
