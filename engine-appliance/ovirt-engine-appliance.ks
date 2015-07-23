@@ -27,16 +27,12 @@ url --mirrorlist=http://mirrorlist.centos.org/?repo=os&release=$releasever&arch=
 repo --name=updates --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
 repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
 
-#url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
-#repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
-
 #
 # Adding upstream oVirt
 #
 %post --erroronfail
 set -x
-grep -i fedora /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/Fedora/glusterfs-fedora.repo"
-grep -i centos /etc/system-release && yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
+yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
 yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm
 yum install -y ovirt-engine
 
@@ -78,8 +74,10 @@ ssh_pwauth: True
 __EOF__
 
 
+#
 # Enable the guest agent
 #
-yum install -y ovirt-guest-agent-common || :
-systemctl enable ovirt-guest-agent.service || :
+yum install -y "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+yum install -y ovirt-guest-agent-common
+systemctl enable ovirt-guest-agent.service
 %end
