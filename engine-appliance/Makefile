@@ -27,7 +27,6 @@ all: ovirt-engine-appliance.ova
 
 check: ovirt-engine-appliance-manifest-rpm
 	egrep "^ovirt-engine" ovirt-engine-appliance-manifest-rpm
-	egrep "^ovirt-guest-agent" ovirt-engine-appliance-manifest-rpm
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
