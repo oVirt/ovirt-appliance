@@ -80,6 +80,6 @@ __EOF__
 
 # Enable the guest agent
 #
-yum install -y ovirt-guest-agent-common
-systemctl enable ovirt-guest-agent.service
+yum install -y ovirt-guest-agent-common || :
+systemctl enable ovirt-guest-agent.service || :
 %end
