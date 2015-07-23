@@ -32,8 +32,7 @@ repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release
 #
 %post --erroronfail
 set -x
-yum-config-manager --add-repo="http://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo"
-yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm
+yum install -y "http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
 yum install -y ovirt-engine
 
 #
