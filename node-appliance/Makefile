@@ -7,8 +7,8 @@ image-build: ovirt-node-appliance.qcow2
 
 # Simulates an auto-installation
 image-install: SQUASHFS_URL="@HOST_HTTP@/ovirt-node-appliance.squashfs.img"
-image-install: DISTRO=fedora
-image-install: RELEASEVER=22
+image-install: DISTRO=centos
+image-install: RELEASEVER=7
 image-install: auto-installation.ks.in
 	[[ -f ovirt-node-appliance.squashfs.img ]]
 	sed -e "s#@SQUASHFS_URL@#$(SQUASHFS_URL)#" auto-installation.ks.in > auto-installation.ks
