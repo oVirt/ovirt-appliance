@@ -1,0 +1,17 @@
+automake
+autoconf
+make
+python
+git
+lorax
+pykickstart
+virt-install
+libguestfs-tools
+imagefactory
+qemu-system-x86
+asciidoc
+python-sh
+glusterfs
+gluster
+squashfs-tools
+oz
