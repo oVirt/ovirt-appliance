@@ -15,7 +15,7 @@ image-install: auto-installation.ks.in
 	$(MAKE) -f image-tools/build.mk DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( 10 * 1024 )) SPARSE= auto-installation.qcow2
 
 verrel:
-	@bash image-tools/image-verrel rootfs NodeAppliance org.ovirt.node
+	@bash image-tools/image-verrel rootfs org.ovirt.Node x86_64
 
 # Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
 export LIBGUESTFS_BACKEND=direct
