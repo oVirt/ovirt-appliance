@@ -129,6 +129,6 @@ pushd imgbased
  make install
 popd
 
-imgbase --debug image-build --postprocess
+imgbase --debug --experimental image-build --postprocess
 imgbase --debug update --set-upstream node-unstable/org.ovirt.node.NodeAppliance
 %end
