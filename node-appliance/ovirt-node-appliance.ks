@@ -94,6 +94,7 @@ yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release36.rpm
 yum install --nogpgcheck -y vdsm
 yum install --nogpgcheck -y vdsm-cli ovirt-engine-cli
 yum install --nogpgcheck -y ovirt-host-deploy-offline
+yum install --nogpgcheck -y glusterfs-server
 %end
 
 

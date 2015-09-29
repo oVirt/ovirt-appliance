@@ -34,7 +34,7 @@ class TestRootfsQcow2Image(unittest.TestCase):
     sh = _fish.bake("sh")
 
     def test_package(self):
-        req_pkgs = ["vdsm", "cockpit", "glusterfs-server", "vdsm-cli", "ovirt-engine-cli"]
+        req_pkgs = ["vdsm", "cockpit"]
 
         missing_pkgs = []
         all_builds = lines(self.sh("rpm -qa"))
