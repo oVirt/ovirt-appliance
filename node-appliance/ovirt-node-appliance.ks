@@ -149,5 +149,5 @@ pushd imgbased
 popd
 
 imgbase --debug --experimental image-build --postprocess
-imgbase --debug update --set-upstream node-unstable/org.ovirt.node.NodeAppliance
+imgbase --debug update --set-upstream node-unstable:org.ovirt.node.Node
 %end
