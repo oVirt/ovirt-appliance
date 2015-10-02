@@ -11,7 +11,7 @@ user --name=node --lock
 
 clearpart --all --initlabel # --disklabel=gpt
 bootloader --timeout=1
-autopart --type=thinp
+autopart --type=thinp --fstype=ext4
 
 liveimg --url=@SQUASHFS_URL@
 
