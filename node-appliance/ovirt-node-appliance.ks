@@ -123,6 +123,7 @@ ln -vs /etc/systemd/system/cloud-init.service.d/ /etc/systemd/system/cloud-confi
 ln -vs /etc/systemd/system/cloud-init.service.d/ /etc/systemd/system/cloud-final.service.d
 ln -vs /etc/systemd/system/cloud-init.service.d/ /etc/systemd/system/cloud-init-local.service.d
 
+mkdir -vp /usr/lib/systemd/system-preset/
 cat > /usr/lib/systemd/system-preset/90-node.preset <<EOP
 # Disable cloud-init by default, can be enabled during installation using service
 disable cloud-config.service
