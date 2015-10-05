@@ -4,6 +4,7 @@ RELEASEVER=7
 
 # Builds the rootfs
 image-build: ovirt-node-appliance.qcow2
+	cp -v anaconda.log anaconda-$@.log
 
 # Simulates an auto-installation
 image-install: SQUASHFS_URL="@HOST_HTTP@/ovirt-node-appliance.squashfs.img"
@@ -11,6 +12,7 @@ image-install: auto-installation.ks.in
 	[[ -f ovirt-node-appliance.squashfs.img ]]
 	sed -e "s#@SQUASHFS_URL@#$(SQUASHFS_URL)#" auto-installation.ks.in > auto-installation.ks
 	$(MAKE) -f image-tools/build.mk DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( 10 * 1024 )) SPARSE= auto-installation.qcow2
+	cp -v anaconda.log anaconda-$@.log
 
 verrel:
 	@bash image-tools/image-verrel rootfs org.ovirt.Node x86_64
