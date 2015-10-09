@@ -63,6 +63,7 @@ OVESETUP_CONFIG/sanWipeAfterDelete=bool:False
 OVESETUP_CONFIG/updateFirewall=bool:True
 OVESETUP_CONFIG/websocketProxyConfig=bool:True
 OVESETUP_PROVISIONING/postgresProvisioningEnabled=bool:True
+OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyConfig=bool:True
 OVESETUP_APACHE/configureRootRedirection=bool:True
 OVESETUP_APACHE/configureSsl=bool:True
 OSETUP_RPMDISTRO/requireRollback=none:None
