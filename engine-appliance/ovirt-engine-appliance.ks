@@ -33,6 +33,10 @@ repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release
 %post --erroronfail
 set -x
 yum install -y "http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release36.rpm"
+
+# Use baseurl instead of repo to ensure we use the latest rpms
+sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" /etc/yum.repos.d/ovirt*.repo
+
 yum install -y ovirt-engine
 
 #
