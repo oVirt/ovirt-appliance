@@ -59,3 +59,11 @@ mv -v \
   "$ARTIFACTSDIR/"
 
 rm "$ARTIFACTSDIR"/.treeinfo
+
+ln -v "$ARTIFACTSDIR"/*.ova ovirt-engine-appliance.ova
+make ovirt-engine-appliance.rpm
+
+mv -v \
+  "$HOME"/rpmbuild/RPMS/*/*.rpm \
+  "$HOME"/rpmbuild/SRPMS/*.rpm \
+  "$ARTIFACTSDIR/"
