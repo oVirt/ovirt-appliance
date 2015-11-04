@@ -27,7 +27,7 @@ prepare_boot() {
 
   # Also update the kickstarts to point to that url
   sed "s#@SQUASHFS_URL@#$SQUASHFS_URL#" interactive-installation.ks.in > interactive-installation.ks
-  sed "s#@SQUASHFS_URL@#$SQUASHFS_URL#" auto-installation.ks.in > auto-installation.ks
+  sed "s#@SQUASHFS_URL@#$SQUASHFS_URL#" ovirt-node-appliance-auto-installation.ks.in > ovirt-node-appliance-auto-installation.ks
   sed -i -e "/http_proxy=/ d" -e "s/^poweroff/reboot/" *-installation.ks
 
   # Fetch the installer image of Fedora 21, can get removed once CentOS 7.1 is released

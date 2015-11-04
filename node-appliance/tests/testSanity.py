@@ -8,8 +8,11 @@ logging.basicConfig(level=logging.DEBUG)
 
 import unittest
 import sh
+import os
 from virt import Image, VM, CloudConfig
 
+NODE_IMG = os.environ.get("TEST_NODE_ROOTFS_IMG",
+                          "ovirt-node-appliance.qcow2")
 
 class MachineTestCase(unittest.TestCase):
     @staticmethod
@@ -32,7 +35,7 @@ class NodeTestCase(MachineTestCase):
     def setUpClass(cls):
         debug("SetUpClass %s" % cls)
         cls.node = cls._start_vm("node-%s" % cls.__name__,
-                                 "ovirt-node-appliance.qcow2",
+                                 NODE_IMG,
                                  "node-test.qcow2", 7001, 77)
 
     @classmethod
@@ -48,33 +51,6 @@ class NodeTestCase(MachineTestCase):
     def tearDown(self):
         debug("Tearing down %s" % self)
         self.snapshot.revert()
-
-
-class IntegrationTestCase(MachineTestCase):
-    @classmethod
-    def setUpClass(cls):
-        print("SetUpClass %s" % cls)
-        cls.node = cls._start_vm("node", "ovirt-node-appliance.qcow2",
-                                 "node-test.qcow2", 420077, 77)
-        cls.engine = cls._start_vm("engine", "ovirt-engine-appliance.qcow2",
-                                   "engine-test.qcow2", 420088, 88)
-
-    @classmethod
-    def tearDownClass(cls):
-        info("Tearing down %s" % cls)
-        cls.node = None
-        cls.engine = None
-
-    def setUp(self):
-        self.node_snapshot = self.node.snapshot()
-        self.node.start()
-
-        self.engine_snapshot = self.engine.snapshot()
-        self.engine.start()
-
-    def tearDown(self):
-        self.node_snapshot.revert()
-        self.engine_snapshot.revert()
 
 
 class TestNodeTestcase(NodeTestCase):
@@ -120,6 +96,38 @@ class TestImgbaseNode(NodeTestCase):
 
     def test_has_layout(self):
         self.node.ssh("imgbase layout")
+
+
+"""
+Preparation for integration testing
+
+ENGINE_IMG = "ovirt-engine-appliance.qcow2"
+class IntegrationTestCase(MachineTestCase):
+    @classmethod
+    def setUpClass(cls):
+        print("SetUpClass %s" % cls)
+        cls.node = cls._start_vm("node", NODE_IMG,
+                                 "node-test.qcow2", 420077, 77)
+        cls.engine = cls._start_vm("engine", ENGINE_IMG,
+                                   "engine-test.qcow2", 420088, 88)
+
+    @classmethod
+    def tearDownClass(cls):
+        info("Tearing down %s" % cls)
+        cls.node = None
+        cls.engine = None
+
+    def setUp(self):
+        self.node_snapshot = self.node.snapshot()
+        self.node.start()
+
+        self.engine_snapshot = self.engine.snapshot()
+        self.engine.start()
+
+    def tearDown(self):
+        self.node_snapshot.revert()
+        self.engine_snapshot.revert()
+"""
 
 
 if __name__ == "__main__":

@@ -8,10 +8,9 @@ image-build: ovirt-node-appliance.qcow2
 
 # Simulates an auto-installation
 image-install: SQUASHFS_URL="@HOST_HTTP@/ovirt-node-appliance.squashfs.img"
-image-install: auto-installation.ks.in
-	[[ -f ovirt-node-appliance.squashfs.img ]]
-	sed -e "s#@SQUASHFS_URL@#$(SQUASHFS_URL)#" auto-installation.ks.in > auto-installation.ks
-	$(MAKE) -f image-tools/build.mk DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( 10 * 1024 )) SPARSE= auto-installation.qcow2
+image-install: ovirt-node-appliance-auto-installation.ks.in ovirt-node-appliance.squashfs.img
+	sed -e "s#@SQUASHFS_URL@#$(SQUASHFS_URL)#" ovirt-node-appliance-auto-installation.ks.in > ovirt-node-appliance-auto-installation.ks
+	$(MAKE) -f image-tools/build.mk DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$$(( 10 * 1024 )) SPARSE= ovirt-node-appliance-auto-installation.qcow2
 	cp -v anaconda.log anaconda-$@.log
 
 verrel:
@@ -21,8 +20,10 @@ verrel:
 export LIBGUESTFS_BACKEND=direct
 # Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
 export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
-check:
-	nosetests -v tests/testImage.py --with-xunit
+export TEST_NODE_ROOTFS_IMG=$(PWD)/ovirt-node-appliance.qcow2
+export TEST_NODE_SQUASHFS_IMG=$(PWD)/ovirt-node-appliance.squashfs.img
+check: ovirt-node-appliance.squashfs.img ovirt-node-appliance.qcow2
+	cd tests && nosetests --with-xunit -v -w .
 
 
 %.qcow2: %.ks
@@ -31,7 +32,7 @@ check:
 	make -f image-tools/build.mk DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) $@
 
 %.squashfs.img: %.qcow2
-	 make -f image-tools/build.mk $@
+	make -f image-tools/build.mk $@
 	unsquashfs -ll $@
 
 %-manifest-rpm: %.qcow2

@@ -25,8 +25,10 @@ def lines(data):
     return [l for l in data.split("\n") if l]
 
 
-squashfsimg = "ovirt-node-appliance.squashfs.img"
-qcowimg = "ovirt-node-appliance.qcow2"
+squashfsimg = os.environ.get("TEST_NODE_SQUASHFS_IMG",
+                             "ovirt-node-appliance.squashfs.img")
+qcowimg = os.environ.get("TEST_NODE_ROOTFS_IMG",
+                         "ovirt-node-appliance.qcow2")
 
 
 class TestRootfsQcow2Image(unittest.TestCase):
