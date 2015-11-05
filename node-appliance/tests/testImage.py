@@ -31,6 +31,7 @@ qcowimg = os.environ.get("TEST_NODE_ROOTFS_IMG",
                          "ovirt-node-appliance.qcow2")
 
 
+@unittest.skipUnless(os.path.exists(qcowimg), "qcow2 is missing")
 class TestRootfsQcow2Image(unittest.TestCase):
     _fish = guestfish.bake("-ia", qcowimg, _ok_code=[0, 1])
     sh = _fish.bake("sh")
@@ -65,6 +66,7 @@ class TestRootfsQcow2Image(unittest.TestCase):
             "To many denials: %s\n%s" % (len(denials), denials)
 
 
+@unittest.skipUnless(os.path.exists(squashfsimg), "squashfs is missing")
 class TestRootfsSquashfsImage(unittest.TestCase):
     dest = None
     img = None
@@ -76,8 +78,9 @@ class TestRootfsSquashfsImage(unittest.TestCase):
     def setUpClass(cls):
         cls.dest = tempfile.mktemp(dir=os.getcwd())
         log("Using dest: %s" % cls.dest)
-        sh.unsquashfs("-li", "-d", cls.dest, squashfsimg)
-        cls.img = "%s/LiveOS/rootfs.img" % cls.dest
+        if os.path.exists(squashfsimg):
+            sh.unsquashfs("-li", "-d", cls.dest, squashfsimg)
+            cls.img = "%s/LiveOS/rootfs.img" % cls.dest
 
     @classmethod
     def tearDownClass(cls):
