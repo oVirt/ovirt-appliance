@@ -166,7 +166,7 @@ class VM():
                               graphics="none",
                               noautoconsole=True,
                               filesystem="%s,HOST,mode=squash" % os.getcwd(),
-                              check="path_in_use=off")
+                              check="all=off")
 
         dom = __hack_dom_pre_creation(str(dom))
 
