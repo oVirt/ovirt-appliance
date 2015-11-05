@@ -24,8 +24,11 @@ def gen_ssh_identity_file():
 
 class MachineTestCase(unittest.TestCase):
     @staticmethod
-    def _start_vm(name, srcimg, tmpimg, ssh_port, ipsuffix):
+    def _start_vm(name, srcimg, tmpimg, magicnumber):
         debug("Strating new VM %s" % name)
+
+        ssh_port = 42000 + int(magicnumber)
+        ipsuffix = magicnumber
 
         img = Image(srcimg).reflink(tmpimg)
         dom = VM.create(name, img, ssh_port=ssh_port)
@@ -47,7 +50,7 @@ class NodeTestCase(MachineTestCase):
     def setUpClass(cls):
         debug("SetUpClass %s" % cls)
         n = "node-%s" % cls.__name__
-        cls.node = cls._start_vm(n, NODE_IMG, n + ".qcow2", 42077, 77)
+        cls.node = cls._start_vm(n, NODE_IMG, n + ".qcow2", 77)
 
     @classmethod
     def tearDownClass(cls):
@@ -115,10 +118,13 @@ class IntegrationTestCase(MachineTestCase):
         print("SetUpClass %s" % cls)
         n = "-%s" % cls.__name__
         cls.node = cls._start_vm("node" + n, NODE_IMG,
-                                 "node-" + n + ".qcow2", 42077, 77)
+                                 "node-" + n + ".qcow2", 77)
         ENGINE_IMG = NODE_IMG
         cls.engine = cls._start_vm("engine" + n, ENGINE_IMG,
-                                   "engine" + n + ".qcow2", 42088, 88)
+                                   "engine" + n + ".qcow2", 88)
+
+        # FIXME
+        # Here we need to do the engine setup
 
     @classmethod
     def tearDownClass(cls):
