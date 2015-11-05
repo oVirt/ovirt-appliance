@@ -4,3 +4,7 @@ python-sh
 glusterfs
 gluster
 squashfs-tools
+libvirt-daemon-qemu
+libvirt-daemon-kvm
+libvirt
+libvirt-client
