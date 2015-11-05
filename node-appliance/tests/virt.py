@@ -36,9 +36,12 @@ def logcall(func):
 
 
 def get_ssh_pubkey():
+    keys = []
     pubkey = os.environ["HOME"] + "/.ssh/id_rsa.pub"
-    with open(pubkey, "rt") as src:
-        return src.read().strip()
+    if os.path.exists(pubkey):
+        with open(pubkey, "rt") as src:
+            keys.append(src.read().strip())
+    return keys
 
 
 class CloudConfig():
@@ -47,7 +50,7 @@ class CloudConfig():
 
     runcmd = None
 
-    ssh_authorized_keys = [get_ssh_pubkey()]
+    ssh_authorized_keys = get_ssh_pubkey()
 
     @property
     def user(self):
@@ -112,6 +115,7 @@ class Image():
 class VM():
     name = None
     _ssh_port = None
+    _ssh_identity_file = os.environ["HOME"] + "/.ssh/id_rsa"
 
     def __del__(self):
         debug("Destroying VM %r" % self.name)
@@ -178,6 +182,7 @@ class VM():
                 "-oStrictHostKeyChecking=no",
                 "-oUserKnownHostsFile=/dev/null",
                 "-oBatchMode=yes",
+                "-oIdentityFile=" + self._ssh_identity_file,
                 "-p%s" % self._ssh_port) + args
         debug("SSHing: %s %s" % (args, kwargs))
         return sh.ssh(*args, **kwargs)

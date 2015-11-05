@@ -2,29 +2,41 @@
 # vim: et ts=4 sw=4 sts=4
 
 import logging
-from logging import debug, info
+from logging import debug
 
 logging.basicConfig(level=logging.DEBUG)
 
 import unittest
 import sh
 import os
+import tempfile
 from virt import Image, VM, CloudConfig
 
 NODE_IMG = os.environ.get("TEST_NODE_ROOTFS_IMG",
                           "ovirt-node-appliance.qcow2")
 
+
+def gen_ssh_identity_file():
+    f = tempfile.mkdtemp("testing-ssh") + "/id_rsa"
+    sh.ssh_keygen(b=2048, t="rsa", f=f, N="", q=True)
+    return f
+
+
 class MachineTestCase(unittest.TestCase):
     @staticmethod
     def _start_vm(name, srcimg, tmpimg, ssh_port, ipsuffix):
         debug("Strating new VM %s" % name)
+
         img = Image(srcimg).reflink(tmpimg)
         dom = VM.create(name, img, ssh_port=ssh_port)
+        dom._ssh_identity_file = gen_ssh_identity_file()
 
         cc = CloudConfig()
         cc.instanceid = name + "-ci"
         cc.password = name
         cc.runcmd = "ip addr add 10.0.2.%s/24 dev eth0" % ipsuffix
+        with open(dom._ssh_identity_file + ".pub", "rt") as src:
+            cc.ssh_authorized_keys = [src.read().strip()]
         dom.set_cloud_config(cc)
 
         return dom

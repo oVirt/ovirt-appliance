@@ -1,4 +1,4 @@
-# FIXME Stick to Fedora until this is solved: http://bugs.centos.org/view.php?id=8239
+
 DISTRO=centos
 RELEASEVER=7
 
@@ -24,7 +24,6 @@ export TEST_NODE_ROOTFS_IMG=$(PWD)/ovirt-node-appliance.qcow2
 export TEST_NODE_SQUASHFS_IMG=$(PWD)/ovirt-node-appliance.squashfs.img
 check: ovirt-node-appliance.squashfs.img ovirt-node-appliance.qcow2
 	cd tests && nosetests --with-xunit -v -w .
-
 
 %.qcow2: %.ks
 # Ensure that the url line contains the distro
