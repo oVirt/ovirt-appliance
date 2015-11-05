@@ -1,5 +1,24 @@
 #!/usr/bin/env python
-# vim: et ts=4 sw=4 sts=4
+# -*- coding: utf-8 -*-
+#
+# Copyright 2015 Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+# Refer to the README and COPYING files for full details of the license
+#
 
 import logging
 from logging import debug
@@ -9,7 +28,7 @@ logging.basicConfig(level=logging.DEBUG)
 import sh
 import os
 import tempfile
-import uuid
+import random
 from contextlib import contextmanager
 import xml.etree.ElementTree as ET
 
@@ -46,8 +65,11 @@ def get_ssh_pubkey():
 
 
 def random_mac():
-    mac = uuid.getnode()
-    return ':'.join(("%012X" % mac)[i:i+2] for i in range(0, 12, 2))
+    mac = [0x00, 0x16, 0x3e,
+           random.randint(0x00, 0x7f),
+           random.randint(0x00, 0xff),
+           random.randint(0x00, 0xff)]
+    return ':'.join(map(lambda x: "%02x" % x, mac))
 
 
 class CloudConfig():
@@ -128,7 +150,7 @@ class VM():
         self.undefine()
 
     @staticmethod
-    def create(name, disk, ssh_port=None):
+    def create(name, disk, ssh_port=None, memory_gb=2):
         def __hack_dom_pre_creation(domxml):
             root = ET.fromstring(domxml)
 
@@ -159,13 +181,17 @@ class VM():
                               name=name,
                               disk=("path=%s,bus=virtio,"
                                     "discard=unmap,cache=unsafe") % disk,
-                              memory=2048, vcpus=4, cpu="host",
+                              memory=int(1024 * int(memory_gb)),
+                              vcpus=4,
+                              cpu="host",
                               network="user,model=virtio",
                               watchdog="default,action=poweroff",
                               serial="pty",
-                              graphics="none",
+                              graphics="none",  # headless
                               noautoconsole=True,
                               filesystem="%s,HOST,mode=squash" % os.getcwd(),
+                              memballoon="virtio",  # To save some host-ram
+                              rng="/dev/random",  # For entropy
                               check="all=off")
 
         dom = __hack_dom_pre_creation(str(dom))
@@ -184,16 +210,20 @@ class VM():
 
     def ssh(self, *args, **kwargs):
         assert self._ssh_port
-        args = ("root@127.0.0.1", "-tt",
+        args = ("root@127.0.0.1",
+                "-oPort=%s" % self._ssh_port,
                 "-oConnectTimeout=30",
                 "-oConnectionAttempts=3",
                 "-oStrictHostKeyChecking=no",
                 "-oUserKnownHostsFile=/dev/null",
                 "-oBatchMode=yes",
+                "-oRequestTTY=force",
                 "-oIdentityFile=" + self._ssh_identity_file,
-                "-p%s" % self._ssh_port) + args
+                ) + args
         debug("SSHing: %s %s" % (args, kwargs))
-        return sh.ssh(*args, **kwargs)
+        data = sh.ssh(*args, **kwargs)
+        debug("stdout: %s" % data)
+        return data
 
     @logcall
     def attach_cdrom(self, iso):
@@ -238,7 +268,11 @@ class VM():
 
     @logcall
     def shutdown(self):
-        sh.virsh("shutdown", self.name)
+        sh.virsh("shutdown", "--mode=acpi", self.name)
+
+    @logcall
+    def reboot(self):
+        sh.virsh("reboot", "--mode=acpi", self.name)
 
     @logcall
     def undefine(self):
@@ -286,6 +320,10 @@ class VM():
         self.fish("write", remote, data)
 
 
+if __name__ == "__main__":
+    unittest.main()
+
+
 def legacy():
     node_img = Image("ovirt-node-appliance.qcow2").reflink("node-test.qcow2")
 
@@ -297,3 +335,5 @@ def legacy():
         node.set_cloud_config(cc)
         node.start()
         print(node.ssh("ping -c1 10.0.2.2"))
+
+# vim: et ts=4 sw=4 sts=4
