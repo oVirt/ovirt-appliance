@@ -237,6 +237,10 @@ class VM():
         sh.virsh("destroy", self.name)
 
     @logcall
+    def shutdown(self):
+        sh.virsh("shutdown", self.name)
+
+    @logcall
     def undefine(self):
         try:
             self.destroy()
@@ -270,6 +274,16 @@ class VM():
                   ":",
                   "write", "%s/meta-data" % noclouddir, cc.meta,
                   )
+
+    def upload(self, local, remote):
+        """Upload a host file to the guest
+        """
+        self.fish("upload", local, remote)
+
+    def post(self, remote, data):
+        """Write data to a guest file
+        """
+        self.fish("write", remote, data)
 
 
 def legacy():
