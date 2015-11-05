@@ -151,6 +151,14 @@ class TestIntegrationTestCase(IntegrationTestCase):
         debug(self.node.ssh("ping -c1 10.11.12.88"))
         debug(self.engine.ssh("ping -c1 10.11.12.77"))
 
+    @unittest.skip("Not implemented")
+    def test_add_host(self):
+        pass
+
+    @unittest.skip("Not implemented")
+    def test_spawn_vm(self):
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()
