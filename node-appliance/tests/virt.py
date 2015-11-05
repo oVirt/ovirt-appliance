@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 import sh
 import os
 import tempfile
+import uuid
 from contextlib import contextmanager
 import xml.etree.ElementTree as ET
 
@@ -42,6 +43,11 @@ def get_ssh_pubkey():
         with open(pubkey, "rt") as src:
             keys.append(src.read().strip())
     return keys
+
+
+def random_mac():
+    mac = uuid.getnode()
+    return ':'.join(("%012X" % mac)[i:i+2] for i in range(0, 12, 2))
 
 
 class CloudConfig():
@@ -137,10 +143,12 @@ class VM():
                  xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0">
                 <qemu:arg value='-redir'/>
                 <qemu:arg value='tcp:{ssh_port}::22'/>
-                <qemu:arg value='-net'/>
-                <qemu:arg value='socket,mcast=230.0.0.1:1234'/>
+                <qemu:arg value='-netdev'/>
+                <qemu:arg value='socket,id=busnet0,mcast=230.0.0.1:1234'/>
+                <qemu:arg value='-device'/>
+                <qemu:arg value='virtio-net-pci,netdev=busnet0,mac={mac}'/>
                 </qemu:commandline>
-                """.format(ssh_port=ssh_port))
+                """.format(ssh_port=ssh_port, mac=random_mac()))
                 root.append(snippet)
 
             return ET.tostring(root)

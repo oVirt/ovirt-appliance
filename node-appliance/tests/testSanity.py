@@ -34,7 +34,7 @@ class MachineTestCase(unittest.TestCase):
         cc = CloudConfig()
         cc.instanceid = name + "-ci"
         cc.password = name
-        cc.runcmd = "ip addr add 10.0.2.%s/24 dev eth0" % ipsuffix
+        cc.runcmd = "ip addr add 10.11.12.%s/24 dev eth1" % ipsuffix
         with open(dom._ssh_identity_file + ".pub", "rt") as src:
             cc.ssh_authorized_keys = [src.read().strip()]
         dom.set_cloud_config(cc)
@@ -46,9 +46,8 @@ class NodeTestCase(MachineTestCase):
     @classmethod
     def setUpClass(cls):
         debug("SetUpClass %s" % cls)
-        cls.node = cls._start_vm("node-%s" % cls.__name__,
-                                 NODE_IMG,
-                                 "node-test.qcow2", 7001, 77)
+        n = "node-%s" % cls.__name__
+        cls.node = cls._start_vm(n, NODE_IMG, n + ".qcow2", 42077, 77)
 
     @classmethod
     def tearDownClass(cls):
@@ -110,36 +109,41 @@ class TestImgbaseNode(NodeTestCase):
         self.node.ssh("imgbase layout")
 
 
-"""
-Preparation for integration testing
-
-ENGINE_IMG = "ovirt-engine-appliance.qcow2"
 class IntegrationTestCase(MachineTestCase):
     @classmethod
     def setUpClass(cls):
         print("SetUpClass %s" % cls)
-        cls.node = cls._start_vm("node", NODE_IMG,
-                                 "node-test.qcow2", 420077, 77)
-        cls.engine = cls._start_vm("engine", ENGINE_IMG,
-                                   "engine-test.qcow2", 420088, 88)
+        n = "-%s" % cls.__name__
+        cls.node = cls._start_vm("node" + n, NODE_IMG,
+                                 "node-" + n + ".qcow2", 42077, 77)
+        ENGINE_IMG = NODE_IMG
+        cls.engine = cls._start_vm("engine" + n, ENGINE_IMG,
+                                   "engine" + n + ".qcow2", 42088, 88)
 
     @classmethod
     def tearDownClass(cls):
-        info("Tearing down %s" % cls)
+        debug("Tearing down %s" % cls)
         cls.node = None
         cls.engine = None
 
     def setUp(self):
         self.node_snapshot = self.node.snapshot()
-        self.node.start()
-
         self.engine_snapshot = self.engine.snapshot()
+        self.node.start()
         self.engine.start()
 
     def tearDown(self):
         self.node_snapshot.revert()
         self.engine_snapshot.revert()
-"""
+
+
+class TestIntegrationTestCase(IntegrationTestCase):
+    def test_intra_network_connectivity(self):
+        debug("Node: %s" % self.node.ssh("ifconfig"))
+        debug("Engine: %s" % self.engine.ssh("ifconfig"))
+
+        debug(self.node.ssh("ping -c1 10.11.12.88"))
+        debug(self.engine.ssh("ping -c1 10.11.12.77"))
 
 
 if __name__ == "__main__":
