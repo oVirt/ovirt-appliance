@@ -64,6 +64,7 @@ class MachineTestCase(unittest.TestCase):
         cc.password = str(magicnumber)
         # cc.runcmd = "ip link set dev eth1 up ; ip addr add {ipaddr}/24 dev eth1".format(ipaddr=ipaddr)
         cc.runcmd = "nmcli con add con-name bus0 ifname eth1 autoconnect yes type ethernet ip4 {ipaddr}/24 ; nmcli con up id bus0".format(ipaddr=ipaddr)
+        cc.runcmd += " ; grep myhostname /etc/nsswitch.conf || sed -i '/hosts:/ s/$/ myhostname/' /etc/nsswitch.conf"
         with open(dom._ssh_identity_file + ".pub", "rt") as src:
             cc.ssh_authorized_keys = [src.read().strip()]
         dom.set_cloud_config(cc)
