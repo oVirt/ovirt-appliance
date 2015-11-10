@@ -278,7 +278,7 @@ class VM():
     def fish(self, *args):
         """Run guestfish on the disk of the VM
         """
-        return sh.guestfish("-v", "-d", self.name, "-i", *args)
+        return sh.guestfish("--network", "-v", "-d", self.name, "-i", *args)
 
     @logcall
     def start(self):

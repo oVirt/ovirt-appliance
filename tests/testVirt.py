@@ -243,6 +243,8 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
 
     @classmethod
     def _node_setup(cls):
+        cls.node.fish("sh", "yum install -y sos cloud-init")
+
         cls.node.start()
 
         debug("Disable firewalld")
@@ -255,8 +257,6 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
         # Bug-Url: https://bugzilla.redhat.com/show_bug.cgi?id=1279555
         cls.node.ssh("sed -i '/fake_kvm_support/ s/false/true/' " +
                      "/usr/lib/python2.7/site-packages/vdsm/config.py")
-
-        cls.node.ssh("yum install -y sos cloud-init")
 
         cls.node.shutdown()
 
