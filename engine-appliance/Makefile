@@ -26,7 +26,7 @@ all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
 
 check: ovirt-engine-appliance-manifest-rpm
-	egrep -q "^ovirt-engine" ovirt-engine-appliance-manifest-rpm || echo "Engine packages are missing"
+	egrep -q "^ovirt-engine" ovirt-engine-appliance-manifest-rpm
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
@@ -62,3 +62,6 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 
 %-manifest-rpm: %.qcow2
 	 make -f image-tools/build.mk $@
+
+clean:
+	-rm -vf ovirt-engine-appliance.ova ovirt-engine-appliance.qcow2 ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance.spec

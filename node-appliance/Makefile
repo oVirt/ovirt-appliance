@@ -41,3 +41,6 @@ check:
 	pyflakes tests/*.py
 	pep8 tests/*.py
 	cd tests && nosetests --with-xunit -v -w .
+
+clean:
+	-rm -vf ovirt-node-appliance.qcow2 ovirt-node-appliance.squashfs.img ovirt-node-appliance-manifest-rpm
