@@ -6,3 +6,7 @@ check:
 	pyflakes *.py
 	pep8 *.py
 	nosetests --with-xunit -v -w .
+
+check-recursive:
+	cd ../node-appliance/ && make check
+	cd ../engine-appliance/ && make check

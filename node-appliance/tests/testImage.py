@@ -20,6 +20,7 @@
 # Refer to the README and COPYING files for full details of the license
 #
 
+from logging import debug
 import unittest
 import sh
 from sh import guestfish
@@ -31,10 +32,6 @@ import re
 
 # Increase the capture length of python-sh to show complete errors
 sh.ErrorReturnCode.truncate_cap = 999999
-
-
-def log(x):
-    print(x)
 
 
 squashfsimg = os.environ.get("TEST_NODE_SQUASHFS_IMG",
@@ -62,7 +59,7 @@ class TestRootfsQcow2Image(unittest.TestCase):
         all_pkgs = dict((name_from_build(b), b) for b in all_builds)
         for rpkg in req_pkgs:
             if rpkg in all_pkgs:
-                log("'%s' is in the image" % all_pkgs[rpkg])
+                debug("'%s' is in the image" % all_pkgs[rpkg])
             else:
                 missing_pkgs.append(rpkg)
 
@@ -95,7 +92,7 @@ class TestRootfsSquashfsImage(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.dest = tempfile.mktemp(dir=os.getcwd())
-        log("Using dest: %s" % cls.dest)
+        debug("Using dest: %s" % cls.dest)
         if os.path.exists(squashfsimg):
             sh.unsquashfs("-li", "-d", cls.dest, squashfsimg)
             cls.img = "%s/LiveOS/rootfs.img" % cls.dest
@@ -103,18 +100,18 @@ class TestRootfsSquashfsImage(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if os.path.exists(cls.dest):
-            log("Removing tree: %s" % cls.dest)
+            debug("Removing tree: %s" % cls.dest)
             assert os.getcwd() in cls.dest
             shutil.rmtree(cls.dest)
 
     def test_one_partition(self):
         """Ensure that the image is really just a filesystem image
 
-        … and not a disk image (image with a partition table).
+        ... and not a disk image (image with a partition table).
         """
         from sh import file as _file
         filetype = _file(self.img)
-        log("Found filetype: %s" % filetype)
+        debug("Found filetype: %s" % filetype)
         assert "filesystem" in filetype
 
     def test_fsck(self):
