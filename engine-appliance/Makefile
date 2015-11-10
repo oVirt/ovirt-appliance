@@ -26,7 +26,7 @@ all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
 
 check: ovirt-engine-appliance-manifest-rpm
-	egrep -q "^ovirt-engine" ovirt-engine-appliance-manifest-rpm
+	egrep "^ovirt-engine" ovirt-engine-appliance-manifest-rpm
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
