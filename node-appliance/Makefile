@@ -22,7 +22,10 @@ export LIBGUESTFS_BACKEND=direct
 export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
 export TEST_NODE_ROOTFS_IMG=$(PWD)/ovirt-node-appliance.qcow2
 export TEST_NODE_SQUASHFS_IMG=$(PWD)/ovirt-node-appliance.squashfs.img
+export TEST_ENGINE_ROOTFS_IMG=$(PWD)/../ovirt-engine-appliance.qcow2
 check: ovirt-node-appliance.squashfs.img ovirt-node-appliance.qcow2
+	pyflakes tests/*.py
+	pep8 tests/*.py
 	cd tests && nosetests --with-xunit -v -w .
 
 %.qcow2: %.ks

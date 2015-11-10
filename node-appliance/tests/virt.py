@@ -20,11 +20,15 @@
 # Refer to the README and COPYING files for full details of the license
 #
 
+"""
+Main features of tehse classes:
+- root less integration testing
+- VM connectivity without bridge
+- cloud-init integration to do IP configuration
+"""
+
 import logging
 from logging import debug
-
-logging.basicConfig(level=logging.DEBUG)
-
 import sh
 import os
 import tempfile
@@ -56,16 +60,9 @@ def logcall(func):
     return logged
 
 
-def get_ssh_pubkey():
-    keys = []
-    pubkey = os.environ["HOME"] + "/.ssh/id_rsa.pub"
-    if os.path.exists(pubkey):
-        with open(pubkey, "rt") as src:
-            keys.append(src.read().strip())
-    return keys
-
-
 def random_mac():
+    """Generate a random mac
+    """
     mac = [0x00, 0x16, 0x3e,
            random.randint(0x00, 0x7f),
            random.randint(0x00, 0xff),
@@ -74,12 +71,14 @@ def random_mac():
 
 
 class CloudConfig():
+    """Convenience class to create cloud-init configuration
+    """
     instanceid = None
     password = None
 
     runcmd = None
 
-    ssh_authorized_keys = get_ssh_pubkey()
+    ssh_authorized_keys = []
 
     @property
     def user(self):
@@ -123,7 +122,12 @@ class CloudConfig():
         return data
 
 
-class Image():
+class DiskImage():
+    """Represents a disk image
+
+    Main reason for this wrapper is access to teh reflink feature
+    and cleaning the image in the end.
+    """
     name = None
 
     def __init__(self, name):
@@ -133,7 +137,7 @@ class Image():
         dst = os.path.abspath(dst)
         sh.qemu_img("create", "-fqcow2", "-o",
                     "backing_file=%s" % self.name, dst)
-        img = Image(dst)
+        img = DiskImage(dst)
         img.__del__ = lambda d=dst: sh.rm("-f", dst)
         return img
 
@@ -142,6 +146,14 @@ class Image():
 
 
 class VM():
+    """Represents a VM instance (root-less)
+    This is quite high-level. Here the VM (machine) can be configured
+    as well as some OS things (using cloud-init).
+    Assuming this machine and OS level confgiuration, this class also
+    offers a few convenience functions (like ssh) based on the assumed
+    configuration of the VM.
+    """
+
     name = None
     _ssh_port = None
     _ssh_identity_file = os.environ["HOME"] + "/.ssh/id_rsa"
@@ -210,6 +222,8 @@ class VM():
         return vm
 
     def ssh(self, *args, **kwargs):
+        """SSH into the host
+        """
         assert self._ssh_port
         args = ("root@127.0.0.1",
                 "-oPort=%s" % self._ssh_port,
@@ -226,11 +240,13 @@ class VM():
         debug("stdout: %s" % data)
         return data
 
-    @logcall
-    def attach_cdrom(self, iso):
-        sh.virsh("attach-disk", self.name, iso, "sd", live=True)
-
     def snapshot(self):
+        """Create a snapshot to revert to
+
+        snap = vm.snapshot()
+        …
+        snap.revert()
+        """
         dom = self
 
         class VMSnapshot():
@@ -239,8 +255,9 @@ class VM():
                 self.sname = str(sh.virsh("snapshot-current", "--name",
                                           dom.name)).strip()
                 debug("Created snap %r of dom %r" % (self.sname, dom.name))
-                # Snapshots just use seconds, sometimes we have more than one snap per
-                # second, thus we add an extra sleep to prevent snap-id collisions
+                # Snapshots just use seconds, sometimes we have more than
+                # one snap per second, thus we add an extra sleep to prevent
+                # snap-id collisions
                 time.sleep(1.2)
 
             def revert(self):
@@ -260,26 +277,42 @@ class VM():
 
     @logcall
     def fish(self, *args):
+        """Run guestfish on the disk of the VM
+        """
         return sh.guestfish("-v", "-d", self.name, "-i", *args)
 
     @logcall
     def start(self):
+        """Start the VM
+        """
         sh.virsh("start", self.name)
 
     @logcall
     def destroy(self):
+        """Forefully shutdown a VM
+        """
         sh.virsh("destroy", self.name)
 
     @logcall
-    def shutdown(self):
+    def shutdown(self, wait=True, timeout=60):
+        """Ask the VM to shutdown (via ACPI)
+
+        Also block until the VM is shutdown
+        """
         sh.virsh("shutdown", "--mode=acpi", self.name)
+        if wait:
+            self.wait_event("lifecycle", timeout=timeout)
 
     @logcall
     def reboot(self):
+        """Ask the VM to reboot (via ACPI)
+        """
         sh.virsh("reboot", "--mode=acpi", self.name)
 
     @logcall
     def undefine(self):
+        """Remove a VM definition and it's snapshots
+        """
         try:
             self.destroy()
         except Exception:
@@ -288,7 +321,9 @@ class VM():
 
     @logcall
     def wait_event(self, evnt=None, timeout=None):
-        """virsh event --help
+        """Wait for a event of a VM
+
+        virsh event --help
         """
         args = ["--event", evnt] if evnt else ["--all"]
         if timeout:
@@ -296,15 +331,21 @@ class VM():
         sh.virsh("event", "--domain", self.name, *args)
 
     def wait_reboot(self, timeout=None):
+        """Wait for the VM to reboot
+        """
         return self.wait_event("reboot", timeout=timeout)
 
     def console(self):
+        """Attach to the VM serial console
+        """
         pty = str(sh.virsh("ttyconsole", self.name)).strip()
         with open(pty, "rb") as src:
             for line in src:
                 yield line
 
     def set_cloud_config(self, cc):
+        """Inject a cloud config into the VM by editing the disk
+        """
         noclouddir = "/var/lib/cloud/seed/nocloud"
         self.fish("sh", "mkdir -p %s" % noclouddir,
                   ":",
@@ -314,30 +355,13 @@ class VM():
                   )
 
     def upload(self, local, remote):
-        """Upload a host file to the guest
+        """Copy a file from the host to the guest
         """
         self.fish("upload", local, remote)
 
     def post(self, remote, data):
-        """Write data to a guest file
+        """Write data to a file inside the guest
         """
         self.fish("write", remote, data)
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-
-def legacy():
-    node_img = Image("ovirt-node-appliance.qcow2").reflink("node-test.qcow2")
-
-    cc = CloudConfig()
-    cc.ssh_authorized_keys = [get_ssh_pubkey()]
-
-    node = VM.create("node", node_img, ssh_port=7777)
-    with node.snapshot():
-        node.set_cloud_config(cc)
-        node.start()
-        print(node.ssh("ping -c1 10.0.2.2"))
 
 # vim: et ts=4 sw=4 sts=4

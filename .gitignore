@@ -18,3 +18,11 @@ maven-eclipse.xml
 *.iml
 .idea
 .pydevproject
+*.pyc
+*.pyo
+*.xml
+*manifest*
+*..swp
+.index
+.treeinfo
+vmlinuz
