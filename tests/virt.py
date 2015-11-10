@@ -27,7 +27,6 @@ Main features of tehse classes:
 - cloud-init integration to do IP configuration
 """
 
-import logging
 from logging import debug
 import sh
 import os
@@ -138,7 +137,7 @@ class DiskImage():
         sh.qemu_img("create", "-fqcow2", "-o",
                     "backing_file=%s" % self.name, dst)
         img = DiskImage(dst)
-        img.__del__ = lambda d=dst: sh.rm("-f", dst)
+        img.__del__ = lambda d=dst: sh.rm("-f", d)
         return img
 
     def __str__(self):

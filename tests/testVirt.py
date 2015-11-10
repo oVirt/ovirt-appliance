@@ -32,7 +32,6 @@ Main advantage of this testcase templates:
 - root less (run as a normal user)!
 """
 
-import logging
 from logging import debug
 import unittest
 import sh

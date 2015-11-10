@@ -16,18 +16,6 @@ image-install: ovirt-node-appliance-auto-installation.ks.in ovirt-node-appliance
 verrel:
 	@bash image-tools/image-verrel rootfs org.ovirt.Node x86_64
 
-# Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
-export LIBGUESTFS_BACKEND=direct
-# Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
-export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
-export TEST_NODE_ROOTFS_IMG=$(PWD)/ovirt-node-appliance.qcow2
-export TEST_NODE_SQUASHFS_IMG=$(PWD)/ovirt-node-appliance.squashfs.img
-export TEST_ENGINE_ROOTFS_IMG=$(PWD)/../ovirt-engine-appliance.qcow2
-check: ovirt-node-appliance.squashfs.img ovirt-node-appliance.qcow2
-	pyflakes tests/*.py
-	pep8 tests/*.py
-	cd tests && nosetests --with-xunit -v -w .
-
 %.qcow2: %.ks
 # Ensure that the url line contains the distro
 	egrep -q "^url .*$(DISTRO)" $<
@@ -39,3 +27,17 @@ check: ovirt-node-appliance.squashfs.img ovirt-node-appliance.qcow2
 
 %-manifest-rpm: %.qcow2
 	 make -f image-tools/build.mk $@
+
+# Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
+export LIBGUESTFS_BACKEND=direct
+# Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
+export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
+export TEST_NODE_ROOTFS_IMG=$(PWD)/ovirt-node-appliance.qcow2
+export TEST_NODE_SQUASHFS_IMG=$(PWD)/ovirt-node-appliance.squashfs.img
+export PYTHONPATH=$(PWD)/../tests/
+# We explicitly set now targets (i.e. qcow2 images) as dependencies
+# building them is up to the user
+check:
+	pyflakes tests/*.py
+	pep8 tests/*.py
+	cd tests && nosetests --with-xunit -v -w .
