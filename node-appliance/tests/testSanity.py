@@ -50,6 +50,9 @@ def gen_ssh_identity_file():
 class MachineTestCase(unittest.TestCase):
     @staticmethod
     def _start_vm(name, srcimg, tmpimg, magicnumber, memory_gb=2):
+        # FIXME We need permissive mode to work correctly
+        assert "Permissive" in sh.getenforce()
+
         debug("Strating new VM %s" % name)
 
         ssh_port = 22000 + int(magicnumber)
@@ -226,6 +229,7 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
         cls.node.ssh("sed -i '/vars/ a fake_kvm_support = true' /etc/vdsm/vdsm.conf")
         # Bug-Url: https://bugzilla.redhat.com/show_bug.cgi?id=1279555
         cls.node.ssh("sed -i '/fake_kvm_support/ s/false/true/' /usr/lib/python2.7/site-packages/vdsm/config.py")
+        cls.node.ssh("yum install -y sos cloud-init")
         cls.node.shutdown()
         cls.node.wait_event("lifecycle")
 
@@ -258,6 +262,7 @@ cert_file = None
         cls.engine.start()
         cls.engine.ssh("sed -i '/^127.0.0.1/ s/$/ engine.example.com/' /etc/hosts")
         cls.engine.ssh("engine-setup --offline --config-append=/root/ovirt-engine-answers")
+        cls.engine.ssh("yum install -y sos")
         cls.engine.shutdown()
         cls.engine.wait_event("lifecycle")
         debug("Installation completed")
