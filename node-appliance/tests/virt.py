@@ -29,6 +29,7 @@ import sh
 import os
 import tempfile
 import random
+import time
 from contextlib import contextmanager
 import xml.etree.ElementTree as ET
 
@@ -238,6 +239,9 @@ class VM():
                 self.sname = str(sh.virsh("snapshot-current", "--name",
                                           dom.name)).strip()
                 debug("Created snap %r of dom %r" % (self.sname, dom.name))
+                # Snapshots just use seconds, sometimes we have more than one snap per
+                # second, thus we add an extra sleep to prevent snap-id collisions
+                time.sleep(1.2)
 
             def revert(self):
                 sh.virsh("snapshot-revert", dom.name, self.sname)
