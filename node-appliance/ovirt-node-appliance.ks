@@ -108,33 +108,6 @@ yum install -y docker docker-io || :
 
 
 #
-# Add cloud-init and saltstack
-#
-%post
-set -x
-yum install -y cloud-init salt-minion
-mkdir -vp /etc/systemd/system/cloud-init.service.d/
-cat > /etc/systemd/system/cloud-init.service.d/10-node.conf <<EOU
-[Unit]
-StandardOutput=journal
-EOU
-
-ln -vs /etc/systemd/system/cloud-init.service.d/ /etc/systemd/system/cloud-config.service.d
-ln -vs /etc/systemd/system/cloud-init.service.d/ /etc/systemd/system/cloud-final.service.d
-ln -vs /etc/systemd/system/cloud-init.service.d/ /etc/systemd/system/cloud-init-local.service.d
-
-mkdir -vp /usr/lib/systemd/system-preset/
-cat > /usr/lib/systemd/system-preset/90-node.preset <<EOP
-# Disable cloud-init by default, can be enabled during installation using service
-disable cloud-config.service
-disable cloud-init.service
-disable cloud-init-local.service
-disable cloud-final.service
-EOP
-%end
-
-
-#
 # Add imgbased
 #
 %post
