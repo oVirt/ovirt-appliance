@@ -49,9 +49,6 @@ vim-minimal
 augeas
 tmux
 
-# Just in case we need it
-initial-setup
-
 # For image based updates
 imgbased
 %end
