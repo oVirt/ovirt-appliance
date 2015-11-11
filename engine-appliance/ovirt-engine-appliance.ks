@@ -29,7 +29,7 @@ repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release
 #
 # Adding upstream oVirt
 #
-%post --erroronfail
+%post
 set -x
 yum install -y "http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm"
 
@@ -80,7 +80,6 @@ __EOF__
 #
 # Enable the guest agent
 #
-yum install -y "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
 yum install -y ovirt-guest-agent-common
 systemctl enable ovirt-guest-agent.service
 %end
