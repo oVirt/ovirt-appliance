@@ -9,6 +9,7 @@ check:
 	pyflakes *.py
 	pep8 *.py
 	nosetests --with-xunit -v --no-byte-compile -w .
+	-xsltproc nosetests.xslt nosetests.xml
 
 build-recursive:
 	cd ../node-appliance/ && make $(NODE_IMG_FILE)
