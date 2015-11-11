@@ -132,12 +132,14 @@ class NodeTestCase(MachineTestCase):
         self.snapshot.revert()
 
 
-class TestNodeTestcase(NodeTestCase):
+class Test_Tier_0_NodeTestcase(NodeTestCase):
     """Class to test that the NodeTestCase class works correctly
 
     To prevent regressions in the lower layer.
     """
     def test_snapshots_work(self):
+        """Check if snapshots are working correct
+        """
         has_kernel = lambda: "kernel" in self.node.ssh("rpm -q kernel")
 
         self.assertTrue(has_kernel())
@@ -150,12 +152,21 @@ class TestNodeTestcase(NodeTestCase):
         self.assertTrue(has_kernel())
 
     def test_ssh_works(self):
+        """Check if basic SSH is working correct
+        """
         self.node.ssh("pwd")
 
+    def test_shutdown_works(self):
+        """Check if host can be shutdown gracefully
+        """
+        self.node.ssh("echo We could log in, the host is up")
+        self.node.shutdown()
+
     def test_reboot_works(self):
-        with self.assertRaises(sh.ErrorReturnCode_255):
-            self.node.ssh("reboot")
-        self.node.wait_reboot(timeout=60)
+        """Check that a host can be rebooted and comes back
+        """
+        self.node.ssh("echo We could log in, the host is up")
+        self.node.reboot()
         self.node.ssh("pwd")
 
 
@@ -359,8 +370,8 @@ cert_file = None
         return reply
 
 
-class TestIntegrationTestCase(IntegrationTestCase):
-    def test_intra_network_connectivity(self):
+class Test_Tier_0_IntegrationTestCase(IntegrationTestCase):
+    def test_tier_1_intra_network_connectivity(self):
         """Check that the basic IP connectivity between VMs is given
         """
         self.node.ssh("ifconfig")
@@ -372,18 +383,18 @@ class TestIntegrationTestCase(IntegrationTestCase):
         self.node.ssh("ping -c10 10.11.12.88")
         self.engine.ssh("ping -c10 10.11.12.77")
 
-    def test_engine_is_up(self):
-        """Check that the engine comes up and provides it's API
-        """
-        self.engine.ssh("curl --fail 127.0.0.1 | grep -i engine")
-        self.engine_shell("ping")
-
-    def test_node_can_reach_engine(self):
+    def test_tier_1_node_can_reach_engine(self):
         """Check if the node can reach the engine
         """
         self.node.ssh("ping -c3 -i3 10.11.12.88")
         self.engine.ssh("ping -c3 -i3 10.11.12.77")
         self.node.ssh("curl --fail 10.11.12.88 | grep -i engine")
+
+    def test_tier_2_engine_is_up(self):
+        """Check that the engine comes up and provides it's API
+        """
+        self.engine.ssh("curl --fail 127.0.0.1 | grep -i engine")
+        self.engine_shell("ping")
 
 
 if __name__ == "__main__":

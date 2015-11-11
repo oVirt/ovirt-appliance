@@ -25,7 +25,7 @@ import unittest
 from testVirt import IntegrationTestCase
 
 
-class TestIntegrationSanity(IntegrationTestCase):
+class Test_Tier_1_IntegrationSanity(IntegrationTestCase):
     """Basic integration testing between Node and Engine
 
     Add a host, add storage, and spawn a disk-less VM.
@@ -33,7 +33,7 @@ class TestIntegrationSanity(IntegrationTestCase):
     Any testcase involving one Node and one Engine should go
     here.
     """
-    def test_add_host(self):
+    def test_tier_1_add_host(self):
         """Create and add a host and wait for it to come up
         """
         nodename = "node-host"
@@ -49,13 +49,13 @@ class TestIntegrationSanity(IntegrationTestCase):
         self.engine_shell_wait(nodename, "list hosts --query 'status=up'")
 
     @unittest.skip("Not implemented")
-    def test_add_storage(self):
+    def test_tier_1_add_storage(self):
         """Create a storage domain on Engine
         """
         pass
 
     @unittest.skip("Not implemented")
-    def test_spawn_vm(self):
+    def test_tier_2_spawn_vm(self):
         """Use create a storage domain and host to spawn a disk-less VM
         """
         self.test_add_host()
