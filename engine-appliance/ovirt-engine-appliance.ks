@@ -16,7 +16,6 @@ part / --size=2048 --grow --fstype=ext4 --fsoptions=discard
 
 %packages --ignoremissing
 cloud-init
-initial-setup
 %end
 
 
