@@ -111,8 +111,10 @@ class NodeTestCase(MachineTestCase):
 
         debug("SetUpClass %s" % cls)
         n = "%s-node" % cls.__name__
-        if os.path.exists(NODE_IMG):
-            cls.node = cls._start_vm(n, NODE_IMG, n + ".qcow2", 77)
+        cls.node = cls._start_vm(n, NODE_IMG, n + ".qcow2", 77)
+
+        debug("Install cloud-init")
+        cls.node.fish("sh", "yum install -y sos cloud-init")
 
     @classmethod
     def tearDownClass(cls):
@@ -243,6 +245,7 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
 
     @classmethod
     def _node_setup(cls):
+        debug("Install cloud-init")
         cls.node.fish("sh", "yum install -y sos cloud-init")
 
         cls.node.start()
