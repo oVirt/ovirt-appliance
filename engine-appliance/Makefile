@@ -26,7 +26,7 @@ all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
 
 %.ks: %.ks.in
-	sed -e "/# Answers/ r ovirt-engine-answers" $<
+	sed -e "/# Answers/ r ovirt-engine-answers" "$<" > "$@"
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
