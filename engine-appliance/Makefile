@@ -25,8 +25,16 @@ PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
 
+# Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
+export LIBGUESTFS_BACKEND=direct
+# Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
+export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
+export TEST_ENGINE_ROOTFS_IMG=$(PWD)/ovirt-engine-appliance.qcow2
 check: ovirt-engine-appliance-manifest-rpm
-	egrep "^ovirt-engine" ovirt-engine-appliance-manifest-rpm
+	pyflakes tests/*.py
+	pep8 tests/*.py
+	cd tests && nosetests --with-xunit -v -w .
+
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
