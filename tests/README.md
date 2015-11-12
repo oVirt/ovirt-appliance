@@ -23,7 +23,11 @@ To test:
         squashfs-tools \
         python-nose \
         python-pep8 \
-        pyflakes
+        pyflakes \
+        libselinux-utils
+    
+    # Permissive mode is required for now
+    setenforce 0
     
     # Checkout the repository
     git clone https://gerrit.ovirt.org/p/ovirt-appliance.git
