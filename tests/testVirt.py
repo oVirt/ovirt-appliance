@@ -268,9 +268,6 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
 
         cls.node.start()
 
-        debug("Disable firewalld")
-        cls.node.ssh("systemctl disable firewalld.service")
-
         debug("Enable fake qemu support")
         cls.node.ssh("yum install -y vdsm-hook-faqemu")
         cls.node.ssh("sed -i '/vars/ a fake_kvm_support = true' "
