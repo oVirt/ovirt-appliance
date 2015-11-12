@@ -41,12 +41,6 @@ import xml.etree.ElementTree as ET
 sh.ErrorReturnCode.truncate_cap = 999999
 
 
-def lines(data):
-    """This method is not suited for big data
-    """
-    return [l for l in data.split("\n") if l]
-
-
 squashfsimg = "ovirt-node-appliance.squashfs.img"
 qcowimg = "ovirt-node-appliance.qcow2"
 
