@@ -87,6 +87,10 @@ yum install --nogpgcheck -y cockpit
 #
 %post --erroronfail
 set -x
+
+# Bug-Url: https://bugzilla.redhat.com/show_bug.cgi?id=995362
+yum remove -y firewalld
+
 yum install -y http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release36.rpm
 yum install --nogpgcheck -y vdsm
 yum install --nogpgcheck -y vdsm-cli ovirt-engine-cli
