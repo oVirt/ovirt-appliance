@@ -286,6 +286,7 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
         cls.node.ssh("yum install -y vdsm-hook-faqemu")
         cls.node.ssh("sed -i '/vars/ a fake_kvm_support = true' "
                      "/etc/vdsm/vdsm.conf")
+
         # Bug-Url: https://bugzilla.redhat.com/show_bug.cgi?id=1279555
         cls.node.ssh("sed -i '/fake_kvm_support/ s/false/true/' " +
                      "/usr/lib/python2.7/site-packages/vdsm/config.py")
@@ -372,19 +373,21 @@ cert_file = None
 
         return oshell(cmd)
 
-    def engine_shell_wait(self, needle, cmd, tries=60):
+    def engine_shell_wait(self, needle, cmd, tries=60, final_cmd="ping"):
         """Wait for a needle to turn up in an ovirt-shell command reply
         """
         while tries >= 0:
             debug("Waiting for %r in engine change: %s" % (needle, cmd))
             tries -= 1
             if tries == 0:
+                debug(self.engine_shell(final_cmd))
                 raise TimedoutError()
             reply = self.engine_shell(cmd)
             if needle in reply:
                 break
             else:
                 time.sleep(1)
+        debug(self.engine_shell(final_cmd))
         return reply
 
 

@@ -46,7 +46,8 @@ class Test_Tier_1_IntegrationSanity(IntegrationTestCase):
         self.assertTrue(nodename in self.engine_shell("list hosts"))
 
         debug("Check that the host is getting up")
-        self.engine_shell_wait(nodename, "list hosts --query 'status=up'")
+        self.engine_shell_wait(nodename, "list hosts --query 'status=up'",
+                               final_cmd="list hosts --show-all")
 
     @unittest.skip("Not implemented")
     def test_tier_1_add_storage(self):
