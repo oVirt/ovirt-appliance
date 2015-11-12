@@ -31,6 +31,7 @@ To test:
     
     # Checkout the repository
     git clone https://gerrit.ovirt.org/p/ovirt-appliance.git
+    cd ovirt-appliance
     git submodule update --init
     cd tests
     
