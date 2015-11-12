@@ -109,12 +109,15 @@ class NodeTestCase(MachineTestCase):
         if not os.path.exists(NODE_IMG):
             return
 
-        debug("SetUpClass %s" % cls)
-        n = "%s-node" % cls.__name__
-        cls.node = cls._start_vm(n, NODE_IMG, n + ".qcow2", 77)
+        try:
+            n = "%s-node" % cls.__name__
+            cls.node = cls._start_vm(n, NODE_IMG, n + ".qcow2", 77)
 
-        debug("Install cloud-init")
-        cls.node.fish("sh", "yum install -y sos cloud-init")
+            debug("Install cloud-init")
+            cls.node.fish("sh", "yum install -y sos cloud-init")
+        except:
+            cls.node.undefine()
+            raise
 
     @classmethod
     def tearDownClass(cls):
@@ -232,21 +235,25 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
         if not os.path.exists(ENGINE_IMG):
             return
 
-        debug("SetUpClass %s" % cls)
-        n = "%s-" % cls.__name__
-        cls.node = cls._start_vm(n + "node", NODE_IMG,
-                                 n + "node.qcow2", 77)
-        cls.engine = cls._start_vm(n + "engine", ENGINE_IMG,
-                                   n + "engine.qcow2", 88,
-                                   memory_gb=4)
+        try:
+            n = "%s-" % cls.__name__
+            cls.node = cls._start_vm(n + "node", NODE_IMG,
+                                     n + "node.qcow2", 77)
+            cls.engine = cls._start_vm(n + "engine", ENGINE_IMG,
+                                       n + "engine.qcow2", 88,
+                                       memory_gb=4)
 
-        #
-        # Do the engine setup
-        # This assumes that the engine was tested already and
-        # this could probably be pulled in a separate testcase
-        #
-        cls._node_setup()
-        cls._engine_setup()
+            #
+            # Do the engine setup
+            # This assumes that the engine was tested already and
+            # this could probably be pulled in a separate testcase
+            #
+            cls._node_setup()
+            cls._engine_setup()
+        except:
+            cls.node.undefine()
+            cls.engine.undefine()
+            raise
 
     @classmethod
     def tearDownClass(cls):
