@@ -104,6 +104,8 @@ class NodeTestCase(MachineTestCase):
     Mainly this set's up a VM based on the Node appliance image
     and ensures that each testcase runs in a fresh snapshot.
     """
+    node = None
+
     @classmethod
     def setUpClass(cls):
         if not os.path.exists(NODE_IMG):
@@ -116,13 +118,15 @@ class NodeTestCase(MachineTestCase):
             debug("Install cloud-init")
             cls.node.fish("sh", "yum install -y sos cloud-init")
         except:
-            cls.node.undefine()
+            if cls.node:
+                cls.node.undefine()
+
             raise
 
     @classmethod
     def tearDownClass(cls):
         debug("Tearing down %s" % cls)
-        if os.path.exists(NODE_IMG):
+        if cls.node:
             cls.node.undefine()
 
     def setUp(self):
@@ -176,6 +180,9 @@ class Test_Tier_0_NodeTestcase(NodeTestCase):
 @unittest.skipUnless(os.path.exists(NODE_IMG), "Node image is missing")
 @unittest.skipUnless(os.path.exists(ENGINE_IMG), "Engine image is missing")
 class IntegrationTestCase(MachineTestCase):
+    node = None
+    engine = None
+
     # FIXME reduce the number of answers to the minimum
     ENGINE_ANSWERS = """
 # For 3.6
@@ -251,15 +258,22 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
             cls._node_setup()
             cls._engine_setup()
         except:
-            cls.node.undefine()
-            cls.engine.undefine()
+            if cls.node:
+                cls.node.undefine()
+
+            if cls.engine:
+                cls.engine.undefine()
+
             raise
 
     @classmethod
     def tearDownClass(cls):
         debug("Tearing down %s" % cls)
-        cls.node = None
-        cls.engine = None
+        if cls.node:
+            cls.node.undefine()
+
+        if cls.engine:
+            cls.engine.undefine()
 
     @classmethod
     def _node_setup(cls):

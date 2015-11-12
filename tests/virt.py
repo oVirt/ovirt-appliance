@@ -122,20 +122,30 @@ class DiskImage():
     and cleaning the image in the end.
     """
     name = None
+    refcount = False
 
     def __init__(self, name):
         self.name = name
 
-    def reflink(self, dst):
+    def reflink(self, dst, refcount=True):
         dst = os.path.abspath(dst)
         sh.qemu_img("create", "-fqcow2", "-o",
                     "backing_file=%s" % self.name, dst)
         img = DiskImage(dst)
-        img.__del__ = lambda d=dst: sh.rm("-f", d)
+        img.refcount = refcount
         return img
+
+    def unlink(self):
+        debug("Unlinking %r" % self.name)
 
     def __str__(self):
         return self.name
+
+    def __del__(self):
+        # The actual refcounting is done by python for us
+        # we just take care that the file is getting removed
+        if self.refcount:
+            debug(sh.rm("-vf", self.name))
 
 
 class VM():
@@ -148,6 +158,7 @@ class VM():
     """
 
     name = None
+    disk = None
     _ssh_port = None
     _ssh_identity_file = os.environ["HOME"] + "/.ssh/id_rsa"
 
