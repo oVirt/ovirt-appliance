@@ -10,7 +10,7 @@ kept in the respective appliance specific test directories.
 To test:
 
     # Install dependencies
-    yum install -y \
+    sudo yum install -y \
         libvirt-daemon \
         libvirt-client \
         libvirt-daemon-qemu \
@@ -24,6 +24,8 @@ To test:
         python-nose \
         python-pep8 \
         pyflakes
+    
+    git submodule update --init
     
     make clean-build-and-check
 
