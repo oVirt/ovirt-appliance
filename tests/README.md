@@ -25,8 +25,12 @@ To test:
         python-pep8 \
         pyflakes
     
+    # Checkout the repository
+    git clone https://gerrit.ovirt.org/p/ovirt-appliance.git
     git submodule update --init
+    cd tests
     
+    # The build and testing itself
     make clean-build-and-check
 
 This will take a long time, because it will build the Engine and Node
