@@ -1,0 +1,1 @@
+- Make setups testcases themselfs (draft: COmplete step in testcase, then do a new self.take_snapshot(), subsequent testcases should start form that snapshot, requires strict testcase naming)

@@ -22,7 +22,8 @@ Results for <xsl:value-of select="@name"/>
         <xsl:for-each select="testcase">
 ----
 Class: <xsl:value-of select="@classname"/>
-Name: <xsl:value-of select="@name"/> <xsl:value-of select="@time"/>
+Name: <xsl:value-of select="@name"/>
+Runtime: <xsl:value-of select="@time"/>
 <xsl:choose>
 <xsl:when test="not(*)">
 PASSED

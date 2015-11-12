@@ -11,8 +11,8 @@ export TEST_NODE_ROOTFS_IMG=$(PWD)/../node-appliance/$(NODE_IMG_FILE)
 export TEST_ENGINE_ROOTFS_IMG=$(PWD)/../engine-appliance/$(ENGINE_IMG_FILE)
 
 check:
-	pyflakes *.py
-	pep8 *.py
+	@pyflakes *.py
+	@pep8 *.py
 	nosetests --with-xunit -v --no-byte-compile -w .
 	-xsltproc nosetests.xslt nosetests.xml
 

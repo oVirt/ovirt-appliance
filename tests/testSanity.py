@@ -57,7 +57,7 @@ class Test_Tier_1_IntegrationSanity(IntegrationTestCase):
 
     @unittest.skip("Not implemented")
     def test_tier_2_spawn_vm(self):
-        """Use create a storage domain and host to spawn a disk-less VM
+        """Use a storage domain and host to spawn a disk-less VM
         """
         self.test_add_host()
         self.test_add_storage()
