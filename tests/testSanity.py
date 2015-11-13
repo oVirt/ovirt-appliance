@@ -39,7 +39,9 @@ class Test_Tier_1_IntegrationSanity(IntegrationTestCase):
         nodename = "node-host"
 
         self.engine_shell(("add host --name {nodename} --address 10.11.12.77 "
-                           "--root_password 77 --cluster-name Default"
+                           "--root_password 77 "
+                           "--override_iptables true "
+                           "--cluster-name Default"
                            ).format(nodename=nodename))
 
         debug("Check that the host is now recognized")
