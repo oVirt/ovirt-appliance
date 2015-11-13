@@ -67,7 +67,10 @@ class MachineTestCase(unittest.TestCase):
     @staticmethod
     def _start_vm(name, srcimg, tmpimg, magicnumber, memory_gb=2):
         # FIXME We need permissive mode to work correctly
-        assert "Permissive" in sh.getenforce()
+        SELINUX_ENFORCEMENT_FILE = "/sys/fs/selinux/enforce"
+        if os.path.exists(SELINUX_ENFORCEMENT_FILE):
+            with open(SELINUX_ENFORCEMENT_FILE, "rt") as src:
+                assert "0" == src.read().strip()
 
         debug("Strating new VM %s" % name)
 
