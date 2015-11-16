@@ -47,6 +47,8 @@ NODE_IMG = os.environ.get("TEST_NODE_ROOTFS_IMG",
 ENGINE_IMG = os.environ.get("TEST_ENGINE_ROOTFS_IMG",
                             "ovirt-engine-appliance.qcow2")
 
+KEEP_TEST_ENV = bool(os.environ.get("TEST_KEEP_TEST_ENV"))
+
 
 class TimedoutError(Exception):
     pass
@@ -128,6 +130,9 @@ class NodeTestCase(MachineTestCase):
 
     @classmethod
     def tearDownClass(cls):
+        if KEEP_TEST_ENV:
+            return
+
         debug("Tearing down %s" % cls)
         if cls.node:
             cls.node.undefine()
@@ -138,6 +143,13 @@ class NodeTestCase(MachineTestCase):
         self.node.start()
 
     def tearDown(self):
+        if self._resultForDoCleanups.failures:
+            pass
+            # FIXME rescue sos logs
+
+        if KEEP_TEST_ENV:
+            return
+
         debug("Tearing down %s" % self)
         self.snapshot.revert()
 
@@ -271,6 +283,9 @@ OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyPort=int:2222
 
     @classmethod
     def tearDownClass(cls):
+        if KEEP_TEST_ENV:
+            return
+
         debug("Tearing down %s" % cls)
         if cls.node:
             cls.node.undefine()
@@ -349,6 +364,9 @@ cert_file = None
         self.engine.start()
 
     def tearDown(self):
+        if KEEP_TEST_ENV:
+            return
+
         self.node_snapshot.revert()
         self.engine_snapshot.revert()
 

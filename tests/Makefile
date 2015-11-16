@@ -13,7 +13,7 @@ export TEST_ENGINE_ROOTFS_IMG=$(PWD)/../engine-appliance/$(ENGINE_IMG_FILE)
 check:
 	@pyflakes *.py
 	@pep8 *.py
-	nosetests --with-xunit -v --no-byte-compile -w .
+	nosetests --with-xunit -v --no-byte-compile
 	-xsltproc nosetests.xslt nosetests.xml
 
 install-deps:
