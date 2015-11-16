@@ -192,31 +192,38 @@ class VM():
 
             return ET.tostring(root)
 
-        define = sh.virsh.bake("define")
-        dom = sh.virt_install("--import",
-                              "--print-xml",
-                              name=name,
-                              disk=("path=%s,bus=virtio,"
-                                    "discard=unmap,cache=unsafe") % disk,
-                              memory=int(1024 * int(memory_gb)),
-                              vcpus=4,
-                              cpu="host",
-                              network="user,model=virtio",
-                              watchdog="default,action=poweroff",
-                              serial="pty",
-                              graphics="none",  # headless
-                              noautoconsole=True,
-                              filesystem="%s,HOST,mode=squash" % os.getcwd(),
-                              memballoon="virtio",  # To save some host-ram
-                              rng="/dev/random",  # For entropy
-                              check="all=off")
+        args = ("--import",
+                "--print-xml"
+                )
+
+        kwargs = {"name": name,
+                  "disk": ("path=%s,bus=virtio,"
+                           "discard=unmap,cache=unsafe") % disk,
+                  "memory": int(1024 * int(memory_gb)),
+                  "vcpus": 4,
+                  "cpu": "host",
+                  "network": "user,model=virtio",
+                  "watchdog": "default,action=poweroff",
+                  "serial": "pty",
+                  "graphics": "none",  # headless
+                  "noautoconsole": True,
+                  "filesystem": "%s,HOST,mode=squash" % os.getcwd(),
+                  "memballoon": "virtio",  # To save some host-ram
+                  "rng": "/dev/random",  # For entropy
+                  }
+
+        # FIXME Remove the conditiong once there are F22+ builders
+        if "--check" in sh.virt_install("--help"):
+            kwargs["check"] = "all=off"
+
+        dom = sh.virt_install(*args, **kwargs)
 
         dom = __hack_dom_pre_creation(str(dom))
 
         with tempfile.NamedTemporaryFile() as tmpfile:
             tmpfile.write(str(dom))
             tmpfile.flush()
-            define(tmpfile.name)
+            sh.virsh.define(tmpfile.name)
 
         vm = VM()
         vm.name = name
