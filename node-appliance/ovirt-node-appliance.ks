@@ -1,7 +1,7 @@
 #
 # Platform repositories
 #
-url --mirrorlist=http://mirrorlist.centos.org/?repo=os&release=$releasever&arch=$basearch
+url --url=http://mirror.centos.org/centos/7/os/x86_64/
 repo --name=updates --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
 repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
 

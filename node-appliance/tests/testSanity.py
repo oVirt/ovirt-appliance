@@ -53,6 +53,8 @@ class TestImgbaseNode(NodeTestCase):
         The layout should have been created as part of the install process.
         """
         self.node.ssh("imgbase layout")
+        import time
+        time.sleep(1000000)
 
 
 if __name__ == "__main__":
