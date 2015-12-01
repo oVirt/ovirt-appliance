@@ -13,6 +13,7 @@ repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release
 lang en_US.UTF-8
 keyboard us
 timezone --utc Etc/UTC
+network
 auth --enableshadow --passalgo=sha512
 selinux --permissive
 rootpw --lock
