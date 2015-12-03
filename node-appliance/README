@@ -16,6 +16,7 @@ These few steps help you to get your hands onto Node.
 To get started with Node, you first need to clone the appliance and build it:
 
     git clone git://gerrit.ovirt.org/ovirt-appliance.git
+    cd ovirt-appliance
     git submodule update --init --recursive
     
     cd node-appliance
