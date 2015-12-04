@@ -36,9 +36,9 @@ check: ovirt-engine-appliance-manifest-rpm
 	$(SUDO) $(PYTHON) scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
 	ls -shal $@
 
-ovirt-engine-appliance.spec: VERSION=$(shell date +%Y%m%d)
-ovirt-engine-appliance.spec: VERSION_EXTRA=.0
-ovirt-engine-appliance.spec: RELEASE=1
+ovirt-engine-appliance.spec: VERSION=3.6
+ovirt-engine-appliance.spec: VERSION_EXTRA=
+ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d).1
 ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
 ovirt-engine-appliance.spec: ovirt-engine-appliance.spec.in
 	sed \
