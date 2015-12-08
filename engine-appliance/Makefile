@@ -25,8 +25,8 @@ PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
 
-%.ks: %.ks.in
-	sed -e "/# Answers/ r ovirt-engine-answers" "$<" > "$@"
+%.ks: data/%.ks.in
+	sed -e "/# Answers/ r data/ovirt-engine-answers" "$<" > "$@"
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
@@ -40,7 +40,7 @@ ovirt-engine-appliance.spec: VERSION=4.0
 ovirt-engine-appliance.spec: VERSION_EXTRA=
 ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d).1
 ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
-ovirt-engine-appliance.spec: ovirt-engine-appliance.spec.in
+ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
 	sed \
 	  -e "s/@VERSION@/$(VERSION)$(VERSION_EXTRA)/" \
 	  -e "s/@RELEASE@/$(RELEASE)/" \
