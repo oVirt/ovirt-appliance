@@ -69,8 +69,8 @@ export LIBGUESTFS_BACKEND=direct
 export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
 export TEST_ENGINE_ROOTFS_IMG=$(PWD)/ovirt-engine-appliance.qcow2
 check: ovirt-engine-appliance-manifest-rpm
-	pyflakes tests/*.py
-	pep8 tests/*.py
+	-pyflakes tests/*.py
+	-pep8 tests/*.py
 	cd tests && nosetests --with-xunit -v -w .
 
 clean:

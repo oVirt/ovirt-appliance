@@ -15,3 +15,5 @@ glusterfs
 gluster
 squashfs-tools
 oz
+pyflakes
+python-pep8
