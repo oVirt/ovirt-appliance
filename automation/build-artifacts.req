@@ -17,3 +17,4 @@ squashfs-tools
 oz
 pyflakes
 python-pep8
+python-nose
