@@ -84,4 +84,6 @@ __EOF__
 yum install -y "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
 yum install -y ovirt-guest-agent-common
 systemctl enable ovirt-guest-agent.service
+
+rm -vf /etc/sysconfig/network-scripts/ifcfg-e*
 %end
