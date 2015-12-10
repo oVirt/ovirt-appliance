@@ -34,8 +34,8 @@ pushd engine-appliance
  # Do some sanity checks
  make check
 
- [[ -f ovirt-engine-appliance.ova ]] && mv -v ovirt-engine-appliance.ova "$ARTIFACTSDIR"/"${OVANAME}.ova"
- [[ -f ovirt-engine-appliance.qcow2 ]] && mv -v ovirt-engine-appliance.qcow2 "$ARTIFACTSDIR"/
+ [[ -f ovirt-engine-appliance.ova ]] && ln -v ovirt-engine-appliance.ova "$ARTIFACTSDIR"/"${OVANAME}.ova"
+ [[ -f ovirt-engine-appliance.qcow2 ]] && ln -v ovirt-engine-appliance.qcow2 "$ARTIFACTSDIR"/
  mv -v \
    anaconda.log \
    "$ARTIFACTSDIR/"
