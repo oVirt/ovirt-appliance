@@ -26,6 +26,7 @@ pushd engine-appliance
  export PATH=$PATH:/sbin:/usr/sbin
  export TMPDIR=/var/tmp/
 
+ mkdir "$ARTIFACTSDIR"
 
  # Create the OVA
  make
@@ -33,16 +34,15 @@ pushd engine-appliance
  # Do some sanity checks
  make check
 
- # Finally, create the rpm
- make ovirt-engine-appliance.rpm
-
- # Now rescue artifacts
- mkdir "$ARTIFACTSDIR"
  [[ -f ovirt-engine-appliance.ova ]] && mv -v ovirt-engine-appliance.ova "$ARTIFACTSDIR"/"${OVANAME}.ova"
- [[ -f ovirt-engine-appliance.qcow2 ]] && mv -v ovirt-engine-appliance.qco2 "$ARTIFACTSDIR"/
+ [[ -f ovirt-engine-appliance.qcow2 ]] && mv -v ovirt-engine-appliance.qcow2 "$ARTIFACTSDIR"/
  mv -v \
    anaconda.log \
    "$ARTIFACTSDIR/"
+
+ # Finally, create the rpm
+ make ovirt-engine-appliance.rpm
+
  mv -v \
    "$HOME"/rpmbuild/RPMS/*/*.rpm \
    "$HOME"/rpmbuild/SRPMS/*.rpm \
