@@ -14,11 +14,12 @@ usage() {
 OVA=$(realpath $1)
 shift
 
-TMPDIR=$(mktemp -d -p $PWD --suffix "-ova.d")
 NEWOVA=${OVA%.ova}-$(date +%Y%m%d%H%M%S).ova
+TMPDIR=${NEWOVA}.d
 
 ( # Try
   set -e
+  mkdir "$TMPDIR"
   cd "$TMPDIR"
   info "Extracting OVA '$OVA' to '$TMPDIR' (this can take a while)"
   tar xf "$OVA"
@@ -31,6 +32,8 @@ NEWOVA=${OVA%.ova}-$(date +%Y%m%d%H%M%S).ova
 )
 test $? -gt 0 && { # Except
   err "Something failed"
+  err "Note: You can workaround bug https://bugzilla.redhat.com/1271183"
+  err "      by using: export LIBGUESTFS_BACKEND=direct"
   err "Temporary files: $TMPDIR"
   err "New OVA: $NEWOVA"
   exit 1
