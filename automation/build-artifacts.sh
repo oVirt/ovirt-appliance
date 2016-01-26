@@ -1,5 +1,7 @@
 #!/bin/bash -xe
 
+set -e
+
 df -h || :
 
 export ARTIFACTSDIR=$PWD/exported-artifacts
