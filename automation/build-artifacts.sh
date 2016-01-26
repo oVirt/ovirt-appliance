@@ -27,7 +27,7 @@ export QEMU_APPEND="ip=dhcp proxy="
 df -h || :
 
 bash -xe ci/build.sh
-bash -xe ci/check.sh
+#bash -xe ci/check.sh
 
 rm -f *.qcow2 || :
 
