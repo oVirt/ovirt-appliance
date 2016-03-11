@@ -17,6 +17,8 @@ ARCH=x86_64
 DISTRO=centos
 RELEASEVER=7
 
+OVIRTRELEASERPM=http://plain.resources.ovirt.org/pub/ovirt-master-snapshot/rpm/el7/noarch/ovirt-release-master.rpm
+
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
 .SECONDARY:
@@ -26,7 +28,10 @@ all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
 
 %.ks: data/%.ks.in
-	sed -e "/# Answers/ r data/ovirt-engine-answers" "$<" > "$@"
+	sed \
+	 -e "/# Answers/ r data/ovirt-engine-answers" \
+	 -e "s|@OVIRTRELEASERPM@|$(OVIRTRELEASERPM)|" \
+	 "$<" > "$@"
 
 %.qcow2: %.ks
 	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
