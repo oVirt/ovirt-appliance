@@ -29,11 +29,12 @@ df -h || :
 bash -xe ci/build.sh
 #bash -xe ci/check.sh
 
-rm -f *.qcow2 || :
+#rm -f *.qcow2 || :
 
 mkdir "$ARTIFACTSDIR"
 
 [[ -f ovirt-engine-appliance.ova ]] && mv -v ovirt-engine-appliance.ova "$ARTIFACTSDIR"/"${OVANAME}.ova"
+[[ -f ovirt-engine-appliance.qcow2 ]] && mv -v ovirt-engine-appliance.qcow2 "$ARTIFACTSDIR"
 mv -v \
   anaconda.log \
   "$ARTIFACTSDIR/"
