@@ -8,7 +8,7 @@ export ARTIFACTSDIR=$PWD/exported-artifacts
 git submodule update --init --recursive --force
 
 #patch to avoid kvm staff we are in mock
-#sed -i '/-enable-kvm/d' engine-appliance/image-tools/anaconda_install
+sed -i '/-enable-kvm/d' engine-appliance/image-tools/anaconda_install
 # Enter the Engine Appliance
 pushd engine-appliance
 
