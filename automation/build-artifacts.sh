@@ -1,15 +1,14 @@
 #!/bin/bash -xe
-
-set -e
+echo "build-artifacts.sh"
 
 df -h || :
-
+#this scripts build ovirt-node and ovirt-node-is projects
+mknod /dev/kvm c 10 232
+export PATH=$PATH:/usr/libexec
 export ARTIFACTSDIR=$PWD/exported-artifacts
 #export http_proxy=proxy.phx.ovirt.org:3128
 
 git submodule update --init --recursive --force
-#patch to avoid kvm staff we are in mock
-sed -i '/-enable-kvm/d' engine-appliance/image-tools/anaconda_install
 
 # Enter the Engine Appliance
 pushd engine-appliance
