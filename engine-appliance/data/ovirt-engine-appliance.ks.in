@@ -36,7 +36,9 @@ yum install -y @OVIRTRELEASERPM@
 # Use baseurl instead of repo to ensure we use the latest rpms
 sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" /etc/yum.repos.d/ovirt*.repo
 
-yum install -y ovirt-engine
+yum install -y \
+	ovirt-engine \
+	ovirt-engine-dwh
 
 #
 echo "Creating a partial answer file"
