@@ -17,7 +17,7 @@ ARCH=x86_64
 DISTRO=centos
 RELEASEVER=7
 
-OVIRTRELEASERPM=http://plain.resources.ovirt.org/pub/ovirt-4.0_prealpha-latest/rpm/el7/noarch/ovirt-release40.rpm
+OVIRTRELEASERPM=http://plain.resources.ovirt.org/pub/ovirt-4.0-pre/rpm/el7/noarch/ovirt-release40-pre.rpm
 
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
