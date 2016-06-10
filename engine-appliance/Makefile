@@ -7,6 +7,9 @@
 # 4. sysprep, sparsify and comvert runtime image to ova
 #
 
+#
+# OVA specific vars
+# #
 # This size must be full GB, in MB
 VM_DISK ?= $(shell expr 10 \* 1024)
 
@@ -17,7 +20,14 @@ ARCH=x86_64
 DISTRO=centos
 RELEASEVER=7
 
+#
+# oVirt specific vars
+#
 OVIRTRELEASERPM=http://plain.resources.ovirt.org/pub/ovirt-master-snapshot/rpm/el7/noarch/ovirt-release-master.rpm
+ovirt-engine-appliance.spec: VERSION=4.1
+ovirt-engine-appliance.spec: VERSION_EXTRA=
+ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d).1
+ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
 
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
@@ -41,10 +51,6 @@ all: ovirt-engine-appliance.ova
 	$(SUDO) $(PYTHON) scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
 	ls -shal $@
 
-ovirt-engine-appliance.spec: VERSION=4.0
-ovirt-engine-appliance.spec: VERSION_EXTRA=
-ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d).1
-ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
 ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
 	sed \
 	  -e "s/@VERSION@/$(VERSION)$(VERSION_EXTRA)/" \
