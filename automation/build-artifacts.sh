@@ -33,10 +33,12 @@ pushd engine-appliance
  make
 
  # Do some sanity checks
- make check || :
+ make check
 
  [[ -f ovirt-engine-appliance.ova ]] && ln -v ovirt-engine-appliance.ova "$ARTIFACTSDIR"/"${OVANAME}.ova"
  [[ -f ovirt-engine-appliance.qcow2 ]] && ln -v ovirt-engine-appliance.qcow2 "$ARTIFACTSDIR"/
+ [[ -f ovirt-engine-appliance-manifest-rpm ]] && ln -v ovirt-engine-appliance-manifest-rpm "$ARTIFACTSDIR"/
+
  mv -v \
    anaconda.log \
    "$ARTIFACTSDIR/"
