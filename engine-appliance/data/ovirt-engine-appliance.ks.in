@@ -29,7 +29,7 @@ repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release
 #
 # Adding upstream oVirt
 #
-%post
+%post --erroronfail
 set -x
 yum install -y @OVIRTRELEASERPM@
 
