@@ -76,6 +76,8 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 
 # Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
 export LIBGUESTFS_BACKEND=direct
+# Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
+export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
 export TEST_ENGINE_ROOTFS_IMG=$(PWD)/ovirt-engine-appliance.qcow2
 check: ovirt-engine-appliance-manifest-rpm
 	grep ovirt-engine ovirt-engine-appliance-manifest-rpm
