@@ -8,7 +8,7 @@ export PATH=$PATH:/usr/libexec
 export ARTIFACTSDIR=$PWD/exported-artifacts
 #export http_proxy=proxy.phx.ovirt.org:3128
 
-git submodule update --init --recursive --force
+git submodule update --init --recursive --force --remote
 
 # Enter the Engine Appliance
 pushd engine-appliance
