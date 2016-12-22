@@ -9,6 +9,7 @@ virt-install
 libguestfs-tools
 imagefactory
 qemu-system-x86
+qemu-kvm-ev
 asciidoc
 python-sh
 glusterfs
