@@ -60,6 +60,7 @@ ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
 
 %.rpm: %.spec
 	rpmbuild --define "_sourcedir `pwd`" -ba $<
+	rpmbuild --define "_sourcedir `pwd`" --define "dist .fc24" -bb $<
 
 RPMBUILD = rpmbuild
 TMPREPOS = tmp.repos
@@ -67,6 +68,7 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 	rm -fr "$(TMPREPOS)"
 	mkdir -p $(TMPREPOS)/{SPECS,RPMS,SRPMS,SOURCES}
 	$(RPMBUILD) --define="_topdir `pwd`/$(TMPREPOS)" --define "_sourcedir `pwd`" -ba $<
+	$(RPMBUILD) --define="_topdir `pwd`/$(TMPREPOS)" --define "dist .fc24" --rebuild $(TMPREPOS)/SRPMS/*.src.rpm
 	@echo
 	@echo "srpm and rpm(s) available at '$(TMPREPOS)'"
 	@echo
