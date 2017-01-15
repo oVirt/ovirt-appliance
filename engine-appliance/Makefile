@@ -19,6 +19,11 @@ OVA_CPUS ?= 4
 ARCH=x86_64
 DISTRO=centos
 RELEASEVER=7
+BOOTISOURL=http://mirror.centos.org/centos/$(RELEASEVER)/os/$(ARCH)/images/boot.iso
+
+LMC ?= livemedia-creator
+LMC_RAM ?= 2048
+LMC_CPUS ?= 4
 
 #
 # oVirt specific vars
@@ -31,11 +36,21 @@ ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
 
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
+# Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
+export LIBGUESTFS_BACKEND=direct
+# Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
+export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
+export TMPDIR=/var/tmp/
+export TEST_ENGINE_ROOTFS_IMG=$(PWD)/ovirt-engine-appliance.qcow2
+
 .SECONDARY:
 .PHONY: $(wildcard *.ks.tpl) ovirt-engine-appliance.spec
 
 all: ovirt-engine-appliance.ova
 	echo "$@" appliance done
+
+boot.iso:
+	curl $(CURLOPTS) -O $(BOOTISOURL)
 
 %.ks: data/%.ks.in
 	sed \
@@ -43,8 +58,14 @@ all: ovirt-engine-appliance.ova
 	 -e "s|@OVIRTRELEASERPM@|$(OVIRTRELEASERPM)|" \
 	 "$<" > "$@"
 
-%.qcow2: %.ks
-	make -f image-tools/build.mk $@ DISTRO=$(DISTRO) RELEASEVER=$(RELEASEVER) DISK_SIZE=$(VM_DISK)
+%.qcow2: SPARSE=1
+%.qcow2: %.ks boot.iso
+	$(LMC) --make-disk --kernel-args="ip=ens2:dhcp" --ram=$(LMC_RAM) --vcpus=$(LMC_CPUS) --iso=boot.iso --ks=$< --qcow2 --image-name=$@
+	mv /var/tmp/$@ .
+	-[[ -n "$(SPARSE)" ]] && [[ "$$(virt-sparsify --help)" =~ --in-place ]] && ( virt-sparsify --in-place $@ ; ln $@ $@.sparse ; )
+	-[[ -n "$(SPARSE)" ]] && [[ ! -f $@.sparse ]] && [[ "$$(virt-sparsify --help)" =~ --check-tempdir ]] && virt-sparsify --check-tmpdir=continue $@ $@.sparse
+	-[[ -n "$(SPARSE)" ]] && [[ ! -f $@.sparse ]] && virt-sparsify $@ $@.sparse
+	-[[ -f $@.sparse ]] &&  ( mv -v $@.sparse $@ ; rm -f $@.sparse ; )
 	ls -shal $@
 
 %.ova: %.qcow2
@@ -74,13 +95,8 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 	@echo
 
 %-manifest-rpm: %.qcow2
-	 make -f image-tools/build.mk $@
+	guestfish --ro -i -a $< sh 'rpm -qa | sort -u' > $@
 
-# Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
-export LIBGUESTFS_BACKEND=direct
-# Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
-export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
-export TEST_ENGINE_ROOTFS_IMG=$(PWD)/ovirt-engine-appliance.qcow2
 check: ovirt-engine-appliance-manifest-rpm
 	grep ovirt-engine ovirt-engine-appliance-manifest-rpm
 #	-pyflakes tests/*.py
