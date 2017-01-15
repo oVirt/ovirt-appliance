@@ -3,10 +3,16 @@ echo "build-artifacts.sh"
 
 df -h || :
 #this scripts build ovirt-node and ovirt-node-is projects
-mknod /dev/kvm c 10 232
+[[ ! -c /dev/kvm ]] && mknod /dev/kvm c 10 232
 export PATH=$PATH:/usr/libexec
 export ARTIFACTSDIR=$PWD/exported-artifacts
 #export http_proxy=proxy.phx.ovirt.org:3128
+
+move_logs() {
+        mv -v *.{log,ks} "$ARTIFACTSDIR/"
+}
+
+trap move_logs EXIT
 
 git submodule update --init --recursive --force --remote
 
@@ -38,10 +44,6 @@ pushd engine-appliance
  [[ -f ovirt-engine-appliance.ova ]] && ln -v ovirt-engine-appliance.ova "$ARTIFACTSDIR"/"${OVANAME}.ova"
  [[ -f ovirt-engine-appliance.qcow2 ]] && ln -v ovirt-engine-appliance.qcow2 "$ARTIFACTSDIR"/
  [[ -f ovirt-engine-appliance-manifest-rpm ]] && ln -v ovirt-engine-appliance-manifest-rpm "$ARTIFACTSDIR"/
-
- mv -v \
-   anaconda.log \
-   "$ARTIFACTSDIR/"
 
  # Finally, create the rpm
  make ovirt-engine-appliance.rpm

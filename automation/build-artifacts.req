@@ -6,6 +6,12 @@ git
 lorax
 pykickstart
 virt-install
+libvirt
+libvirt-client
+libvirt-daemon-kvm
+libvirt-daemon-qemu
+libvirt-python
+libvirt-python3
 libguestfs-tools
 imagefactory
 qemu-system-x86
