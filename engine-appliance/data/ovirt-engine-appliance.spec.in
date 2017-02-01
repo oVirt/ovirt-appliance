@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %{_he_discovery_file}
 
 %changelog
+* Wed Feb  1 2017 Sandro Bonazzola <sbonazzo@redhat.com>
+- oVirt 4.1.0 GA
+
 * Tue May 12 2015 Fabian Deutsch <fdeutsch@redhat.com>
 - Include the snippet for hosted-engine-setup
 
