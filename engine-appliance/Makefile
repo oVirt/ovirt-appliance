@@ -23,7 +23,7 @@ RELEASEVER=7
 #
 # oVirt specific vars
 #
-OVIRTRELEASERPM=http://plain.resources.ovirt.org/pub/ovirt-master-snapshot/rpm/el7/noarch/ovirt-release-master.rpm
+OVIRTRELEASERPM=http://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm
 ovirt-engine-appliance.spec: VERSION=4.1
 ovirt-engine-appliance.spec: VERSION_EXTRA=
 ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d).1
