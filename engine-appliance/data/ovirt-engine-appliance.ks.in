@@ -16,6 +16,27 @@ part / --size=50176 --grow --fstype=ext4 --fsoptions=discard
 
 %packages --ignoremissing
 cloud-init
+-aic94xx-firmware
+-alsa-firmware
+-alsa-tools-firmware
+-ivtv-firmware
+-iwl1000-firmware
+-iwl100-firmware
+-iwl105-firmware
+-iwl135-firmware
+-iwl2000-firmware
+-iwl2030-firmware
+-iwl3160-firmware
+-iwl3945-firmware
+-iwl4965-firmware
+-iwl5000-firmware
+-iwl5150-firmware
+-iwl6000-firmware
+-iwl6000g2a-firmware
+-iwl6000g2b-firmware
+-iwl6050-firmware
+-iwl7260-firmware
+-iwl7265-firmware
 %end
 
 
@@ -55,6 +76,8 @@ cat > /etc/cloud/cloud.cfg.d/42_ovirt_appliance.cfg <<__EOF__
 ssh_pwauth: True
 __EOF__
 
+echo "Removing linux-firmware package."
+yum -C -y remove linux-firmware
 
 #
 # Enable the guest agent
