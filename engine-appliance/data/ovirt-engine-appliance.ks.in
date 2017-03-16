@@ -16,6 +16,7 @@ part / --size=50176 --grow --fstype=ext4 --fsoptions=discard
 
 %packages --ignoremissing
 cloud-init
+cloud-utils-growpart
 -aic94xx-firmware
 -alsa-firmware
 -alsa-tools-firmware
