@@ -61,7 +61,8 @@ sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" /etc/yum.repos.d/ovir
 
 yum install -y \
 	ovirt-engine \
-	ovirt-engine-dwh
+	ovirt-engine-dwh \
+	ovirt-provider-ovn
 
 #
 echo "Creating a partial answer file"
