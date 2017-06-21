@@ -79,6 +79,9 @@ cat > /etc/cloud/cloud.cfg.d/42_ovirt_appliance.cfg <<__EOF__
 ssh_pwauth: True
 __EOF__
 
+echo "Enabling fstrim service"
+systemctl enable fstrim.service
+
 echo "Removing linux-firmware package."
 yum -C -y remove linux-firmware
 
