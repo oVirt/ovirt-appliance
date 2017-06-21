@@ -1,3 +1,7 @@
+# Disable compression, because the ova is already compressed
+%define _source_payload w0.gzdio
+%define _binary_payload w0.gzdio
+
 Name:       ovirt-engine-appliance
 Version:    @VERSION@
 Release:    @RELEASE@%{?dist}%{?extra_release}
