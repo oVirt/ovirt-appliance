@@ -80,7 +80,7 @@ ssh_pwauth: True
 __EOF__
 
 echo "Enabling fstrim service"
-systemctl enable fstrim.service
+systemctl enable fstrim.timer
 
 echo "Removing linux-firmware package."
 yum -C -y remove linux-firmware
