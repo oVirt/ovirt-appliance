@@ -38,6 +38,8 @@ pushd engine-appliance
  # Create the OVA
  make
 
+ tar tvf ovirt-engine-appliance.ova
+
  # Do some sanity checks
  make check
 
