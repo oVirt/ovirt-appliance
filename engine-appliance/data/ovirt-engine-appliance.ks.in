@@ -11,9 +11,22 @@ poweroff
 
 clearpart --all --initlabel
 bootloader --timeout=1
-# Size needs to be something smaller than the disk size, grow ensures that the whole disk is used
-part swap --size=8192
-part / --size=50176 --grow --fstype=xfs
+
+part /boot --fstype=xfs --size=1024
+part pv.01 --grow --size=43008
+
+volgroup ovirt --pesize=4096 pv.01
+
+#logvol / --fstype=xfs --name=root --vgname=ovirt --size=5120 --grow
+logvol /home --fstype=xfs --name=home --vgname=ovirt --size=1024 --fsoptions="nodev"
+logvol /tmp --fstype=xfs --name=tmp --vgname=ovirt --size=2048 --fsoptions="nodev,noexec,nosuid"
+logvol /var --fstype=xfs --name=var --vgname=ovirt --size=20480 --fsoptions="nodev"
+logvol /var/log --fstype=xfs --name=log --vgname=ovirt --size=10240 --fsoptions="nodev"
+logvol /var/log/audit --fstype=xfs --name=audit --vgname=ovirt --size=1024 --fsoptions="nodev"
+logvol swap --name=swap --vgname=ovirt --size=8192
+
+# Making root the last regular partition for cloud-utils-growpart
+part / --fstype=xfs --size=6144 --grow
 
 %packages --ignoremissing
 cloud-init
