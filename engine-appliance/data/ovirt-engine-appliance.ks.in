@@ -12,8 +12,8 @@ poweroff
 clearpart --all --initlabel
 bootloader --timeout=1
 # Size needs to be something smaller than the disk size, grow ensures that the whole disk is used
-part / --size=50176 --grow --fstype=xfs
 part swap --size=8192
+part / --size=50176 --grow --fstype=xfs
 
 %packages --ignoremissing
 cloud-init
