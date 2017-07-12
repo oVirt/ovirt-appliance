@@ -58,7 +58,7 @@ yum install -y @OVIRTRELEASERPM@
 yum -y update
 
 # Use baseurl instead of repo to ensure we use the latest rpms
-sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" /etc/yum.repos.d/ovirt*.repo
+sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" $(find /etc/yum.repos.d/ovirt*.repo -type f ! -name "*dep*")
 
 yum install -y \
 	ovirt-engine \
