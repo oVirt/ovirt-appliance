@@ -67,7 +67,8 @@ def get_manifest(tmpdir):
     guestfish = guestfs.GuestFS(python_return_dict=True)
     guestfish.add_drive_opts(disk, readonly=1)
     guestfish.launch()
-    guestfish.mount("/dev/sda1", "/")
+    rootdev = guestfish.inspect_os()[0]
+    guestfish.mount(rootdev, "/")
     pkgs = query(guestfish)
 
     guestfish.umount_all()
