@@ -14,6 +14,8 @@ move_logs() {
 
 trap move_logs EXIT
 
+seq 0 9 | xargs -I {} mknod /dev/loop{} b 7 {} || :
+
 git submodule update --init --recursive --force --remote
 
 # Enter the Engine Appliance
