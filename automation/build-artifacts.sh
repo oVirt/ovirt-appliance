@@ -38,7 +38,8 @@ pushd engine-appliance
  mkdir "$ARTIFACTSDIR"
 
  # Create the OVA
- make
+ make &
+ tail -f virt-install.log --pid=$! --retry ||:
 
  # Do some sanity checks
  make check
