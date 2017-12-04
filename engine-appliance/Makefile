@@ -97,11 +97,14 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 %-manifest-rpm: %.qcow2
 	guestfish --ro -i -a $< sh 'rpm -qa | sort -u' > $@
 
-check: ovirt-engine-appliance-manifest-rpm
+%-unsigned-rpms: %.qcow2
+	guestfish --ro -i -a $< sh "rpm -qa --qf '%{name}-%{version}-%{release}.%{arch} (%{SIGPGP:pgpsig})\n'" | grep -v "Key ID" > $@
+
+check: ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance-unsigned-rpms
 	grep ovirt-engine ovirt-engine-appliance-manifest-rpm
 #	-pyflakes tests/*.py
 #	-pep8 tests/*.py
 #	cd tests && nosetests --with-xunit -v -w .
 
 clean:
-	-rm -vf ovirt-engine-appliance.ova ovirt-engine-appliance.qcow2 ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance.spec
+	-rm -vf ovirt-engine-appliance.ova ovirt-engine-appliance.qcow2 ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance-unsigned-rpms ovirt-engine-appliance.spec
