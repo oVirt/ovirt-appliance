@@ -49,6 +49,7 @@ pushd engine-appliance
  [[ -f ovirt-engine-appliance.ova ]] && ln -v ovirt-engine-appliance.ova "$ARTIFACTSDIR"/"${OVANAME}.ova"
  [[ -f ovirt-engine-appliance.qcow2 ]] && ln -v ovirt-engine-appliance.qcow2 "$ARTIFACTSDIR"/
  [[ -f ovirt-engine-appliance-manifest-rpm ]] && ln -v ovirt-engine-appliance-manifest-rpm "$ARTIFACTSDIR"/
+ [[ -f ovirt-engine-appliance-unsigned-rpms ]] && ln -v ovirt-engine-appliance-unsigned-rpms "$ARTIFACTSDIR"/
 
  # Finally, create the rpm
  make ovirt-engine-appliance.rpm
