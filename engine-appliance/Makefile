@@ -60,7 +60,7 @@ boot.iso:
 
 %.qcow2: SPARSE=1
 %.qcow2: %.ks boot.iso
-	$(LMC) --make-disk --kernel-args="ip=ens2:dhcp" --ram=$(LMC_RAM) --vcpus=$(LMC_CPUS) --iso=boot.iso --ks=$< --qcow2 --image-name=$@
+	$(LMC) --make-disk --ram=$(LMC_RAM) --vcpus=$(LMC_CPUS) --iso=boot.iso --ks=$< --qcow2 --image-name=$@
 	mv /var/tmp/$@ .
 	-[[ -n "$(SPARSE)" ]] && [[ "$$(virt-sparsify --help)" =~ --in-place ]] && ( virt-sparsify --in-place $@ ; ln $@ $@.sparse ; )
 	-[[ -n "$(SPARSE)" ]] && [[ ! -f $@.sparse ]] && [[ "$$(virt-sparsify --help)" =~ --check-tempdir ]] && virt-sparsify --check-tmpdir=continue $@ $@.sparse
