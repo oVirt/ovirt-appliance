@@ -1,5 +1,6 @@
 lang en_US.UTF-8
 keyboard us
+network
 timezone --utc Etc/UTC
 auth --enableshadow --passalgo=sha512
 selinux --enforcing
