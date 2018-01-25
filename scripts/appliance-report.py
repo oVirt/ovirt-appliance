@@ -69,6 +69,9 @@ def get_manifest(tmpdir):
     guestfish.launch()
     rootdev = guestfish.inspect_os()[0]
     guestfish.mount(rootdev, "/")
+    var_lv = [l for l in guestfish.lvs() if l.endswith("/var")]
+    if var_lv:
+        guestfish.mount(var_lv[0], "/var")
     pkgs = query(guestfish)
 
     guestfish.umount_all()
@@ -132,4 +135,4 @@ def read_ova(tar):
 
 if __name__ == '__main__':
     report = generate_report(sys.argv[1])
-    print report
+    print(report)
