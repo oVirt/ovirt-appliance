@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import argparse
 import guestfs
 import glob
 import itertools
@@ -11,7 +12,7 @@ import tarfile
 from lxml import etree
 from tempfile import mkdtemp
 
-def generate_report(ova):
+def generate_report(ova, full_manifest):
     name = '.'.join(ova.split('.')[:2])
 
     extract_list = []
@@ -19,12 +20,13 @@ def generate_report(ova):
     mem_size = None
     pkgs = None
     tmpdir = None
+    all_pkgs = ""
 
     with tarfile.open(ova, 'r:gz') as t:
         extract_list = read_ova(t)
         tmpdir = extract_files(t, extract_list)
         disk_size, mem_size = parse_ovf(tmpdir)
-        pkgs = get_manifest(tmpdir)
+        pkgs, all_pkgs = get_manifest(tmpdir, full_manifest)
 
     shutil.rmtree(tmpdir)
 
@@ -47,7 +49,7 @@ RHEV-M admin portal is available after setup and login works
 Key Packages:
 %s
     ''' % (name, disk_size, mem_size, pkgs)
-    return tmpl
+    return tmpl, all_pkgs
 
 
 def get_ovf(tmpdir):
@@ -61,7 +63,7 @@ def get_disk(tmpdir):
             disk = f
     return disk
 
-def get_manifest(tmpdir):
+def get_manifest(tmpdir, full_manifest):
     disk = get_disk(tmpdir)
 
     guestfish = guestfs.GuestFS(python_return_dict=True)
@@ -72,12 +74,11 @@ def get_manifest(tmpdir):
     var_lv = [l for l in guestfish.lvs() if l.endswith("/var")]
     if var_lv:
         guestfish.mount(var_lv[0], "/var")
-    pkgs = query(guestfish)
-
+    pkgs, all_pkgs = query(guestfish, full_manifest)
     guestfish.umount_all()
-    return pkgs
+    return pkgs, all_pkgs
 
-def query(guestfish):
+def query(guestfish, full_manifest):
     pkgs = None
 
     try:
@@ -87,7 +88,12 @@ def query(guestfish):
         pkgs = guestfish.sh("rpm -q glibc heat-cfntools kernel openssl "
                 "rhevm-guest-agent-common")
 
-    return pkgs
+    all_pkgs = ""
+    if full_manifest:
+        fmt = "%{name}-%{version}-%{release}.%{arch} (%{SIGPGP:pgpsig})\n"
+        all_pkgs = guestfish.sh("rpm -qa --qf '{}' | sort".format(fmt))
+
+    return pkgs, all_pkgs
 
 
 def parse_ovf(tmpdir):
@@ -134,5 +140,19 @@ def read_ova(tar):
     return extract_list
 
 if __name__ == '__main__':
-    report = generate_report(sys.argv[1])
-    print(report)
+    parser = argparse.ArgumentParser(prog="appliance-report")
+    parser.add_argument("--report", help="Path to report output")
+    parser.add_argument("--manifest", help="Path to rpm manifest output")
+    parser.add_argument("image", help="Path to appliance OVA")
+    args = parser.parse_args()
+    report, manifest = generate_report(args.image, args.manifest)
+
+    if args.report:
+        with open(args.report, "w") as f:
+            f.write(report)
+    else:
+        print(report)
+
+    if args.manifest:
+        with open(args.manifest, "w") as f:
+            f.write(manifest)
