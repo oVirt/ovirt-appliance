@@ -1,1 +1,2 @@
 centos-virt-kvm-common,http://mirror.centos.org/centos/7/virt/x86_64/kvm-common/
+ansible25,https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/
