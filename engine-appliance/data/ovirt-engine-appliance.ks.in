@@ -62,7 +62,6 @@ cloud-utils-growpart
 url --mirrorlist=http://mirrorlist.centos.org/?repo=os&release=$releasever&arch=$basearch
 repo --name=updates --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
 repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
-repo --name=ansible25 --baseurl=https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/
 
 #
 # Adding upstream oVirt
@@ -74,14 +73,6 @@ yum -y update
 
 # Use baseurl instead of repo to ensure we use the latest rpms
 sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" $(find /etc/yum.repos.d/ovirt*.repo -type f ! -name "*dep*")
-
-cat << EOF >> /etc/yum.repos.d/ansible25.repo
-[ansible25]
-baseurl=https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/
-name=ansible25
-enabled=1
-gpgcheck=0
-EOF
 
 yum install -y \
 	ovirt-engine \
