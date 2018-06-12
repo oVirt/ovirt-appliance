@@ -1,0 +1,9 @@
+---
+stage:
+  - build-artifacts
+  - build-artifacts-manual
+  - check-merged
+  - check-patch
+distro: [el7, fc28]
+release_branches:
+    master: ovirt-master

@@ -38,7 +38,13 @@ pushd engine-appliance
  mkdir "$ARTIFACTSDIR"
 
  # Create the OVA
- make &
+ dist="$(rpm --eval %{dist})"
+ if [[ ${dist} = .fc* ]]; then
+    fcrel="$(rpm --eval %{fedora})"
+    make FC_RELEASE=${fcrel} &
+ else
+    make &
+ fi
  tail -f virt-install.log --pid=$! --retry ||:
 
  tar tvf ovirt-engine-appliance.ova

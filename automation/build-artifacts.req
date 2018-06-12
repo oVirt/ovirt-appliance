@@ -15,11 +15,8 @@ libvirt-python3
 libguestfs-tools
 imagefactory
 qemu-system-x86
-qemu-kvm-ev
 asciidoc
 python-sh
-glusterfs
-gluster
 squashfs-tools
 oz
 pyflakes

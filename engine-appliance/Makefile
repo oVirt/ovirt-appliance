@@ -20,6 +20,12 @@ ARCH=x86_64
 DISTRO=centos
 RELEASEVER=7
 BOOTISOURL=http://mirror.centos.org/centos/$(RELEASEVER)/os/$(ARCH)/images/boot.iso
+CURLOPTS=-L
+
+ifdef FC_RELEASE
+BOOTISOURL="http://download.fedoraproject.org/pub/fedora/linux/releases/$(FC_RELEASE)/Server/$(ARCH)/os/images/boot.iso"
+DISTRO=fedora
+endif
 
 LMC ?= livemedia-creator
 LMC_RAM ?= 2048
@@ -56,7 +62,7 @@ boot.iso:
 	sed \
 	 -e "/# Answers/ r data/ovirt-engine-answers" \
 	 -e "s|@OVIRTRELEASERPM@|$(OVIRTRELEASERPM)|" \
-	 "$<" > "$@"
+	 "$<" | cat data/$(DISTRO).ks - > "$@"
 
 %.qcow2: SPARSE=1
 %.qcow2: %.ks boot.iso
@@ -81,8 +87,6 @@ ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
 
 %.rpm: %.spec
 	rpmbuild --define "_sourcedir `pwd`" -ba $<
-	rpmbuild --define "_sourcedir `pwd`" --define "dist .fc27" -bb $<
-	rpmbuild --define "_sourcedir `pwd`" --define "dist .fc28" -bb $<
 
 RPMBUILD = rpmbuild
 TMPREPOS = tmp.repos
@@ -90,8 +94,6 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 	rm -fr "$(TMPREPOS)"
 	mkdir -p $(TMPREPOS)/{SPECS,RPMS,SRPMS,SOURCES}
 	$(RPMBUILD) --define="_topdir `pwd`/$(TMPREPOS)" --define "_sourcedir `pwd`" -ba $<
-	$(RPMBUILD) --define="_topdir `pwd`/$(TMPREPOS)" --define "dist .fc27" --rebuild $(TMPREPOS)/SRPMS/*.src.rpm
-	$(RPMBUILD) --define="_topdir `pwd`/$(TMPREPOS)" --define "dist .fc28" --rebuild $(TMPREPOS)/SRPMS/*.src.rpm
 	@echo
 	@echo "srpm and rpm(s) available at '$(TMPREPOS)'"
 	@echo

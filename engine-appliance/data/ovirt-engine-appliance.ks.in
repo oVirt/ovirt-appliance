@@ -7,14 +7,13 @@ selinux --enforcing
 rootpw --lock
 user --name=node --lock
 firstboot --disabled
-services --enabled=ssh
 poweroff
 
 clearpart --all --initlabel
 bootloader --timeout=1
 
 part /boot --fstype=xfs --size=1024
-part pv.01 --grow --size=43008
+part pv.01 --grow --size=44032
 
 volgroup ovirt --pesize=4096 pv.01
 
@@ -55,13 +54,6 @@ cloud-utils-growpart
 -iwl7265-firmware
 %end
 
-
-#
-# CentOS repositories
-#
-url --mirrorlist=http://mirrorlist.centos.org/?repo=os&release=$releasever&arch=$basearch
-repo --name=updates --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
-repo --name=extra --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
 
 #
 # Adding upstream oVirt
