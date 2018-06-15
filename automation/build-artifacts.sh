@@ -41,6 +41,7 @@ pushd engine-appliance
  dist="$(rpm --eval %{dist})"
  if [[ ${dist} = .fc* ]]; then
     fcrel="$(rpm --eval %{fedora})"
+    export OVANAME="oVirt-Engine-Appliance-Fedora-x86_64-${fcrel}-$(date +%Y%m%d)"
     make FC_RELEASE=${fcrel} &
  else
     make &
