@@ -22,3 +22,5 @@ oz
 pyflakes
 python-pep8
 python-nose
+python-jinja2
+PyYAML

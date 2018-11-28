@@ -1,3 +1,13 @@
+url {{ data["url"] }}
+
+{%- for r_name, r_url in data["repos"].items() %}
+repo --name={{ r_name }} {{ r_url }}
+{%- endfor %}
+
+{%- if data["updates"] %}
+updates {{ data["updates"] }}
+{%- endif %}
+
 lang en_US.UTF-8
 keyboard us
 network
@@ -7,6 +17,7 @@ selinux --enforcing
 rootpw --lock
 user --name=node --lock
 firstboot --disabled
+services --enabled={{ data["services"] }}
 poweroff
 
 clearpart --all --initlabel
@@ -28,6 +39,10 @@ logvol swap --name=swap --vgname=ovirt --size=8192
 %packages --ignoremissing
 cloud-init
 cloud-utils-growpart
+openscap
+openscap-utils
+scap-security-guide
+aide
 -aic94xx-firmware
 -alsa-firmware
 -alsa-tools-firmware
@@ -49,6 +64,9 @@ cloud-utils-growpart
 -iwl6050-firmware
 -iwl7260-firmware
 -iwl7265-firmware
+{%- for pkg in data["packages"] %}
+{{ pkg }}
+{%- endfor %}
 %end
 
 
@@ -57,7 +75,7 @@ cloud-utils-growpart
 #
 %post --erroronfail
 set -x
-yum install -y @OVIRTRELEASERPM@
+yum install -y {{ releaserpm }}
 yum -y update
 
 # Use baseurl instead of repo to ensure we use the latest rpms
@@ -73,7 +91,7 @@ yum install -y \
 echo "Creating a partial answer file"
 #
 cat > /root/ovirt-engine-answers <<__EOF__
-# Answers
+{% include "ovirt-engine-answers" %}
 __EOF__
 
 echo "Enabling ssh_pwauth in cloud.cfg.d"
@@ -96,4 +114,5 @@ yum install -y ovirt-guest-agent-common
 systemctl enable ovirt-guest-agent.service
 
 rm -vf /etc/sysconfig/network-scripts/ifcfg-e*
+
 %end
