@@ -58,11 +58,8 @@ all: ovirt-engine-appliance.ova
 boot.iso:
 	curl $(CURLOPTS) -O $(BOOTISOURL)
 
-%.ks: data/%.ks.in
-	sed \
-	 -e "/# Answers/ r data/ovirt-engine-answers" \
-	 -e "s|@OVIRTRELEASERPM@|$(OVIRTRELEASERPM)|" \
-	 "$<" | cat data/$(DISTRO).ks - > "$@"
+%.ks: data/%.j2
+	scripts/renderks.py $(OVIRTRELEASERPM) $(DISTRO) > "$@"
 
 %.qcow2: SPARSE=1
 %.qcow2: %.ks boot.iso

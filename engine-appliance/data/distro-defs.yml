@@ -1,0 +1,16 @@
+---
+centos:
+  url: --mirrorlist=http://mirrorlist.centos.org/?repo=os&release=$releasever&arch=$basearch
+  repos:
+    updates: --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
+    extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
+  services: ssh
+  packages:
+    - pam_pkcs11
+
+fedora:
+  url: --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$arch
+  repos:
+    updates: --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$arch
+  services: sshd
+  updates: https://bugzilla.redhat.com/attachment.cgi?id=1454675
