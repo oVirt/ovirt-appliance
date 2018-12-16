@@ -10,7 +10,7 @@ Summary:    The oVirt Engine Appliance image (OVA)
 Group:      Applications/System
 URL:        http://www.ovirt.org/
 Source0:    @OVAFILENAME@
-BuildArch:  noarch
+BuildArch:  x86_64
 
 BuildRequires: grep
 
