@@ -5,7 +5,7 @@ stage:
       runtime-requirements:
         support-nesting-level: 2
 
-distro: [el7]
+distro: [el7, fc28]
 release_branches:
     master: ovirt-master
     ovirt-4.3: ovirt-4.3
