@@ -81,12 +81,11 @@ def get_manifest(tmpdir, full_manifest):
 def query(guestfish, full_manifest):
     pkgs = None
 
-    try:
-        pkgs = guestfish.sh("rpm -q glibc heat-cfntools kernel openssl "
-                "ovirt-guest-agent-common")
-    except:
-        pkgs = guestfish.sh("rpm -q glibc heat-cfntools kernel openssl "
-                "rhevm-guest-agent-common")
+    pkgs = guestfish.sh("rpm -q glibc kernel openssl")
+    pkgs+= guestfish.sh("rpm -q heat-cfntools || :")
+    pkgs+= guestfish.sh("rpm -q qemu-guest-agent || \
+                         rpm -q ovirt-guest-agent-common || \
+                         rpm -q rhevm-guest-agent-common")
 
     all_pkgs = ""
     if full_manifest:

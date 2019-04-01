@@ -43,7 +43,7 @@ class TestRootfsQcow2Image(unittest.TestCase):
     def test_package(self):
         """Ensure the main packages are installed
         """
-        req_pkgs = ["ovirt-engine", "ovirt-guest-agent-common"]
+        req_pkgs = ["ovirt-engine", "qemu-guest-agent"]
 
         def has_pkg(pkg):
             try:

@@ -112,8 +112,8 @@ yum -C -y remove linux-firmware
 #
 # Enable the guest agent
 #
-yum install -y ovirt-guest-agent-common
-systemctl enable ovirt-guest-agent.service
+yum install -y qemu-guest-agent
+systemctl enable qemu-guest-agent
 
 rm -vf /etc/sysconfig/network-scripts/ifcfg-e*
 
