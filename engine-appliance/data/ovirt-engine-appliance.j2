@@ -18,6 +18,7 @@ rootpw --lock
 user --name=node --lock
 firstboot --disabled
 services --enabled={{ data["services"] }}
+firewall --enabled --service={{ data["firewall"] }}
 poweroff
 
 clearpart --all --initlabel
@@ -45,6 +46,7 @@ scap-security-guide
 aide
 dracut-fips
 screen
+cockpit
 -aic94xx-firmware
 -alsa-firmware
 -alsa-tools-firmware
@@ -102,6 +104,9 @@ cat > /etc/cloud/cloud.cfg.d/42_ovirt_appliance.cfg <<__EOF__
 # even enabled when cloud-init does not find a seed.
 ssh_pwauth: True
 __EOF__
+
+echo "Enabling cockpit socket"
+systemctl enable cockpit.socket
 
 echo "Enabling fstrim service"
 systemctl enable fstrim.timer
