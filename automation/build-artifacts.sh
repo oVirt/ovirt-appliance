@@ -16,15 +16,24 @@ trap move_logs EXIT
 
 seq 0 9 | xargs -I {} mknod /dev/loop{} b 7 {} || :
 
+dist="$(rpm --eval %{dist})"
+
+if [[ ${dist} = .fc* ]]; then
+   fcrel="$(rpm --eval %{fedora})"
+fi
+
+if [[ ${dist} = .el7 ]] || [[ ( -n "$fcrel" ) && (("$fcrel" < 30 )) ]]; then
+   tag_checkout="imagefactory-1.1.11-1"
+fi
+
 git submodule update --init --recursive --force --remote
 
 # Enter the Engine Appliance
 pushd engine-appliance
 
- # Build imgfac to build Version.py
- dist="$(rpm --eval %{dist})"
+# Build imgfac to build Version.py
  pushd imagefactory
-  [[ ${dist} = .el7 ]] && git checkout imagefactory-1.1.11-1 || :
+  [[ -n $tag_checkout ]] && git checkout $tag_checkout || :
   python setup.py sdist
  popd
 
@@ -41,7 +50,6 @@ pushd engine-appliance
 
  # Create the OVA
  if [[ ${dist} = .fc* ]]; then
-    fcrel="$(rpm --eval %{fedora})"
     export OVANAME="oVirt-Engine-Appliance-Fedora-x86_64-${fcrel}-$(date +%Y%m%d)"
     make FC_RELEASE=${fcrel} &
  else
