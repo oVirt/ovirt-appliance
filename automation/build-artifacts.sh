@@ -22,7 +22,9 @@ git submodule update --init --recursive --force --remote
 pushd engine-appliance
 
  # Build imgfac to build Version.py
+ dist="$(rpm --eval %{dist})"
  pushd imagefactory
+  [[ ${dist} = .el7 ]] && git checkout imagefactory-1.1.11-1 || :
   python setup.py sdist
  popd
 
@@ -38,7 +40,6 @@ pushd engine-appliance
  mkdir "$ARTIFACTSDIR"
 
  # Create the OVA
- dist="$(rpm --eval %{dist})"
  if [[ ${dist} = .fc* ]]; then
     fcrel="$(rpm --eval %{fedora})"
     export OVANAME="oVirt-Engine-Appliance-Fedora-x86_64-${fcrel}-$(date +%Y%m%d)"
