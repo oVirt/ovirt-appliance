@@ -8,6 +8,8 @@ centos:
   firewall: cockpit
   packages:
     - pam_pkcs11
+    - coolkey
+    - opensc
 
 fedora:
   url: --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$arch
