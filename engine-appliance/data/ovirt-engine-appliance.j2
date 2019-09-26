@@ -79,9 +79,6 @@ yum-utils
 %post --erroronfail
 set -x
 
-# Enable CR repo till CentOS 7.7 goes GA
-sed -i "s:enabled=0:enabled=1:" /etc/yum.repos.d/CentOS-CR.repo
-
 yum install -y {{ releaserpm }}
 yum -y update
 
