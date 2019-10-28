@@ -5,6 +5,6 @@ stage:
       runtime-requirements:
         support-nesting-level: 2
 
-distro: [el7]
+distro: [el8]
 release_branches:
     master: ovirt-master

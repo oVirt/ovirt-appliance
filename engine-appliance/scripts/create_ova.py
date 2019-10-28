@@ -67,7 +67,7 @@ class OvaBuilder(object):
                       'vsphere_product_name', 'vsphere_product_vendor_name',
                       'vsphere_product_version']
 
-            klass_has = lambda x: klass.__init__.func_code.co_varnames.\
+            klass_has = lambda x: klass.__init__.__code__.co_varnames.\
                 __contains__(x)
 
             for param in params:

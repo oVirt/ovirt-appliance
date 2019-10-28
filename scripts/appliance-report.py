@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import argparse
 import guestfs
@@ -6,7 +6,6 @@ import glob
 import itertools
 import os
 import shutil
-import sys
 import tarfile
 
 from lxml import etree

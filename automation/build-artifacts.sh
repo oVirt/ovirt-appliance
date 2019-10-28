@@ -23,7 +23,7 @@ pushd engine-appliance
 
  mkdir tmp
  export TMPDIR="$PWD/tmp/"
- export PYTHON="python"
+ export PYTHON="python3"
  export OVANAME="oVirt-Engine-Appliance-CentOS-x86_64-7-$(date +%Y%m%d)"
  export QEMU_APPEND="ip=dhcp proxy="
 

@@ -1,0 +1,5 @@
+# Provides pyflakes
+epel8,https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/
+# Provides oz, imagefactory and others
+el8collection,https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/
+
