@@ -24,7 +24,7 @@ pushd engine-appliance
  mkdir tmp
  export TMPDIR="$PWD/tmp/"
  export PYTHON="python3"
- export OVANAME="oVirt-Engine-Appliance-CentOS-x86_64-7-$(date +%Y%m%d)"
+ export OVANAME="oVirt-Engine-Appliance-CentOS-x86_64-7-$(date +%Y%m%d%H%M%S)"
  export QEMU_APPEND="ip=dhcp proxy="
 
  export PATH=$PATH:/sbin:/usr/sbin
@@ -36,7 +36,7 @@ pushd engine-appliance
  # Create the OVA
  if [[ ${dist} = .fc* ]]; then
     fcrel="$(rpm --eval %{fedora})"
-    export OVANAME="oVirt-Engine-Appliance-Fedora-x86_64-${fcrel}-$(date +%Y%m%d)"
+    export OVANAME="oVirt-Engine-Appliance-Fedora-x86_64-${fcrel}-$(date +%Y%m%d%H%M%S)"
     make FC_RELEASE=${fcrel} &
  else
     make &
