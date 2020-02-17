@@ -1,10 +1,11 @@
 ---
 centos:
-  url: --mirrorlist=http://mirrorlist.centos.org/?repo=os&release=$releasever&arch=$basearch
+  url: --mirrorlist=http://mirrorlist.centos.org/?repo=baseos&release=$releasever&arch=$basearch
   repos:
-    updates: --mirrorlist=http://mirrorlist.centos.org/?repo=updates&release=$releasever&arch=$basearch
     extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
-  services: ssh
+    appstream: --mirrorlist=http://mirrorlist.centos.org/?repo=appstream&release=$releasever&arch=$basearch
+    powertools: --mirrorlist=http://mirrorlist.centos.org/?repo=powertools&release=$releasever&arch=$basearch
+  services: sshd
   firewall: cockpit
   packages:
     - pam_pkcs11

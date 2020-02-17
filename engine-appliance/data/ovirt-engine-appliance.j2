@@ -45,7 +45,7 @@ openscap-utils
 scap-security-guide
 aide
 dracut-fips
-screen
+tmux
 cockpit
 yum-utils
 -aic94xx-firmware
@@ -85,6 +85,8 @@ yum -y update
 
 # Use baseurl instead of repo to ensure we use the latest rpms
 sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" $(find /etc/yum.repos.d/ovirt*.repo -type f ! -name "*dep*")
+
+yum module enable -y javapackages-tools pki-deps 389-ds
 
 yum install -y \
 	ovirt-engine \

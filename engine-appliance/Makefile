@@ -18,8 +18,8 @@ OVA_CPUS ?= 4
 
 ARCH=x86_64
 DISTRO=centos
-RELEASEVER=7
-BOOTISOURL=http://mirror.centos.org/centos/$(RELEASEVER)/os/$(ARCH)/images/boot.iso
+RELEASEVER=8
+BOOTISOURL=http://mirror.centos.org/centos/$(RELEASEVER)/BaseOS/$(ARCH)/os/images/boot.iso
 CURLOPTS=-L
 
 ifdef FC_RELEASE
