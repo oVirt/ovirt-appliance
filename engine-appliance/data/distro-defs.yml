@@ -8,8 +8,6 @@ centos:
   services: sshd
   firewall: cockpit
   packages:
-    - pam_pkcs11
-    - coolkey
     - opensc
 
 fedora:
