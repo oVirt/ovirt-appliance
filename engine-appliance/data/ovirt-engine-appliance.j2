@@ -37,7 +37,7 @@ logvol /var/log --fstype=xfs --name=log --vgname=ovirt --size=10240 --fsoptions=
 logvol /var/log/audit --fstype=xfs --name=audit --vgname=ovirt --size=1024 --fsoptions="nodev"
 logvol swap --name=swap --vgname=ovirt --size=8192
 
-%packages --ignoremissing
+%packages
 cloud-init
 cloud-utils-growpart
 openscap
@@ -65,20 +65,20 @@ yum-utils
 #
 %post --erroronfail
 set -x
-yum install -y {{ releaserpm }}
-yum -y update
+dnf install -y {{ releaserpm }}
+dnf -y update
 
 # Use baseurl instead of repo to ensure we use the latest rpms
 sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" $(find /etc/yum.repos.d/ovirt*.repo -type f ! -name "*dep*")
 
-yum module enable -y javapackages-tools pki-deps 389-ds
+dnf module enable -y javapackages-tools pki-deps 389-ds
 
-yum install -y \
+dnf install -y \
 	ovirt-engine \
 	ovirt-engine-dwh \
 	ovirt-provider-ovn
 
-yum install -y \
+dnf install -y \
 	ovirt-engine-extension-aaa-ldap-setup
 
 #
@@ -102,12 +102,12 @@ echo "Enabling fstrim service"
 systemctl enable fstrim.timer
 
 echo "Removing linux-firmware package."
-yum -C -y remove linux-firmware
+dnf -C -y remove linux-firmware
 
 #
 # Enable the guest agent
 #
-yum install -y qemu-guest-agent
+dnf install -y qemu-guest-agent
 systemctl enable qemu-guest-agent
 
 rm -vf /etc/sysconfig/network-scripts/ifcfg-e*
