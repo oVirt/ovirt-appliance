@@ -10,20 +10,20 @@ updates {{ data["updates"] }}
 
 lang en_US.UTF-8
 keyboard us
-network
 timezone --utc Etc/UTC
+bootloader --timeout=1
 auth --enableshadow --passalgo=sha512
 selinux --enforcing
+firewall --enabled --service={{ data["firewall"] }}
+network
+services --enabled={{ data["services"] }}
 rootpw --lock
+
 user --name=node --lock
 firstboot --disabled
-services --enabled={{ data["services"] }}
-firewall --enabled --service={{ data["firewall"] }}
-poweroff
-
+# Partition clearing information
 clearpart --all --initlabel
-bootloader --timeout=1
-
+# Disk partitioning information
 part /boot --fstype=xfs --size=1024
 part pv.01 --grow --size=50176
 
@@ -37,28 +37,104 @@ logvol /var/log --fstype=xfs --name=log --vgname=ovirt --size=10240 --fsoptions=
 logvol /var/log/audit --fstype=xfs --name=audit --vgname=ovirt --size=1024 --fsoptions="nodev"
 logvol swap --name=swap --vgname=ovirt --size=8192
 
+poweroff
+
+# Packages
 %packages
+@core
+dnf
+kernel
+yum
+nfs-utils
+dnf-utils
+grub2-pc
+# oVirt is not using EFI
+#grub2-efi-x64
+#shim
+
+# pull firmware packages out
+-aic94xx-firmware
+-alsa-firmware
+-alsa-lib
+-alsa-tools-firmware
+-ivtv-firmware
+-iwl1000-firmware
+-iwl100-firmware
+-iwl105-firmware
+-iwl135-firmware
+-iwl2000-firmware
+-iwl2030-firmware
+-iwl3160-firmware
+-iwl3945-firmware
+-iwl4965-firmware
+-iwl5000-firmware
+-iwl5150-firmware
+-iwl6000-firmware
+-iwl6000g2a-firmware
+-iwl6000g2b-firmware
+-iwl6050-firmware
+-iwl7260-firmware
+-iwl7265-firmware
+-libertas-sd8686-firmware
+-libertas-sd8787-firmware
+-libertas-usb8388-firmware
+
+# cloud-init does magical things with EC2 metadata, including provisioning
+# a user account with ssh keys.
 cloud-init
+## Adding a dependency for cloud-init as recommended by tdawson
+python3-jsonschema
+
+# allows the host machine to issue commands to the guest operating system
+qemu-guest-agent
+
+# need this for growpart, because parted doesn't yet support resizepart
+# https://bugzilla.redhat.com/show_bug.cgi?id=966993
+#cloud-utils
+
 cloud-utils-growpart
+# We need this image to be portable; also, rescue mode isn't useful here.
+dracut-config-generic
+dracut-norescue
+
+# Needed by oVirt
+firewalld
+
+# cherry-pick a few things from @base
+tar
+tcpdump
+rsync
+
+# Some things from @core we can do without in a minimal install
+-biosdevname
+-plymouth
+NetworkManager
+-iprutils
+
+# Because we need networking
+dhcp-client
+
+# Minimal Cockpit web console
+cockpit-ws
+cockpit-system
+
+# Add rng-tools as source of entropy
+rng-tools
+
+# Additions for STIG support and oVirt required packages
+aide
+cockpit
+dracut-fips
+grub2
+opensc
 openscap
 openscap-utils
 scap-security-guide
-aide
-dracut-fips
 tmux
-cockpit
-yum-utils
--aic94xx-firmware
--alsa-firmware
--alsa-tools-firmware
--ivtv-firmware
--iwl6000g2b-firmware
--iwl7265-firmware
 {%- for pkg in data["packages"] %}
 {{ pkg }}
 {%- endfor %}
 %end
-
 
 #
 # Adding upstream oVirt
@@ -95,12 +171,13 @@ cat > /etc/cloud/cloud.cfg.d/42_ovirt_appliance.cfg <<__EOF__
 ssh_pwauth: True
 __EOF__
 
+echo "Enabling fstrim"
+systemctl enable fstrim.timer
+
 echo "Enabling cockpit socket"
 systemctl enable cockpit.socket
 
-echo "Enabling fstrim service"
-systemctl enable fstrim.timer
-
+# this is installed by default but we don't need it in virt
 echo "Removing linux-firmware package."
 dnf -C -y remove linux-firmware
 
