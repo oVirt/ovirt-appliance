@@ -147,7 +147,7 @@ dnf -y update
 # Use baseurl instead of repo to ensure we use the latest rpms
 sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" $(find /etc/yum.repos.d/ovirt*.repo -type f ! -name "*dep*")
 
-dnf module enable -y javapackages-tools pki-deps 389-ds
+dnf module enable -y javapackages-tools pki-deps 389-ds postgresql:12
 
 dnf install -y \
 	ovirt-engine \
