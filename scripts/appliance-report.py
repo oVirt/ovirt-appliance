@@ -82,9 +82,7 @@ def query(guestfish, full_manifest):
 
     pkgs = guestfish.sh("rpm -q glibc kernel openssl")
     pkgs+= guestfish.sh("rpm -q heat-cfntools || :")
-    pkgs+= guestfish.sh("rpm -q qemu-guest-agent || \
-                         rpm -q ovirt-guest-agent-common || \
-                         rpm -q rhevm-guest-agent-common")
+    pkgs+= guestfish.sh("rpm -qa \*guest-agent\*")
 
     all_pkgs = ""
     if full_manifest:
