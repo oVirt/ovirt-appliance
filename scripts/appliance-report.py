@@ -81,7 +81,6 @@ def query(guestfish, full_manifest):
     pkgs = None
 
     pkgs = guestfish.sh("rpm -q glibc kernel openssl")
-    pkgs+= guestfish.sh("rpm -q heat-cfntools || :")
     pkgs+= guestfish.sh("rpm -qa \*guest-agent\*")
 
     all_pkgs = ""
