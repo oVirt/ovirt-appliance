@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_he_discovery_file}
 
 %changelog
+* Fri May 22 2020 Lev Veyde <lveyde@redhat.com> - 4.4
+- oVirt 4.4.1 RC1 appliance
+
 * Mon May 18 2020 Lev Veyde <lveyde@redhat.com> - 4.4
 - oVirt 4.4 GA appliance
 
