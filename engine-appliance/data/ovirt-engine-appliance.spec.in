@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_he_discovery_file}
 
 %changelog
+* Mon Jun 01 2020 Lev Veyde <lveyde@redhat.com>
+- Rebase on oVirt 4.3.10
+
 * Thu Mar 19 2020 Lev Veyde <lveyde@redhat.com>
 - Rebase on oVirt 4.3.9
 
