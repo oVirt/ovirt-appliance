@@ -14,7 +14,6 @@ BuildArch:  x86_64
 
 BuildRequires: grep
 
-Requires:   ovirt-hosted-engine-setup
 
 %global _he_discovery_dir /etc/ovirt-hosted-engine/
 %global _he_discovery_file %{_he_discovery_dir}/10-appliance.conf
