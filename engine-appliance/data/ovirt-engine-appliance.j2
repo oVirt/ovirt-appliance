@@ -149,6 +149,12 @@ sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" $(find /etc/yum.repos
 
 dnf module enable -y javapackages-tools pki-deps 389-ds postgresql:12
 
+# Only while in 4.4.1 pre-release we need to get apache-sshd from
+# CentOS Virt SIG testing.
+# We coudln't release it before 4.4.1 is ready to GA because the new
+# apache-sshd is not backward compatible.
+dnf install -y --nogpgcheck https://buildlogs.centos.org/centos/8/virt/x86_64/ovirt-44/Packages/a/apache-sshd-2.5.0-1.el8.noarch.rpm
+
 dnf install -y \
 	ovirt-engine \
 	ovirt-engine-dwh \
