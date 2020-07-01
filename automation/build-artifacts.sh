@@ -53,6 +53,12 @@ pushd engine-appliance
  [[ -f ovirt-engine-appliance-manifest-rpm ]] && ln -v ovirt-engine-appliance-manifest-rpm "$ARTIFACTSDIR"/
  [[ -f ovirt-engine-appliance-unsigned-rpms ]] && ln -v ovirt-engine-appliance-unsigned-rpms "$ARTIFACTSDIR"/
 
+grep qemu-guest-agent ovirt-engine-appliance-manifest-rpm
+grep ovirt-engine-4 ovirt-engine-appliance-manifest-rpm
+grep ovirt-engine-dwh ovirt-engine-appliance-manifest-rpm
+grep ovirt-provider-ovn ovirt-engine-appliance-manifest-rpm
+grep ovirt-engine-extension-aaa-ldap-setup ovirt-engine-appliance-manifest-rpm
+
  # Finally, create the rpm
  make ovirt-engine-appliance.rpm
 
