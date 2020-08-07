@@ -131,6 +131,11 @@ openscap
 openscap-utils
 scap-security-guide
 tmux
+
+# Needed for supporting upgrade from 4.3 with SSO configured (RHBZ# 1866811)
+mod_auth_gssapi
+
+# Distribution specific packages or with different name for different distributions
 {%- for pkg in data["packages"] %}
 {{ pkg }}
 {%- endfor %}
