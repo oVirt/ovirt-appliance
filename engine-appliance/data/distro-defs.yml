@@ -7,8 +7,6 @@ centos:
     powertools: --mirrorlist=http://mirrorlist.centos.org/?repo=powertools&release=$releasever&arch=$basearch
   services: sshd
   firewall: cockpit
-  packages:
-    - opensc
 
 fedora:
   url: --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$arch
