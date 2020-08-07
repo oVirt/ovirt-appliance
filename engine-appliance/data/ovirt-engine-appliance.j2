@@ -132,8 +132,10 @@ openscap-utils
 scap-security-guide
 tmux
 
-# Needed for supporting upgrade from 4.3 with SSO configured (RHBZ# 1866811)
+# Needed for supporting upgrade from 4.3 with SSO configured (RHBZ#1866811)
 mod_auth_gssapi
+# Additional packages for handling SSO enabled systems we recommend (RHBZ#1866811)
+mod_session
 
 # Distribution specific packages or with different name for different distributions
 {%- for pkg in data["packages"] %}
@@ -161,6 +163,14 @@ dnf install -y \
 
 dnf install -y \
 	ovirt-engine-extension-aaa-ldap-setup
+
+# Additional packages for handling SSO enabled systems we recommend (RHBZ#1866811)
+dnf install -y \
+	ovirt-engine-extension-aaa-misc
+
+# Additional package that we recommend for more flexible engine logging
+dnf install -y \
+	ovirt-engine-extension-logger-log4j
 
 #
 echo "Creating a partial answer file"
