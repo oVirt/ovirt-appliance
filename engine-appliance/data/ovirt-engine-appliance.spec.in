@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_he_discovery_file}
 
 %changelog
+* Tue Nov 10 2020 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
+- oVirt 4.4.3 GA appliance
+
 * Wed Sep 16 2020 Lev Veyde <lveyde@redhat.com> - 4.4
 - oVirt 4.4.2 GA appliance
 
