@@ -20,7 +20,7 @@ OVA_CPUS ?= 4
 
 ARCH=x86_64
 DISTRO=centos
-RELEASEVER=8-stream
+RELEASEVER=8
 BOOTISOURL=http://mirror.centos.org/centos/$(RELEASEVER)/BaseOS/$(ARCH)/os/images/boot.iso
 CURLOPTS=-L
 

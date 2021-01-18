@@ -1,9 +1,9 @@
 ---
 centos:
-  url: --mirrorlist=http://mirrorlist.centos.org/?repo=baseos&release=8-stream&arch=$basearch
+  url: --mirrorlist=http://mirrorlist.centos.org/?repo=baseos&release=$releasever&arch=$basearch
   repos:
-    extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=8-stream&arch=$basearch
-    appstream: --mirrorlist=http://mirrorlist.centos.org/?repo=appstream&release=8-stream&arch=$basearch
-    powertools: --mirrorlist=http://mirrorlist.centos.org/?repo=powertools&release=8-stream&arch=$basearch
+    extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=$releasever&arch=$basearch
+    appstream: --mirrorlist=http://mirrorlist.centos.org/?repo=appstream&release=$releasever&arch=$basearch
+    powertools: --mirrorlist=http://mirrorlist.centos.org/?repo=powertools&release=$releasever&arch=$basearch
   services: sshd
   firewall: cockpit
