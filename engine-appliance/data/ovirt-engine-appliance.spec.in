@@ -2,7 +2,7 @@
 %define _source_payload w0.gzdio
 %define _binary_payload w0.gzdio
 
-Name:       ovirt-engine-appliance
+Name:       @APPLIANCE_RPM_NAME@
 Version:    @VERSION@
 Release:    @RELEASE@%{?dist}%{?extra_release}
 License:    GPLv2
@@ -13,7 +13,6 @@ Source0:    @OVAFILENAME@
 BuildArch:  x86_64
 
 BuildRequires: grep
-
 
 %global _he_discovery_dir /etc/ovirt-hosted-engine/
 %global _he_discovery_file %{_he_discovery_dir}/10-appliance.conf

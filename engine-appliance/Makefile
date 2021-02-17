@@ -29,14 +29,15 @@ LMC ?= livemedia-creator
 LMC_RAM ?= 2048
 LMC_CPUS ?= 4
 
+APPLIANCE_RPM_NAME=ovirt-engine-appliance
 #
 # oVirt specific vars
 #
 OVIRTRELEASERPM=http://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm
-ovirt-engine-appliance.spec: VERSION=4.4
-ovirt-engine-appliance.spec: VERSION_EXTRA=
-ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
-ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
+VERSION=4.4
+VERSION_EXTRA=
+RELEASE=$(shell date +%Y%m%d%H%M%S).1
+OVAFILENAME=ovirt-engine-appliance.ova
 
 PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python
 
@@ -50,7 +51,7 @@ export TEST_ENGINE_ROOTFS_IMG=$(PWD)/ovirt-engine-appliance.qcow2
 .SECONDARY:
 .PHONY: $(wildcard *.ks.tpl) ovirt-engine-appliance.spec
 
-all: ovirt-engine-appliance.ova
+all: ovirt-engine-appliance.ova check $(APPLIANCE_RPM_NAME).rpm
 	echo "$@" appliance done
 
 boot.iso:
@@ -73,8 +74,9 @@ boot.iso:
 	$(SUDO) $(PYTHON) scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
 	ls -shal $@
 
-ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
+$(APPLIANCE_RPM_NAME).spec: data/ovirt-engine-appliance.spec.in
 	sed \
+	  -e "s/@APPLIANCE_RPM_NAME@/$(APPLIANCE_RPM_NAME)/" \
 	  -e "s/@VERSION@/$(VERSION)$(VERSION_EXTRA)/" \
 	  -e "s/@RELEASE@/$(RELEASE)/" \
 	  -e "s/@OVAFILENAME@/$(OVAFILENAME)/" \
@@ -100,7 +102,12 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
 	guestfish --ro -i -a $< sh "rpm -qa --qf '%{name}-%{version}-%{release}.%{arch} (%{SIGPGP:pgpsig})\n'" | grep -v "Key ID" > $@
 
 check: ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance-unsigned-rpms
-	grep ovirt-engine ovirt-engine-appliance-manifest-rpm
+	grep qemu-guest-agent ovirt-engine-appliance-manifest-rpm
+	grep ovirt-engine-4 ovirt-engine-appliance-manifest-rpm
+	grep ovirt-engine-dwh ovirt-engine-appliance-manifest-rpm
+	grep ovirt-provider-ovn ovirt-engine-appliance-manifest-rpm
+	grep ovirt-engine-extension-aaa-ldap-setup ovirt-engine-appliance-manifest-rpm
+	tar tvf ovirt-engine-appliance.ova
 #	-pyflakes tests/*.py
 #	-pep8 tests/*.py
 #	cd tests && nosetests --with-xunit -v -w .

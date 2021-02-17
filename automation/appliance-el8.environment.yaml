@@ -1,0 +1,6 @@
+- name: 'DISTRO'
+  value: 'centos'
+- name: 'RELEASEVER'
+  value: '8'
+- name: 'APPLIANCE_RPM_NAME'
+  value: 'ovirt-engine-appliance'

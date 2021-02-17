@@ -1,7 +1,21 @@
 ---
 stage:
-  - check-merged
+  - appliance-el8: &appliance-el8
+      script:
+        fromfile: 'automation/appliance-el8.sh'
+  - appliance-el8stream: &appliance-el8stream
+      script:
+        fromfile: 'automation/appliance-el8stream.sh'
   - check-patch:
+      substage:
+        - appliance-el8: *appliance-el8
+        - appliance-el8stream: *appliance-el8stream
+      runtime-requirements:
+        support-nesting-level: 2
+  - build-artifacts:
+      substage:
+        - appliance-el8: *appliance-el8
+        - appliance-el8stream: *appliance-el8stream
       runtime-requirements:
         support-nesting-level: 2
 
