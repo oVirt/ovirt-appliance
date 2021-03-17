@@ -34,7 +34,7 @@ LMC_CPUS ?= 4
 #
 # oVirt specific vars
 #
-OVIRTRELEASERPM=http://resources.ovirt.org/pub/yum-repo/ovirt-release44-pre.rpm
+OVIRTRELEASERPM=http://resources.ovirt.org/pub/yum-repo/ovirt-release44.rpm
 ovirt-engine-appliance.spec: VERSION=4.4
 ovirt-engine-appliance.spec: VERSION_EXTRA=
 ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
