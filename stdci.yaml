@@ -18,6 +18,12 @@ stage:
         - appliance-el8stream: *appliance-el8stream
       runtime-requirements:
         support-nesting-level: 2
+  - poll-upstream-sources:
+      substage:
+        - appliance-el8: *appliance-el8
+        - appliance-el8stream: *appliance-el8stream
+      runtime-requirements:
+        support-nesting-level: 2
 
 distro: [el8]
 release_branches:
