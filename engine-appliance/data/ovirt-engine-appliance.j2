@@ -40,7 +40,7 @@ logvol swap --name=swap --vgname=ovirt --size=8192
 poweroff
 
 # Packages
-%packages
+%packages --excludedocs --excludeWeakdeps
 @core
 dnf
 kernel
