@@ -1,6 +1,0 @@
-- name: 'DISTRO'
-  value: 'centos-stream'
-- name: 'RELEASEVER'
-  value: '8-stream'
-- name: 'APPLIANCE_RPM_NAME'
-  value: 'ovirt-engine-appliance-centos-stream'

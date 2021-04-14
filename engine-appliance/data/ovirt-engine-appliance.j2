@@ -124,7 +124,11 @@ mod_session
 #
 %post --erroronfail
 set -x
+# For build issues debugging purpose, looking for known repositories
+dnf repolist
+
 dnf install -y {{ releaserpm }}
+
 dnf -y update
 
 # Use baseurl instead of repo to ensure we use the latest rpms
