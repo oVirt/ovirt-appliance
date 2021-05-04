@@ -1,11 +1,13 @@
 
 #
-# How it works:
+# How it worked:
 # 1. Inherit from Fedora Cloud images with modifications
 # 2. Use Fedora 19 boot iso to run lmc
 # 3. Create runtime image (qcow2)
 # 4. sysprep, sparsify and comvert runtime image to ova
 #
+# TODO: update above doc
+
 
 #
 # OVA specific vars
@@ -22,10 +24,6 @@ RELEASEVER=8-stream
 BOOTISOURL=http://mirror.centos.org/centos/$(RELEASEVER)/BaseOS/$(ARCH)/os/images/boot.iso
 CURLOPTS=-L
 
-ifdef FC_RELEASE
-BOOTISOURL="http://download.fedoraproject.org/pub/fedora/linux/releases/$(FC_RELEASE)/Server/$(ARCH)/os/images/boot.iso"
-DISTRO=fedora
-endif
 
 LMC ?= livemedia-creator
 LMC_RAM ?= 2048
@@ -34,7 +32,7 @@ LMC_CPUS ?= 4
 #
 # oVirt specific vars
 #
-OVIRTRELEASERPM=http://resources.ovirt.org/pub/yum-repo/ovirt-release44-pre.rpm
+OVIRTRELEASERPM=http://resources.ovirt.org/pub/yum-repo/ovirt-release44.rpm
 ovirt-engine-appliance.spec: VERSION=4.4
 ovirt-engine-appliance.spec: VERSION_EXTRA=
 ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
