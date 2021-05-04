@@ -8,7 +8,7 @@ Release:    @RELEASE@%{?dist}%{?extra_release}
 License:    GPLv2
 Summary:    The oVirt Engine Appliance image (OVA)
 Group:      Applications/System
-URL:        http://www.ovirt.org/
+URL:        https://www.ovirt.org/
 Source0:    @OVAFILENAME@
 BuildArch:  x86_64
 
@@ -52,6 +52,21 @@ rm -rf %{buildroot}
 %{_he_discovery_file}
 
 %changelog
+* Tue May 04 2021 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
+- oVirt 4.4.6 GA appliance
+
+* Wed Mar 17 2021 Lev Veyde <lveyde@redhat.com> - 4.4
+- oVirt 4.4.5 GA appliance
+
+* Mon Dec 21 2020 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
+- oVirt 4.4.4 GA appliance
+
+* Tue Nov 10 2020 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
+- oVirt 4.4.3 GA appliance
+
+* Wed Sep 16 2020 Lev Veyde <lveyde@redhat.com> - 4.4
+- oVirt 4.4.2 GA appliance
+
 * Wed Jul 08 2020 Lev Veyde <lveyde@redhat.com> - 4.4
 - oVirt 4.4.1 GA appliance
 
