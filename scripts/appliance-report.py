@@ -69,10 +69,10 @@ def get_manifest(tmpdir, full_manifest):
     guestfish.add_drive_opts(disk, readonly=1)
     guestfish.launch()
     rootdev = guestfish.inspect_os()[0]
-    guestfish.mount(rootdev, "/")
+    guestfish.mount_ro(rootdev, "/")
     var_lv = [l for l in guestfish.lvs() if l.endswith("/var")]
     if var_lv:
-        guestfish.mount(var_lv[0], "/var")
+        guestfish.mount_ro(var_lv[0], "/var")
     pkgs, all_pkgs = query(guestfish, full_manifest)
     guestfish.umount_all()
     return pkgs, all_pkgs
