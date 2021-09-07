@@ -52,50 +52,5 @@ rm -rf %{buildroot}
 %{_he_discovery_file}
 
 %changelog
-* Tue May 04 2021 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
-- oVirt 4.4.6 GA appliance
-
-* Wed Mar 17 2021 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4.5 GA appliance
-
-* Mon Dec 21 2020 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
-- oVirt 4.4.4 GA appliance
-
-* Tue Nov 10 2020 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
-- oVirt 4.4.3 GA appliance
-
-* Wed Sep 16 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4.2 GA appliance
-
-* Wed Jul 08 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4.1 GA appliance
-
-* Wed Jul 01 2020 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
-- oVirt 4.4.1 RC6 appliance
-
-* Fri Jun 19 2020 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
-- oVirt 4.4.1 RC5 appliance
-
-* Fri May 22 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4.1 RC1 appliance
-
-* Mon May 18 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4 GA appliance
-
-* Wed May 06 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4 appliance
-
-* Thu Mar 25 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4 appliance
-
-* Thu Mar 12 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4 appliance
-
-* Thu Mar 05 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4 appliance
-
-* Thu Feb 27 2020 Lev Veyde <lveyde@redhat.com> - 4.4
-- oVirt 4.4 appliance
-
-* Tue Nov 26 2019 Sandro Bonazzola <sbonazzo@redhat.com> - 4.4
-- oVirt 4.4 appliance
+* Tue Sep 07 2021 Sandro Bonazzola <sbonazzo@redhat.com> - 4.5
+- oVirt Engine Appliance 4.5
