@@ -85,7 +85,7 @@ ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
 
 RPMBUILD = rpmbuild
 TMPREPOS = tmp.repos
-rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova
+rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova ovirt-engine-appliance-manifest-rpm
 	rm -fr "$(TMPREPOS)"
 	mkdir -p $(TMPREPOS)/{SPECS,RPMS,SRPMS,SOURCES}
 	$(RPMBUILD) --define="_topdir `pwd`/$(TMPREPOS)" --define "_sourcedir `pwd`" -ba $<
