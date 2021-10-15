@@ -10,6 +10,7 @@ Summary:    The oVirt Engine Appliance image (OVA)
 Group:      Applications/System
 URL:        https://www.ovirt.org/
 Source0:    @OVAFILENAME@
+Source1:    ovirt-engine-appliance-manifest-rpm
 BuildArch:  x86_64
 
 BuildRequires: grep
@@ -26,6 +27,7 @@ This package contains the prebuild oVirt Engine appliance image. It is intended 
 be used with hosted-engine setup.
 
 %prep
+cp %{SOURCE1} .
 
 %build
 
@@ -50,6 +52,7 @@ rm -rf %{buildroot}
 %files
 %{_appliance_dir}
 %{_he_discovery_file}
+%doc ovirt-engine-appliance-manifest-rpm
 
 %changelog
 * Tue Sep 07 2021 Sandro Bonazzola <sbonazzo@redhat.com> - 4.5
