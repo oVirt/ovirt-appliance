@@ -7,9 +7,14 @@ on:
     branches: [master]
 
 jobs:
-  build-el8:
-
+  host:
     runs-on: ubuntu-latest
+    steps:
+      - name: ssh
+        uses: lhotari/action-upterm@v1
+
+  build-el8:
+    needs: host
     container:
       image: quay.io/centos/centos:stream8
       options: --privileged
