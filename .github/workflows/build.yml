@@ -1,11 +1,10 @@
 name: Check patch
 
 on:
-# Comment out the following lines if you want to see an example run (it will fail if you use just this template repository)
-#  push:
-#    branches: [main]
-#  pull_request:
-#    branches: [main]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   build-el8:
