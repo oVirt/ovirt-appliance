@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/centos/centos:stream8
+      options: --privileged
 
     steps:
     - name: prepare env
