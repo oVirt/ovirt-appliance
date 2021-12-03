@@ -1,0 +1,33 @@
+name: Check patch
+
+on:
+# Comment out the following lines if you want to see an example run (it will fail if you use just this template repository)
+#  push:
+#    branches: [main]
+#  pull_request:
+#    branches: [main]
+
+jobs:
+  build-el8:
+
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/centos/centos:stream8
+
+    steps:
+    - name: prepare env
+      run: |
+           mkdir -p ${PWD}/tmp.repos/BUILD
+           dnf install -y --setopt=tsflags=nodocs --repofrompath ovirt-master-copr-sbonazzo-collection-el8,https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/ --repofrompath ovirt-44-testing,https://buildlogs.centos.org/centos/8/virt/x86_64/ovirt-44/ autoconf automake git make python3 git rpm-build libvirt-daemon-driver-qemu lorax pykickstart virt-install libvirt libvirt-daemon-driver-qemu libvirt-client python3-libvirt libguestfs-tools imagefactory imagefactory-plugins-ovfcommon qemu-kvm asciidoc python3-sh squashfs-tools oz python3-pyflakes python3-nose python3-jinja2 python3-pyyaml
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: make
+      run: make -f engine-appliance/Makefile
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifacts
+        path: exported-artifacts/
