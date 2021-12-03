@@ -23,7 +23,9 @@ jobs:
         fetch-depth: 0
 
     - name: make
-      run: make -f engine-appliance/Makefile
+      run: |
+            cd engine-appliance
+            make
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
