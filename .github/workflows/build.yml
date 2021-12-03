@@ -26,7 +26,9 @@ jobs:
     - name: make
       run: |
             cd engine-appliance
-            make
+            make &
+            sleep 1
+            tail -f /root/ovirt-appliance/engine-appliance/virt-install.log
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
