@@ -17,6 +17,7 @@ jobs:
     - name: prepare env
       run: |
            mkdir -p ${PWD}/tmp.repos/BUILD
+           dnf copr enable -y @python/python3.8 
            dnf install -y --setopt=tsflags=nodocs --repofrompath ovirt-master-copr-sbonazzo-collection-el8,https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/ --repofrompath ovirt-44-testing,https://buildlogs.centos.org/centos/8/virt/x86_64/ovirt-44/ autoconf automake git make python3 git rpm-build libvirt-daemon-driver-qemu lorax pykickstart virt-install libvirt libvirt-daemon-driver-qemu libvirt-client python3-libvirt libguestfs-tools imagefactory imagefactory-plugins-ovfcommon qemu-kvm asciidoc python3-sh squashfs-tools oz python3-jinja2 python3-pyyaml
     - uses: actions/checkout@v2
       with:
