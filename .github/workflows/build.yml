@@ -18,6 +18,8 @@ jobs:
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
       timeout-minutes: 15
+      with:
+        sudo: false
     - name: prepare env
       run: |
            mkdir -p ${PWD}/tmp.repos/BUILD
