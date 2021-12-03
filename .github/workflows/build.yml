@@ -15,6 +15,9 @@ jobs:
       options: --privileged
 
     steps:
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 15
     - name: prepare env
       run: |
            mkdir -p ${PWD}/tmp.repos/BUILD
