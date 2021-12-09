@@ -28,13 +28,14 @@ jobs:
             make &
             tail --pid=$! --retry -f /__w/ovirt-appliance/ovirt-appliance/engine-appliance/virt-install.log ||:
             tar tvf ovirt-engine-appliance.ova
-            make ovirt-engine-appliance.rpm
+            make ovirt-engine-appliance-unsigned-rpms
+            make rpm
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: artifacts
         path: |
-            ~/rpmbuild/RPMS/**/*.rpm
-            ~/rpmbuild/SRPMS/**/*.rpm
+            tmp.repos/RPMS/x86_64/*.rpm
+            tmp.repos/SRPMS/*.rpm
             ovirt-engine-appliance-manifest-rpm
             ovirt-engine-appliance-unsigned-rpms
