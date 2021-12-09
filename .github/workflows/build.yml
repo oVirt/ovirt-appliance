@@ -35,7 +35,7 @@ jobs:
       with:
         name: artifacts
         path: |
-            tmp.repos/RPMS/x86_64/*.rpm
-            tmp.repos/SRPMS/*.rpm
-            ovirt-engine-appliance-manifest-rpm
-            ovirt-engine-appliance-unsigned-rpms
+            engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
+            engine-appliance/tmp.repos/SRPMS/*.rpm
+            engine-appliance/ovirt-engine-appliance-manifest-rpm
+            engine-appliance/ovirt-engine-appliance-unsigned-rpms
