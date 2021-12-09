@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 
 from imagefactory_plugins.ovfcommon.ovfcommon import RHEVOVFPackage
