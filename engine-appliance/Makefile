@@ -38,7 +38,7 @@ ovirt-engine-appliance.spec: VERSION_EXTRA=
 ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
 ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
 
-PYTHON ?= PYTHONPATH="$(PWD)/imagefactory/" python3
+PYTHON ?= python3
 
 # Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
 export LIBGUESTFS_BACKEND=direct
@@ -85,7 +85,7 @@ ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
 
 RPMBUILD = rpmbuild
 TMPREPOS = tmp.repos
-rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova ovirt-engine-appliance-manifest-rpm
+rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance-unsigned-rpms
 	rm -fr "$(TMPREPOS)"
 	mkdir -p $(TMPREPOS)/{SPECS,RPMS,SRPMS,SOURCES}
 	$(RPMBUILD) --define="_topdir `pwd`/$(TMPREPOS)" --define "_sourcedir `pwd`" -ba $<
