@@ -1,4 +1,4 @@
-name: Check patch
+name: Build
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-el8:
-    runs-on: ubuntu-latest
+    runs-on: centos84vm
     container:
       image: quay.io/centos/centos:stream8
       options: --privileged
