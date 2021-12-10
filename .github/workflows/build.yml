@@ -1,13 +1,10 @@
 name: Build
 
 on:
-#  push:
-#    branches: [master]
   workflow_dispatch:
-  
-  pull_request:
+  push:
     branches: [master]
-
+  
 jobs:
   build-el8:
     runs-on: centos84vm
@@ -17,25 +14,37 @@ jobs:
 
     steps:
     - name: prepare env
-      run: dnf install --nogpgcheck -y --setopt=tsflags=nodocs --repofrompath epel,https://download-ib01.fedoraproject.org/pub/epel/8/Everything/x86_64/ --repofrompath powertools2,http://mirror.centos.org/centos/8/PowerTools/x86_64/os/ --repofrompath ovirt-master-copr-sbonazzo-collection-el8,https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/ --repofrompath ovirt-44-testing,https://buildlogs.centos.org/centos/8/virt/x86_64/ovirt-44/ autoconf automake git make python3 git rpm-build libvirt-daemon-driver-qemu lorax pykickstart virt-install libvirt libvirt-daemon-driver-qemu libvirt-client python3-libvirt libguestfs-tools imagefactory imagefactory-plugins-ovfcommon qemu-kvm asciidoc python3-sh squashfs-tools oz python3-jinja2 python3-pyyaml
+      run: >
+        dnf install --nogpgcheck -y --setopt=tsflags=nodocs
+        --repofrompath epel,https://download-ib01.fedoraproject.org/pub/epel/8/Everything/x86_64/
+        --repofrompath powertools2,http://mirror.centos.org/centos/8/PowerTools/x86_64/os/
+        --repofrompath ovirt-master-copr-sbonazzo-collection-el8,https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/
+        --repofrompath ovirt-44-testing,https://buildlogs.centos.org/centos/8/virt/x86_64/ovirt-44/
+        autoconf automake git make asciidoc
+        python3 python3-sh python3-jinja2 python3-pyyaml
+        rpm-build squashfs-tools oz lorax pykickstart
+        imagefactory imagefactory-plugins-ovfcommon
+        virt-install libvirt libvirt-daemon-driver-qemu libvirt-client python3-libvirt libguestfs-tools qemu-kvm
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
     - name: make
       run: |
-            cd engine-appliance
-            make &
-            tail --pid=$! --retry -f /__w/ovirt-appliance/ovirt-appliance/engine-appliance/virt-install.log ||:
-            tar tvf ovirt-engine-appliance.ova
-            make ovirt-engine-appliance-unsigned-rpms
-            make rpm
-    - name: Upload artifacts
+        cd engine-appliance
+        make &
+        tail --pid=$! --retry -f virt-install.log ||:
+        make rpm
+    - name: Upload rpm
       uses: actions/upload-artifact@v2
       with:
-        name: artifacts
+        name: rpm
+        path: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
+    - name: Upload manifest
+      uses: actions/upload-artifact@v2
+      with:
+        name: manifest
         path: |
-            engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-            engine-appliance/tmp.repos/SRPMS/*.rpm
-            engine-appliance/ovirt-engine-appliance-manifest-rpm
-            engine-appliance/ovirt-engine-appliance-unsigned-rpms
+          engine-appliance/ovirt-engine-appliance-manifest-rpm
+          engine-appliance/ovirt-engine-appliance-unsigned-rpms
+
