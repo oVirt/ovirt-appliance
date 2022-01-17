@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-el8:
-    runs-on: self-hosted
+    runs-on: image-builders
     container:
       image: quay.io/centos/centos:stream8
       options: --privileged
@@ -35,11 +35,11 @@ jobs:
         make &
         tail --pid=$! --retry -f virt-install.log ||:
         make rpm
-    - name: Upload rpm
-      uses: actions/upload-artifact@v2
-      with:
-        name: rpm
-        path: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
+#    - name: Upload rpm
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: rpm
+#        path: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
     - name: Upload manifest
       uses: actions/upload-artifact@v2
       with:
