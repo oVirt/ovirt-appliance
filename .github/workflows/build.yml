@@ -25,6 +25,9 @@ jobs:
         rpm-build squashfs-tools oz lorax pykickstart
         imagefactory imagefactory-plugins-ovfcommon
         virt-install libvirt libvirt-daemon-driver-qemu libvirt-client python3-libvirt libguestfs-tools qemu-kvm
+ 
+    - name: fix loop mounts
+      run: for i in `seq 0 9`; do [[ ! -b /dev/loop$i ]] && mknod /dev/loop$i -m0660 b 7 $i; done
 
     - uses: actions/checkout@v2
       with:
