@@ -35,12 +35,16 @@ jobs:
         make &
         tail --pid=$! --retry -f virt-install.log ||:
         make rpm
-#    - name: Upload rpm
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: rpm
-#        path: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-    - name: Upload manifest
+    - name: Upload rpm to resources.ovirt.org
+      uses: appleboy/scp-action@v0.1.2
+      with:
+        host: resources.ovirt.org
+        username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
+        key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
+        source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
+        target: ovirt-appliance
+
+    - name: Upload manifest to github
       uses: actions/upload-artifact@v2
       with:
         name: manifest
