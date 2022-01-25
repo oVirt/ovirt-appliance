@@ -47,7 +47,7 @@ jobs:
         key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
         known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
         source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-        target: ovirt-appliance
+        target: github-ci/ovirt-appliance
         cleanup: yes
         keep_files_count: 10
 
