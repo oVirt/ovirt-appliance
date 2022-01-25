@@ -2,6 +2,7 @@
 
 Welcome to the oVirt Engine Appliance source repository.
 This repository is hosted on [GitHub:ovirt-appliance](https://github.com/oVirt/ovirt-appliance).
+The build artifacts (rpm), unlike most of the other oVirt projects, are in https://resources.ovirt.org/repos/ovirt/github-ci/ovirt-appliance/
 
 ## How to contribute
 
