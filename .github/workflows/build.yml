@@ -47,9 +47,11 @@ jobs:
         key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
         known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
         source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-        target: github-ci/ovirt-appliance
+        target: github-ci/ovirt-appliance/el8
         cleanup: yes
-        keep_files_count: 10
+        createrepo: yes
+        # keep 10 last builds + repodata
+        keep_files_count: 11
 
     - name: Upload manifest to github
       uses: actions/upload-artifact@v2
