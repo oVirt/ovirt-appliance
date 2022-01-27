@@ -20,11 +20,9 @@ jobs:
         --repofrompath powertools2,http://mirror.centos.org/centos/8/PowerTools/x86_64/os/
         --repofrompath ovirt-master-copr-sbonazzo-collection-el8,https://copr-be.cloud.fedoraproject.org/results/sbonazzo/EL8_collection/epel-8-x86_64/
         --repofrompath ovirt-44-testing,https://buildlogs.centos.org/centos/8/virt/x86_64/ovirt-44/
-        autoconf automake git make asciidoc
-        python3 python3-sh python3-jinja2 python3-pyyaml
-        rpm-build squashfs-tools oz lorax pykickstart
-        imagefactory imagefactory-plugins-ovfcommon
-        virt-install libvirt libvirt-daemon-driver-qemu libvirt-client python3-libvirt libguestfs-tools qemu-kvm
+        autoconf automake git make rpm-build asciidoc
+        python3-sh oz imagefactory imagefactory-plugins-ovfcommon
+        virt-install libvirt libguestfs-tools lorax pykickstart python3-jinja2 python3-pyyaml
  
     - name: fix loop mounts
       run: for i in `seq 0 9`; do [[ ! -b /dev/loop$i ]] && mknod /dev/loop$i -m0660 b 7 $i; done
