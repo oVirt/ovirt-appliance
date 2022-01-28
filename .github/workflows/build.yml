@@ -53,5 +53,5 @@ jobs:
           
     - name: Clean up entire workdir
       if: ${{ !inputs.keep_workdir }}
-      run: rm -rf $PWD
+      run: rm -rf $PWD/*
 
