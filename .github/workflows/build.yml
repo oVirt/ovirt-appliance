@@ -2,6 +2,9 @@ name: Build
 
 on:
   workflow_dispatch:
+    inputs:
+      keep_workdir:
+        required: false
   push:
     branches: [master]
 
@@ -47,4 +50,8 @@ jobs:
         path: |
           engine-appliance/ovirt-engine-appliance-manifest-rpm
           engine-appliance/ovirt-engine-appliance-unsigned-rpms
+          
+    - name: Clean up entire workdir
+      if: ${{ inputs.keep_workdir }}
+      run: rm -rf $PWD
 
