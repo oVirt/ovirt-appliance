@@ -42,6 +42,9 @@ jobs:
         createrepo: yes
         # keep 10 last builds + repodata
         keep_files_count: 11
+    - name: test
+      if: always()
+      run: sleep 3600
 
     - name: Upload manifest to github
       uses: actions/upload-artifact@v2
@@ -52,6 +55,6 @@ jobs:
           engine-appliance/ovirt-engine-appliance-unsigned-rpms
           
     - name: Clean up entire workdir
-      if: ${{ inputs.keep_workdir }}
+      if: ${{ !inputs.keep_workdir }}
       run: rm -rf $PWD
 
