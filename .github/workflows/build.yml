@@ -16,6 +16,10 @@ jobs:
       options: --privileged
 
     steps:
+    - name: Clean up entire workdir
+      if: ${{ !inputs.keep_workdir }}
+      run: rm -rf $PWD/*
+
     - name: fix loop mounts
       run: for i in `seq 0 9`; do [[ ! -b /dev/loop$i ]] && mknod /dev/loop$i -m0660 b 7 $i; done
 
