@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      keep_workdir:
+        required: false
+  push:
+    branches: [ovirt-4.4]
+
+jobs:
+  build-el8:
+    runs-on: image-builders
+    container:
+      image: quay.io/ovirt/buildcontainer:el8stream
+      options: --privileged
+
+    steps:
+    - name: fix loop mounts
+      run: for i in `seq 0 9`; do [[ ! -b /dev/loop$i ]] && mknod /dev/loop$i -m0660 b 7 $i; done
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: make
+      run: |
+        cd engine-appliance
+        make &
+        tail --pid=$! --retry -f virt-install.log ||:
+        make rpm
+
+    - name: Upload rpm to resources.ovirt.org
+      uses: ovirt/ovirt-resources-upload-action@main
+      with:
+        username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
+        key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
+        source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
+        target: github-ci/ovirt-appliance/el8
+        cleanup: yes
+        createrepo: yes
+        # keep 10 last builds + repodata
+        keep_files_count: 11
+
+    - name: Upload manifest to github
+      uses: actions/upload-artifact@v2
+      with:
+        name: manifest
+        path: |
+          engine-appliance/ovirt-engine-appliance-manifest-rpm
+          engine-appliance/ovirt-engine-appliance-unsigned-rpms
+          
+    - name: Clean up entire workdir
+      if: ${{ !inputs.keep_workdir }}
+      run: rm -rf $PWD/*
+
