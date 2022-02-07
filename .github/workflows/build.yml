@@ -52,6 +52,7 @@ jobs:
           engine-appliance/ovirt-engine-appliance-unsigned-rpms
           
     - name: Clean up entire workdir
-      if: ${{ !inputs.keep_workdir }}
-      run: rm -rf $PWD/*
+      if: always()
+      run: |
+        [[ -z "${{ github.event.inputs.keep_workdir }}" ]] && rm -rf $PWD/*
 
