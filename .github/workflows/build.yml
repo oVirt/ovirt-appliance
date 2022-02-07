@@ -55,7 +55,7 @@ jobs:
     - name: Clean up entire workdir
       if: always()
       env:
-        KEEP_WORKDIR: ${{ inputs.keep_workdir }}
+        KEEP_WORKDIR: ${{ github.event.inputs.keep_workdir }}
       run: |
         [[ -z "${KEEP_WORKDIR}" ]] && rm -rf $PWD/*
 
