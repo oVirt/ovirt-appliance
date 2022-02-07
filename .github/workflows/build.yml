@@ -26,7 +26,6 @@ jobs:
     - name: make
       run: |
         cd engine-appliance
-        exit 1
         make &
         tail --pid=$! --retry -f virt-install.log ||:
         make rpm
