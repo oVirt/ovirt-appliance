@@ -26,6 +26,7 @@ jobs:
     - name: make
       run: |
         cd engine-appliance
+        exit 1
         make &
         tail --pid=$! --retry -f virt-install.log ||:
         make rpm
@@ -53,8 +54,6 @@ jobs:
           
     - name: Clean up entire workdir
       if: always()
-      env:
-        KEEP_WORKDIR: ${{ github.event.inputs.keep_workdir }}
       run: |
-        [[ -z "${KEEP_WORKDIR}" ]] && rm -rf $PWD/*
+        [[ -z "${{ github.event.inputs.keep_workdir }}" ]] && rm -rf $PWD/*
 
