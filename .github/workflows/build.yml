@@ -55,5 +55,5 @@ jobs:
     - name: Clean up entire workdir
       if: always()
       run: |
-        [[ -z "${{ inputs.keep_workdir }}" ]] && rm -rf $PWD/*
+        [[ -z '${{ inputs.keep_workdir }}' ]] && rm -rf $PWD/*
 
