@@ -66,7 +66,7 @@ Then:
 This will create an ova by:
 * create the correct ks from a template
 * initiate livemedia-creator to create the runtime image
-* sysprep and sparsify the rutime image
+* sysprep and sparsify the runtime image
 * finally use an imagefactory plugin to create the ova 
 
 
