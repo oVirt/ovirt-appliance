@@ -4,7 +4,7 @@
 # 1. Inherit from Fedora Cloud images with modifications
 # 2. Use Fedora 19 boot iso to run lmc
 # 3. Create runtime image (qcow2)
-# 4. sysprep, sparsify and comvert runtime image to ova
+# 4. sysprep, sparsify and convert runtime image to ova
 #
 # TODO: update above doc
 
