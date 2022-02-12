@@ -18,8 +18,8 @@ jobs:
             container-name: el8stream
           - name: el9
             container-name: el9stream
-	name: build-${{ matrix.name }}
-    runs-on: [ image-builders, ${{ matrix.name }} ]
+    name: build-${{ matrix.name }}
+    runs-on: [ image-builders, "${{ matrix.name }}" ]
     container:
       image: quay.io/ovirt/buildcontainer:${{ matrix.container-name }}
       options: --privileged
