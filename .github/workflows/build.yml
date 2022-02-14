@@ -9,10 +9,19 @@ on:
     branches: [master]
 
 jobs:
-  build-el8:
-    runs-on: image-builders
+  build-matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: el8
+            container-name: el8stream
+          - name: el9
+            container-name: el9stream
+    name: build-${{ matrix.name }}
+    runs-on: [ image-builders, "${{ matrix.name }}" ]
     container:
-      image: quay.io/ovirt/buildcontainer:el8stream
+      image: quay.io/ovirt/buildcontainer:${{ matrix.container-name }}
       options: --privileged
 
     steps:
@@ -37,7 +46,7 @@ jobs:
         key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
         known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
         source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-        target: github-ci/ovirt-appliance/el8
+        target: github-ci/ovirt-appliance/${{ matrix.name }}
         cleanup: yes
         createrepo: yes
         # keep 10 last builds + repodata
