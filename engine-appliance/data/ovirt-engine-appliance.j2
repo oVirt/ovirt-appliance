@@ -12,7 +12,7 @@ lang en_US.UTF-8
 keyboard us
 timezone --utc Etc/UTC
 bootloader --timeout=1 --append="console=tty1 console=ttyS0,115200n8"
-auth --enableshadow --passalgo=sha512
+authselect select minimal
 selinux --enforcing
 firewall --enabled --service={{ data["firewall"] }}
 network
