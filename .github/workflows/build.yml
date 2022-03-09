@@ -36,11 +36,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: make
+      - name: Build the OVA
         run: |
           cd engine-appliance
           make &
           tail --pid=$! --retry -f virt-install.log ||:
+
+      - name: Check OVA content
+        run: |
+          make check
+
+      - name: Build RPM
+        run: |
           make rpm
 
       - name: Upload rpm to resources.ovirt.org
