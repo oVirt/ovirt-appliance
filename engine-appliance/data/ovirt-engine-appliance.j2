@@ -15,7 +15,7 @@ bootloader --timeout=1 --append="console=tty1 console=ttyS0,115200n8"
 authselect select minimal
 selinux --enforcing
 firewall --enabled --service={{ data["firewall"] }}
-network
+network --noipv6
 services --enabled={{ data["services"] }}
 rootpw --lock
 
