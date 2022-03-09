@@ -1,3 +1,4 @@
+---
 name: Build
 
 on:
@@ -7,6 +8,9 @@ on:
         required: false
   push:
     branches: [master]
+  schedule:
+    # Running every morning in EMEA timezone
+    - cron: '0 6 * * *'
 
 jobs:
   build-matrix:
@@ -19,49 +23,96 @@ jobs:
           - name: el9
             container-name: el9stream
     name: build-${{ matrix.name }}
-    runs-on: [ image-builders, "${{ matrix.name }}" ]
+    runs-on: [image-builders, "${{ matrix.name }}"]
     container:
       image: quay.io/ovirt/buildcontainer:${{ matrix.container-name }}
       options: --privileged
 
     steps:
-    - name: fix loop mounts
-      run: for i in `seq 0 9`; do [[ ! -b /dev/loop$i ]] && mknod /dev/loop$i -m0660 b 7 $i; done
+      - name: fix loop mounts
+        run: for i in `seq 0 9`; do [[ ! -b /dev/loop$i ]] && mknod /dev/loop$i -m0660 b 7 $i; done
 
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: make
-      run: |
-        cd engine-appliance
-        make &
-        tail --pid=$! --retry -f virt-install.log ||:
-        make rpm
+      - name: make
+        run: |
+          cd engine-appliance
+          make &
+          tail --pid=$! --retry -f virt-install.log ||:
+          make rpm
 
-    - name: Upload rpm to resources.ovirt.org
-      uses: ovirt/ovirt-resources-upload-action@main
-      with:
-        username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
-        key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
-        known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
-        source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-        target: github-ci/ovirt-appliance/${{ matrix.name }}
-        cleanup: yes
-        createrepo: yes
-        # keep 10 last builds + repodata
-        keep_files_count: 11
+      - name: Upload rpm to resources.ovirt.org
+        uses: ovirt/ovirt-resources-upload-action@main
+        with:
+          username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
+          key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
+          source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
+          target: github-ci/ovirt-appliance/${{ matrix.name }}
+          cleanup: yes
+          createrepo: yes
+          # keep 10 last builds + repodata
+          keep_files_count: 11
 
-    - name: Upload manifest to github
-      uses: actions/upload-artifact@v2
-      with:
-        name: manifest
-        path: |
-          engine-appliance/ovirt-engine-appliance-manifest-rpm
-          engine-appliance/ovirt-engine-appliance-unsigned-rpms
-          
-    - name: Clean up entire workdir
-      if: always()
-      run: |
-        [[ -z "${{ github.event.inputs.keep_workdir }}" ]] && rm -rf $PWD/*
+      - name: Upload manifest to github
+        uses: actions/upload-artifact@v2
+        with:
+          name: manifest
+          path: |
+            engine-appliance/ovirt-engine-appliance-manifest-rpm
+            engine-appliance/ovirt-engine-appliance-unsigned-rpms
 
+      - name: Clean up entire workdir
+        if: always()
+        run: |
+          [[ -z "${{ github.event.inputs.keep_workdir }}" ]] && rm -rf $PWD/*
+
+
+  close-build-issue-on-success:
+    name: Report workflow success
+    runs-on: ubuntu-latest
+    needs:
+      - build-matrix
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Add a comment about successful job and close issue
+        run: |
+          set -e
+          LABEL="build-failed"
+          ISSUENO=$(gh issue list -l $LABEL | awk ' { print $1 } ' | head -n 1)
+          if [ -n "$ISSUENO" ]; then
+              MESSAGE="✅ The oVirt Appliance build CI job is now [successful](https://github.com/oVirt/ovirt-appliance/actions/runs/${{ github.run_id }}), closing issue."
+              gh issue comment "${ISSUENO}" --body "${MESSAGE}"
+              gh issue close "${ISSUENO}"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  open-build-issue-on-failure:
+    name: Report workflow failure
+    runs-on: ubuntu-latest
+    if: ${{ always() && (needs.build-matrix.result=='failure') }}
+    needs:
+      - build-matrix
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Add a comment about failed job
+        run: |
+          set -e
+          TITLE="Failed oVirt Appliance build job"
+          LABEL="build-failed"
+          ISSUENO=$(gh issue list -l $LABEL | awk ' { print $1 } ' | head -n 1)
+          if [ -z "$ISSUENO" ]; then
+              MESSAGE="❌ The oVirt Appliance build CI job failed. [Please investigate.](https://github.com/oVirt/ovirt-appliance/actions/runs/${{ github.run_id }})"
+              gh issue create --title "${TITLE}" --body "${MESSAGE}" --label "${LABEL}"
+          else
+              MESSAGE="❌ oVirt Appliance build CI job is still failing. [Please investigate.](https://github.com/oVirt/ovirt-appliance/actions/runs/${{ github.run_id }})"
+              gh issue comment "${ISSUENO}" --body "${MESSAGE}"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
