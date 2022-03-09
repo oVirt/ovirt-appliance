@@ -127,7 +127,10 @@ set -xe
 # For build issues debugging purpose, looking for known repositories
 dnf repolist
 
-dnf install -y {{ releaserpm }}
+
+rpm --import https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/pubkey.gpg
+dnf --repofrompath=ovirt-master-snapshot,https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-8-x86_64/ install -y {{ releaserpm }}
+dnf config-manager --set-enabled powertools || true
 
 dnf -y update
 
