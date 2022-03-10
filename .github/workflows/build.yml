@@ -44,10 +44,12 @@ jobs:
 
       - name: Check OVA content
         run: |
+          cd engine-appliance
           make check
 
       - name: Build RPM
         run: |
+          cd engine-appliance
           make rpm
 
       - name: Upload rpm to resources.ovirt.org
