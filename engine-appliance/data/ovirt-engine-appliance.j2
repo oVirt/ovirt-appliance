@@ -134,7 +134,7 @@ dnf config-manager --set-enabled ovirt-45-upstream-testing
 
 dnf -y update
 
-dnf module enable -y javapackages-tools pki-deps 389-ds postgresql:12 mod_auth_openidc
+dnf module enable -y javapackages-tools pki-deps 389-ds postgresql:12 mod_auth_openidc nodejs:14
 
 dnf install -y \
 	ovirt-engine \
