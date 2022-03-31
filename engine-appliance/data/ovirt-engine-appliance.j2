@@ -31,8 +31,9 @@ volgroup ovirt --pesize=4096 pv.01
 
 logvol / --fstype=xfs --name=root --vgname=ovirt --size=6144 --grow
 logvol /home --fstype=xfs --name=home --vgname=ovirt --size=1024 --fsoptions="nodev"
-logvol /tmp --fstype=xfs --name=tmp --vgname=ovirt --size=2048 --fsoptions="nodev,noexec,nosuid"
+logvol /tmp --fstype=xfs --name=tmp --vgname=ovirt --size=1024 --fsoptions="nodev,noexec,nosuid"
 logvol /var --fstype=xfs --name=var --vgname=ovirt --size=20480 --fsoptions="nodev"
+logvol /var/tmp --fstype=xfs --name=tmp --vgname=ovirt --size=1024 --fsoptions="nodev,noexec,nosuid"
 logvol /var/log --fstype=xfs --name=log --vgname=ovirt --size=10240 --fsoptions="nodev"
 logvol /var/log/audit --fstype=xfs --name=audit --vgname=ovirt --size=1024 --fsoptions="nodev"
 logvol swap --name=swap --vgname=ovirt --size=8192
@@ -112,6 +113,11 @@ tmux
 mod_auth_gssapi
 # Additional packages for handling SSO enabled systems we recommend (RHBZ#1866811)
 mod_session
+
+# DISA STIG packages
+rng-tools
+rsyslog-gnutls
+usbguard
 
 # Distribution specific packages or with different name for different distributions
 {%- for pkg in data["packages"] %}
