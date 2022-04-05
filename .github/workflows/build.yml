@@ -18,6 +18,7 @@ on:
 
 jobs:
   build-matrix:
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
