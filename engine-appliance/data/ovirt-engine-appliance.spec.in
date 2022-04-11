@@ -55,5 +55,8 @@ rm -rf %{buildroot}
 %doc ovirt-engine-appliance-manifest-rpm
 
 %changelog
+* Mon Apr 20 2022 Sandro Bonazzola <sbonazzo@redhat.com> - 4.5-@RELEASE@
+- oVirt Engine Appliance 4.5 GA
+
 * Tue Sep 07 2021 Sandro Bonazzola <sbonazzo@redhat.com> - 4.5
 - oVirt Engine Appliance 4.5
