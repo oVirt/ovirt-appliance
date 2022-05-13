@@ -44,6 +44,9 @@ PYTHON ?= python3
 export LIBGUESTFS_BACKEND=direct
 # Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
 export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
+# Debugging issues when guestfish crashes
+export LIBGUESTFS_DEBUG=1
+export LIBGUESTFS_TRACE=1
 export TMPDIR=/var/tmp/
 export TEST_ENGINE_ROOTFS_IMG=$(PWD)/ovirt-engine-appliance.qcow2
 
