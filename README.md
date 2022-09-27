@@ -15,11 +15,8 @@ If you are not familiar with the process, you can read about [collaborating with
 
 ### Found a bug or documentation issue?
 
-To submit a bug or suggest an enhancement for oVirt Engine Appliance please use
-[oVirt Bugzilla for ovirt-appliance product](https://bugzilla.redhat.com/enter_bug.cgi?product=ovirt-appliance).
-
-
-If you don't have a Bugzilla account, you can still report [issues](https://github.com/oVirt/ovirt-appliance/issues). If you find a documentation issue on the oVirt website, please navigate to the page footer and click "Report an issue on GitHub".
+To submit a bug or suggest an enhancement for oVirt Engine Appliance please use GitHub
+[issues](https://github.com/oVirt/ovirt-appliance/issues). If you find a documentation issue on the oVirt website, please navigate to the page footer and click "Report an issue on GitHub".
 
 ## Still need help?
 
