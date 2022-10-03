@@ -1,5 +1,5 @@
 ---
-centos:
+centos-stream-8:
   url: --mirrorlist=http://mirrorlist.centos.org/?repo=baseos&release=8-stream&arch=$basearch
   repos:
     extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=8-stream&arch=$basearch
@@ -12,3 +12,16 @@ centos:
     - centos-stream-repos
   ovirtreleaserpm: ovirt-release-master
   ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-8-x86_64/
+
+centos-stream-9:
+  url: --metalink=https://mirrors.centos.org/metalink?repo=centos-baseos-9-stream&arch=$basearch&protocol=https,http
+  repos:
+    extra: --metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-9-stream&arch=$basearch&protocol=https,http
+    appstream: --metalink=https://mirrors.centos.org/metalink?repo=centos-appstream-9-stream&arch=$basearch&protocol=https,http
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python3
+    - centos-stream-repos
+  ovirtreleaserpm: ovirt-release-master
+  ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-9-x86_64/
