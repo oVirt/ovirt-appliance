@@ -26,9 +26,11 @@ jobs:
           - name: el8
             container-name: el8stream
             base-distro: centos-stream-8
+            boot-iso-url: http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/images/boot.iso
           - name: el9
             container-name: el9stream
             base-distro: centos-stream-9
+            boot-iso-url: http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/boot.iso
     name: build-${{ matrix.name }}
     runs-on: [image-builders, "${{ matrix.name }}"]
     container:
@@ -46,7 +48,7 @@ jobs:
       - name: Build the OVA
         run: |
           cd engine-appliance
-          make DISTRO=${{ matrix.base-distro }} &
+          make DISTRO=${{ matrix.base-distro }} BOOTISOURL=${{ matrix.boot-iso-url }} &
           tail --pid=$! --retry -f virt-install.log ||:
 
       - name: Check OVA content
