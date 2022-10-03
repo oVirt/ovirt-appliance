@@ -32,7 +32,6 @@ LMC_CPUS ?= 4
 #
 # oVirt specific vars
 #
-OVIRTRELEASERPM=ovirt-release-master
 ovirt-engine-appliance.spec: VERSION=4.5
 ovirt-engine-appliance.spec: VERSION_EXTRA=
 ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
@@ -60,7 +59,7 @@ boot.iso:
 	curl $(CURLOPTS) -O $(BOOTISOURL)
 
 %.ks: data/%.j2
-	scripts/renderks.py $(OVIRTRELEASERPM) $(DISTRO) > "$@"
+	scripts/renderks.py $(DISTRO) > "$@"
 
 %.qcow2: SPARSE=1
 %.qcow2: %.ks boot.iso

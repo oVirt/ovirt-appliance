@@ -10,3 +10,4 @@ centos:
   packages:
     - python36
     - centos-stream-repos
+  ovirtreleaserpm: ovirt-release-master
