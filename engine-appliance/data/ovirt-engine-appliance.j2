@@ -135,7 +135,7 @@ dnf repolist
 
 
 rpm --import https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/pubkey.gpg
-dnf --repofrompath=ovirt-master-snapshot,https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-8-x86_64/ install -y {{ releaserpm }}
+dnf --repofrompath=ovirt-master-snapshot,https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-8-x86_64/ install -y {{ data["ovirtreleaserpm"] }}
 dnf config-manager --set-enabled powertools || true
 
 dnf -y update
