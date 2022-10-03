@@ -11,3 +11,4 @@ centos:
     - python36
     - centos-stream-repos
   ovirtreleaserpm: ovirt-release-master
+  ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-8-x86_64/
