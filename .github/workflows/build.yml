@@ -41,7 +41,7 @@ jobs:
       - name: fix loop mounts
         run: for i in `seq 0 9`; do [[ ! -b /dev/loop$i ]] && mknod /dev/loop$i -m0660 b 7 $i; done
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -75,7 +75,7 @@ jobs:
           keep_files_count: 11
 
       - name: Upload manifest to github
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "manifest-${{ matrix.name }}"
           path: |
@@ -95,7 +95,7 @@ jobs:
       - build-matrix
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Add a comment about successful job and close issue
         run: |
           set -e
@@ -118,7 +118,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Add a comment about failed job
         run: |
           set -e
