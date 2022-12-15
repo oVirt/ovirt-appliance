@@ -20,7 +20,7 @@ OVA_CPUS ?= 4
 
 ARCH=x86_64
 DISTRO=default_distro
-BOOTISOURL=http://some.host/some/path/boot.iso
+BOOTISOURL=$(shell scripts/get-boot-iso-url.py $(DISTRO))
 CURLOPTS=-L
 
 
