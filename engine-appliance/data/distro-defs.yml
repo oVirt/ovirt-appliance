@@ -1,5 +1,5 @@
 ---
-centos-stream-8:
+centos-stream-8-copr:
   url: --mirrorlist=http://mirrorlist.centos.org/?repo=baseos&release=8-stream&arch=$basearch
   repos:
     extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=8-stream&arch=$basearch
@@ -13,7 +13,7 @@ centos-stream-8:
   ovirtreleaserpm: ovirt-release-master
   ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-8-x86_64/
 
-centos-stream-9:
+centos-stream-9-copr:
   url: --metalink=https://mirrors.centos.org/metalink?repo=centos-baseos-9-stream&arch=$basearch&protocol=https,http
   repos:
     extra: --metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-9-stream&arch=$basearch&protocol=https,http
@@ -25,3 +25,30 @@ centos-stream-9:
     - centos-stream-repos
   ovirtreleaserpm: ovirt-release-master
   ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-9-x86_64/
+
+centos-stream-8-cbs:
+  url: --mirrorlist=http://mirrorlist.centos.org/?repo=baseos&release=8-stream&arch=$basearch
+  repos:
+    extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=8-stream&arch=$basearch
+    appstream: --mirrorlist=http://mirrorlist.centos.org/?repo=appstream&release=8-stream&arch=$basearch
+    powertools: --mirrorlist=http://mirrorlist.centos.org/?repo=powertools&release=8-stream&arch=$basearch
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python36
+    - centos-stream-repos
+  ovirtreleaserpm: centos-release-ovirt45-testing
+  ovirtreleaserpmrepo: https://buildlogs.centos.org/centos/8-stream/extras/x86_64/extras-common/
+
+centos-stream-9-cbs:
+  url: --metalink=https://mirrors.centos.org/metalink?repo=centos-baseos-9-stream&arch=$basearch&protocol=https,http
+  repos:
+    extra: --metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-9-stream&arch=$basearch&protocol=https,http
+    appstream: --metalink=https://mirrors.centos.org/metalink?repo=centos-appstream-9-stream&arch=$basearch&protocol=https,http
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python3
+    - centos-stream-repos
+  ovirtreleaserpm: centos-release-ovirt45-testing
+  ovirtreleaserpmrepo: https://buildlogs.centos.org/centos/9-stream/extras/x86_64/extras-common/
