@@ -10,6 +10,14 @@ on:
     inputs:
       keep_workdir:
         required: false
+      exclude-distro-os:
+        description: Distros NOT to run. Use el8 or el9.
+        required: true
+        default: "el8"
+      distro-variant:
+        description: Build with CBS or COPR packages. Use "cbs" or "copr".
+        required: true
+        default: "copr"
   push:
     branches: [master]
   schedule:
@@ -25,12 +33,12 @@ jobs:
         include:
           - name: el8
             container-name: el8stream
-            base-distro: centos-stream-8
-            boot-iso-url: http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/images/boot.iso
+            distro-os: centos-stream-8
           - name: el9
             container-name: el9stream
-            base-distro: centos-stream-9
-            boot-iso-url: http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/boot.iso
+            distro-os: centos-stream-9
+        exclude:
+          - name: ${{ github.event.inputs.exclude-distro-os }}
     name: build-${{ matrix.name }}
     runs-on: [image-builders, "${{ matrix.name }}"]
     container:
@@ -48,7 +56,7 @@ jobs:
       - name: Build the OVA
         run: |
           cd engine-appliance
-          make DISTRO=${{ matrix.base-distro }} BOOTISOURL=${{ matrix.boot-iso-url }} &
+          make DISTRO_OS=${{ matrix.distro-os }} DISTRO_VARIANT=${{ github.event.inputs.distro-variant }} &
           tail --pid=$! --retry -f virt-install.log ||:
 
       - name: Check OVA content
