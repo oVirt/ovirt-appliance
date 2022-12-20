@@ -34,7 +34,7 @@ jobs:
         num: [8, 9]
         exclude:
           - num: ${{ github.event.inputs.distro-num }}
-    name: build-el${{ matrix.num }}stream${{ github.event.inputs.distro-variant == '' && '-copr' || -github.event.inputs.distro-variant }}
+    name: build-el${{ matrix.num }}stream${{ github.event.inputs.distro-variant == '' && '-copr' || '-'github.event.inputs.distro-variant }}
     runs-on: [image-builders, "el${{ matrix.num }}"]
     container:
       image: quay.io/ovirt/buildcontainer:el${{ matrix.num }}stream
@@ -51,7 +51,7 @@ jobs:
       - name: Build the OVA
         run: |
           cd engine-appliance
-          make DISTRO=centos-stream-${{ matrix.num }}${{ github.event.inputs.distro-variant == '' && '-copr' || -github.event.inputs.distro-variant }} &
+          make DISTRO=centos-stream-${{ matrix.num }}${{ github.event.inputs.distro-variant == '' && '-copr' || '-'github.event.inputs.distro-variant }} &
           tail --pid=$! --retry -f virt-install.log ||:
 
       - name: Check OVA content
