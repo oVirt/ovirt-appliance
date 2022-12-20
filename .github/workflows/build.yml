@@ -37,7 +37,7 @@ jobs:
     name: build-${{ matrix.name }}
     runs-on: [image-builders, "${{ matrix.name }}"]
     container:
-      image: quay.io/ovirt/buildcontainer:el${{ matrix.distro-num }}stream
+      image: quay.io/ovirt/buildcontainer:el${{ matrix.name }}stream
       options: --privileged
 
     steps:
@@ -51,7 +51,7 @@ jobs:
       - name: Build the OVA
         run: |
           cd engine-appliance
-          make DISTRO_OS=centos-stream-${{ matrix.distro-num }} DISTRO_VARIANT=${{ github.event.inputs.distro-variant }} &
+          make DISTRO_OS=centos-stream-${{ matrix.name }} DISTRO_VARIANT=${{ github.event.inputs.distro-variant }} &
           tail --pid=$! --retry -f virt-install.log ||:
 
       - name: Check OVA content
@@ -71,7 +71,7 @@ jobs:
           key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
           known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
           source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-          target: github-ci/ovirt-appliance/${{ matrix.name }}
+          target: github-ci/ovirt-appliance/el${{ matrix.name }}
           cleanup: yes
           createrepo: yes
           # keep 10 last builds + repodata
@@ -80,7 +80,7 @@ jobs:
       - name: Upload manifest to github
         uses: actions/upload-artifact@v3
         with:
-          name: "manifest-${{ matrix.name }}"
+          name: "manifest-el${{ matrix.name }}"
           path: |
             engine-appliance/ovirt-engine-appliance-manifest-rpm
             engine-appliance/ovirt-engine-appliance-unsigned-rpms
