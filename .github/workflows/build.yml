@@ -10,7 +10,7 @@ on:
     inputs:
       keep_workdir:
         required: false
-      distro-os:
+      exclude-distro-os:
         description: Distros NOT to run. Use el8 or el9.
         required: true
         default: "el8"
@@ -38,7 +38,7 @@ jobs:
             container-name: el9stream
             distro-os: centos-stream-9
         exclude:
-          - name: ${{ github.event.inputs.distro-os }}
+          - name: ${{ github.event.inputs.exclude-distro-os }}
     name: build-${{ matrix.name }}
     runs-on: [image-builders, "${{ matrix.name }}"]
     container:
