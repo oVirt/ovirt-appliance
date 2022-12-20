@@ -33,7 +33,7 @@ jobs:
       matrix:
         num: [8, 9]
         exclude:
-          - name: ${{ github.event.inputs.distro-num }}
+          - num: ${{ github.event.inputs.distro-num }}
     name: build-el${{ matrix.num }}${{ github.event.inputs.distro-variant != '' || '-copr' }}
     runs-on: [image-builders, "el${{ matrix.num }}"]
     container:
