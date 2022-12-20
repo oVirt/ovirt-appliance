@@ -9,11 +9,12 @@ on:
   workflow_dispatch:
     inputs:
       keep_workdir:
+        description: keeps the working dir on the runner after the job is finished
         required: false
-      exclude-distro-os:
-        description: Distros NOT to run. Use el8 or el9.
+      distro-num:
+        description: elX distro to run. Use 8 or 9.
         required: true
-        default: "el8"
+        default: "9"
       distro-variant:
         description: Build with CBS or COPR packages. Use "cbs" or "copr".
         required: true
@@ -30,19 +31,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: el8
-            container-name: el8stream
-            distro-os: centos-stream-8
-          - name: el9
-            container-name: el9stream
-            distro-os: centos-stream-9
+        name: [el8, el9]
         exclude:
-          - name: ${{ github.event.inputs.exclude-distro-os }}
+          - name: el${{ github.event.inputs.distro-num }}
     name: build-${{ matrix.name }}
     runs-on: [image-builders, "${{ matrix.name }}"]
     container:
-      image: quay.io/ovirt/buildcontainer:${{ matrix.container-name }}
+      image: quay.io/ovirt/buildcontainer:el${{ matrix.distro-num }}stream
       options: --privileged
 
     steps:
@@ -56,7 +51,7 @@ jobs:
       - name: Build the OVA
         run: |
           cd engine-appliance
-          make DISTRO_OS=${{ matrix.distro-os }} DISTRO_VARIANT=${{ github.event.inputs.distro-variant }} &
+          make DISTRO_OS=centos-stream-${{ matrix.distro-num }} DISTRO_VARIANT=${{ github.event.inputs.distro-variant }} &
           tail --pid=$! --retry -f virt-install.log ||:
 
       - name: Check OVA content
