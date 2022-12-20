@@ -51,7 +51,7 @@ jobs:
       - name: Build the OVA
         run: |
           cd engine-appliance
-          make DISTRO_OS=centos-stream-${{ matrix.num }} DISTRO_VARIANT=${{ github.event.inputs.distro-variant }} &
+          make DISTRO_OS=centos-stream-${{ matrix.num }} DISTRO_VARIANT=${{ github.event.inputs.distro-variant != '' || 'copr' }} &
           tail --pid=$! --retry -f virt-install.log ||:
 
       - name: Check OVA content
