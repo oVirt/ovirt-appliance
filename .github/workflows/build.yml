@@ -34,7 +34,7 @@ jobs:
         num: [8, 9]
         exclude:
           - name: ${{ github.event.inputs.distro-num }}
-    name: build-el${{ matrix.num }}${{ github.event.inputs.distro-variant != '' or '-copr'}}
+    name: build-el${{ matrix.num }}${{ github.event.inputs.distro-variant != '' || '-copr' }}
     runs-on: [image-builders, "el${{ matrix.num }}"]
     container:
       image: quay.io/ovirt/buildcontainer:el${{ matrix.num }}stream
