@@ -71,7 +71,7 @@ jobs:
           key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
           known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
           source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-          target: github-ci/ovirt-appliance/el${{ matrix.num }}
+          target: github-ci/ovirt-appliance${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }}/el${{ matrix.num }}
           cleanup: yes
           createrepo: yes
           # keep 10 last builds + repodata
