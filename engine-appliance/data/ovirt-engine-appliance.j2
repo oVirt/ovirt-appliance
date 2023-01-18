@@ -138,9 +138,7 @@ rpm --import https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-mast
 dnf --repofrompath=ovirt-release-repo,{{ data["ovirtreleaserpmrepo"] }} install -y {{ data["ovirtreleaserpm"] }}
 dnf config-manager --set-enabled powertools || true
 
-# Adding --nobest, hopefully temporarily, because current usbguard needs protobuf-3.14, while ovirt-master-centos-stream-ceph-pacific-testing has 3.19.
-# TODO Remove '--nobest' once this is resolved somehow (probably by CentOS upgrading their protobuf and rebuilding usbguard)
-dnf -y update --nobest
+dnf -y update
 
 # Use baseurl instead of repo to ensure we use the latest rpms
 find /etc/yum.repos.d -type f -name "ovirt*.repo" ! -name "*dep*" -exec sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" {} \;
