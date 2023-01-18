@@ -193,4 +193,7 @@ systemctl enable qemu-guest-agent
 
 rm -vf /etc/sysconfig/network-scripts/ifcfg-e*
 
+# Remove lvmdevices, in case it was created by anaconda - target VM will likely have different devices
+rm -vf /etc/lvm/devices/system.devices
+
 %end
