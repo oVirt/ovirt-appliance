@@ -42,11 +42,9 @@ ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
 PYTHON ?= python3
 
 # Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
-# direct causes libguestfs to use a deprecated machine type for qemu
-# export LIBGUESTFS_BACKEND=direct
+export LIBGUESTFS_BACKEND=direct
 # Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
-# force_tcg causes corruption of the manifest while running guestfish
-#export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
+export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
 # Debugging issues when guestfish crashes
 export LIBGUESTFS_DEBUG=1
 export LIBGUESTFS_TRACE=1
