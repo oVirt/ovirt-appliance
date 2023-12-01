@@ -32,7 +32,7 @@ LMC_CPUS ?= 4
 #
 # oVirt specific vars
 #
-OVIRTRELEASERPM=centos-release-ovirt45-testing
+OVIRTRELEASERPM=centos-release-ovirt45
 ovirt-engine-appliance.spec: VERSION=4.5
 ovirt-engine-appliance.spec: VERSION_EXTRA=
 ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
