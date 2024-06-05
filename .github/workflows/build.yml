@@ -11,10 +11,6 @@ on:
       keep_workdir:
         description: keeps the working dir on the runner after the job is finished
         required: false
-      exclude-distro-num:
-        description: elXstream distro NOT to run. Use 8 or 9.
-        required: true
-        default: "8"
       distro-variant:
         description: Build with CBS or COPR packages. Use "-cbs" or "-copr".
         required: true
@@ -31,9 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        num: [8, 9]
-        exclude:
-          - num: ${{ github.event.inputs.exclude-distro-num }}
+        num: [9]
     name: build-el${{ matrix.num }}stream${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }}
     runs-on: [image-builders, "el${{ matrix.num }}"]
     container:
