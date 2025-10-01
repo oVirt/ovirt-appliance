@@ -27,11 +27,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        num: [9]
-    name: build-el${{ matrix.num }}stream${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }}
-    runs-on: [image-builders, "el${{ matrix.num }}"]
+        container:
+          - el9stream
+          - el10stream
+          - almalinux9
+          - almalinux10
+    name: build-${{ matrix.container }}${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }}
+    runs-on: [image-builders]
     container:
-      image: quay.io/ovirt/buildcontainer:el${{ matrix.num }}stream
+      image: quay.io/ovirt/buildcontainer:${{ matrix.container }}
       options: --privileged
 
     steps:
@@ -45,7 +49,7 @@ jobs:
       - name: Build the OVA
         run: |
           cd engine-appliance
-          make DISTRO=centos-stream-${{ matrix.num }}${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }} &
+          make DISTRO=${{ matrix.container }}${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }} &
           tail --pid=$! --retry -f virt-install.log ||:
 
       - name: Check OVA content
@@ -65,16 +69,16 @@ jobs:
           key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
           known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
           source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-          target: github-ci/ovirt-appliance${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }}/el${{ matrix.num }}
+          target: github-ci/ovirt-appliance${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }}/${{ matrix.container }}
           cleanup: yes
           createrepo: yes
           # keep 10 last builds + repodata
           keep_files_count: 11
 
       - name: Upload manifest to github
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: "manifest-el${{ matrix.num }}"
+          name: "manifest-${{ matrix.container }}"
           path: |
             engine-appliance/ovirt-engine-appliance-manifest-rpm
             engine-appliance/ovirt-engine-appliance-unsigned-rpms

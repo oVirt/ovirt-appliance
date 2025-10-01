@@ -21,7 +21,7 @@ OVA_CPUS ?= 4
 ARCH=x86_64
 DISTRO=default_distro
 ifeq ($(DISTRO),)
-	DISTRO := centos-stream-9-copr
+	DISTRO := el9stream-copr
 endif
 BOOTISOURL=$(shell scripts/get-boot-iso-url.py $(DISTRO))
 CURLOPTS=-L

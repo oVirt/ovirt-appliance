@@ -1,20 +1,10 @@
 ---
-centos-stream-8-copr:
-  url: --mirrorlist=http://mirrorlist.centos.org/?repo=baseos&release=8-stream&arch=$basearch
-  repos:
-    extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=8-stream&arch=$basearch
-    appstream: --mirrorlist=http://mirrorlist.centos.org/?repo=appstream&release=8-stream&arch=$basearch
-    powertools: --mirrorlist=http://mirrorlist.centos.org/?repo=powertools&release=8-stream&arch=$basearch
-  services: sshd
-  firewall: cockpit
-  packages:
-    - python36
-    - centos-stream-repos
-  ovirtreleaserpm: ovirt-release-master
-  ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-8-x86_64/
-  boot-iso-url: http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/images/boot.iso
+# This file contains the definitions of the distributions we support for building
+# the appliance. Each distribution has a set of parameters that are used by
+# the Makefile and scripts to build the appliance.
 
-centos-stream-9-copr:
+# CentOS Stream 9 variants
+el9stream-copr:
   url: --metalink=https://mirrors.centos.org/metalink?repo=centos-baseos-9-stream&arch=$basearch&protocol=https,http
   repos:
     extra: --metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-9-stream&arch=$basearch&protocol=https,http
@@ -28,22 +18,7 @@ centos-stream-9-copr:
   ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-9-x86_64/
   boot-iso-url: http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/boot.iso
 
-centos-stream-8-cbs:
-  url: --mirrorlist=http://mirrorlist.centos.org/?repo=baseos&release=8-stream&arch=$basearch
-  repos:
-    extra: --mirrorlist=http://mirrorlist.centos.org/?repo=extras&release=8-stream&arch=$basearch
-    appstream: --mirrorlist=http://mirrorlist.centos.org/?repo=appstream&release=8-stream&arch=$basearch
-    powertools: --mirrorlist=http://mirrorlist.centos.org/?repo=powertools&release=8-stream&arch=$basearch
-  services: sshd
-  firewall: cockpit
-  packages:
-    - python36
-    - centos-stream-repos
-  ovirtreleaserpm: centos-release-ovirt45-testing
-  ovirtreleaserpmrepo: https://buildlogs.centos.org/centos/8-stream/extras/x86_64/extras-common/
-  boot-iso-url: http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/images/boot.iso
-
-centos-stream-9-cbs:
+el9stream-cbs:
   url: --metalink=https://mirrors.centos.org/metalink?repo=centos-baseos-9-stream&arch=$basearch&protocol=https,http
   repos:
     extra: --metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-9-stream&arch=$basearch&protocol=https,http
@@ -56,3 +31,90 @@ centos-stream-9-cbs:
   ovirtreleaserpm: centos-release-ovirt45-testing
   ovirtreleaserpmrepo: https://buildlogs.centos.org/centos/9-stream/extras/x86_64/extras-common/
   boot-iso-url: http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/images/boot.iso
+
+# CentOS Stream 10 variants
+el10stream-copr:
+  url: --metalink=https://mirrors.centos.org/metalink?repo=centos-baseos-10-stream&arch=$basearch&protocol=https,http
+  repos:
+    extra: --metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-10-stream&arch=$basearch&protocol=https,http
+    appstream: --metalink=https://mirrors.centos.org/metalink?repo=centos-appstream-10-stream&arch=$basearch&protocol=https,http
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python3
+    - centos-stream-repos
+  ovirtreleaserpm: ovirt-release-master
+  ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-10-x86_64/
+  boot-iso-url: http://mirror.stream.centos.org/10-stream/BaseOS/x86_64/os/images/boot.iso
+
+el10stream-cbs:
+  url: --metalink=https://mirrors.centos.org/metalink?repo=centos-baseos-10-stream&arch=$basearch&protocol=https,http
+  repos:
+    extra: --metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-10-stream&arch=$basearch&protocol=https,http
+    appstream: --metalink=https://mirrors.centos.org/metalink?repo=centos-appstream-10-stream&arch=$basearch&protocol=https,http
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python3
+    - centos-stream-repos
+  ovirtreleaserpm: centos-release-ovirt45-testing
+  ovirtreleaserpmrepo: https://buildlogs.centos.org/centos/10-stream/extras/x86_64/extras-common/
+  boot-iso-url: http://mirror.stream.centos.org/10-stream/BaseOS/x86_64/os/images/boot.iso
+
+# AlmaLinux 9 variants
+almalinux9-copr:
+  url: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/baseos?arch=$basearch&protocol=https
+  repos:
+    extra: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/extras?arch=$basearch&protocol=https
+    appstream: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/appstream?arch=$basearch&protocol=https
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python3
+    - almalinux-repos
+  ovirtreleaserpm: ovirt-release-master
+  ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/rhel-9-x86_64/
+  boot-iso-url: https://repo.almalinux.org/almalinux/9/BaseOS/x86_64/os/images/boot.iso
+
+almalinux9-cbs:
+  url: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/baseos?arch=$basearch&protocol=https
+  repos:
+    extra: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/extras?arch=$basearch&protocol=https
+    appstream: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/appstream?arch=$basearch&protocol=https
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python3
+    - almalinux-repos
+  ovirtreleaserpm: centos-release-ovirt45-testing
+  ovirtreleaserpmrepo: https://buildlogs.centos.org/centos/9-stream/extras/x86_64/extras-common/
+  boot-iso-url: https://repo.almalinux.org/almalinux/9/BaseOS/x86_64/os/images/boot.iso
+
+# AlmaLinux 10 variants
+almalinux10-copr:
+  url: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/10/baseos?arch=$basearch&protocol=https
+  repos:
+    extra: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/10/extras?arch=$basearch&protocol=https
+    appstream: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/10/appstream?arch=$basearch&protocol=https
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python3
+    - almalinux-repos
+  ovirtreleaserpm: ovirt-release-master
+  ovirtreleaserpmrepo: https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/rhel-10-x86_64/
+  boot-iso-url: https://repo.almalinux.org/almalinux/10/BaseOS/x86_64/os/images/boot.iso
+
+almalinux10-cbs:
+  url: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/10/baseos?arch=$basearch&protocol=https
+  repos:
+    extra: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/10/extras?arch=$basearch&protocol=https
+    appstream: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/10/appstream?arch=$basearch&protocol=https
+  services: sshd
+  firewall: cockpit
+  packages:
+    - python3
+    - almalinux-repos
+  ovirtreleaserpm: centos-release-ovirt45-testing
+  ovirtreleaserpmrepo: https://buildlogs.centos.org/centos/10-stream/extras/x86_64/extras-common/
+  boot-iso-url: https://repo.almalinux.org/almalinux/10/BaseOS/x86_64/os/images/boot.iso
