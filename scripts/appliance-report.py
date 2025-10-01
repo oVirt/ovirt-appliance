@@ -11,6 +11,7 @@ import tarfile
 from lxml import etree
 from tempfile import mkdtemp
 
+
 def generate_report(ova, full_manifest):
     name = '.'.join(ova.split('.')[:2])
 
@@ -55,12 +56,14 @@ def get_ovf(tmpdir):
     ovf = glob.glob(tmpdir + "/*.ovf")[0]
     return ovf
 
+
 def get_disk(tmpdir):
     disk = None
     for f in glob.glob(tmpdir + '/*'):
         if os.path.isfile(f) and not os.path.basename(f).endswith(".ovf"):
             disk = f
     return disk
+
 
 def get_manifest(tmpdir, full_manifest):
     disk = get_disk(tmpdir)
@@ -70,18 +73,19 @@ def get_manifest(tmpdir, full_manifest):
     guestfish.launch()
     rootdev = guestfish.inspect_os()[0]
     guestfish.mount_ro(rootdev, "/")
-    var_lv = [l for l in guestfish.lvs() if l.endswith("/var")]
+    var_lv = [lv for lv in guestfish.lvs() if lv.endswith("/var")]
     if var_lv:
         guestfish.mount_ro(var_lv[0], "/var")
     pkgs, all_pkgs = query(guestfish, full_manifest)
     guestfish.umount_all()
     return pkgs, all_pkgs
 
+
 def query(guestfish, full_manifest):
     pkgs = None
 
     pkgs = guestfish.sh("rpm -q glibc kernel openssl")
-    pkgs+= guestfish.sh("rpm -q qemu-guest-agent")
+    pkgs += guestfish.sh("rpm -q qemu-guest-agent")
 
     all_pkgs = ""
     if full_manifest:
@@ -110,6 +114,7 @@ def parse_ovf(tmpdir):
 
     return (disk_size, mem_size)
 
+
 def extract_files(t, extract_list):
     tmpdir = mkdtemp(dir=".")
     t.extractall(path=tmpdir, members=extract_list)
@@ -133,6 +138,7 @@ def read_ova(tar):
             extract_list.append(m)
 
     return extract_list
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog="appliance-report")

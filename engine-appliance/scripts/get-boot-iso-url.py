@@ -4,6 +4,7 @@ import os
 import yaml
 import argparse
 
+
 def main():
     parser = argparse.ArgumentParser(prog="renderks")
     parser.add_argument("--data-dir", default="./data",
@@ -15,6 +16,7 @@ def main():
         data = yaml.load(f)[args.DISTRO]
 
     print(data['boot-iso-url'])
+
 
 if __name__ == '__main__':
     main()

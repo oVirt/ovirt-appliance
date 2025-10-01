@@ -5,7 +5,6 @@ from imagefactory_plugins.ovfcommon.ovfcommon import RHEVOVFPackage
 from oz.ozutil import copyfile_sparse
 import argparse
 import tempfile
-import os
 
 
 class OvaBuilder(object):
@@ -52,7 +51,6 @@ class OvaBuilder(object):
         else:
             raise RuntimeError("Only supporting rhevm and vsphere images")
 
-        
         parameters = parameters or {}                                                                  
         parameters["path"] = tempfile.mkdtemp()
         print(parameters)
@@ -67,8 +65,8 @@ class OvaBuilder(object):
                       'vsphere_product_name', 'vsphere_product_vendor_name',
                       'vsphere_product_version']
 
-            klass_has = lambda x: klass.__init__.__code__.co_varnames.\
-                __contains__(x)
+            def klass_has(x):
+                return x in klass.__init__.__code__.co_varnames
 
             for param in params:
                 if parameters.get(param) and klass_has(param):
@@ -78,6 +76,7 @@ class OvaBuilder(object):
         ova = pkg.make_ova_package()
         copyfile_sparse(ova, dst)
         pkg.delete()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -105,7 +104,7 @@ A common usage looks like:
 
     args = parser.parse_args()
 
-    print (args)
+    print(args)
 
     builder = OvaBuilder()
     builder.generate_rhevm_ova(args.DST, args.SRC,
