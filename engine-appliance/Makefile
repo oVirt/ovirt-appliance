@@ -19,10 +19,7 @@ OVA_RAM ?= 16384
 OVA_CPUS ?= 4
 
 ARCH=x86_64
-DISTRO=default_distro
-ifeq ($(DISTRO),)
-	DISTRO := el9stream-copr
-endif
+DISTRO ?= el9stream-copr
 BOOTISOURL=$(shell scripts/get-boot-iso-url.py $(DISTRO))
 CURLOPTS=-L
 
