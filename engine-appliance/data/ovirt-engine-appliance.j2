@@ -22,7 +22,7 @@ rootpw --lock
 user --name=node --lock
 firstboot --disabled
 # Partition clearing information
-clearpart --all --initlabel
+clearpart --all --initlabel --disklabel=msdos
 # Disk partitioning information
 part /boot --fstype=xfs --size=1024
 part pv.01 --grow --size=50176
@@ -41,7 +41,7 @@ logvol swap --name=swap --vgname=ovirt --size=8192
 poweroff
 
 # Packages
-%packages --excludedocs --excludeWeakdeps
+%packages --excludedocs --exclude-weakdeps
 @core
 dnf
 kernel
@@ -92,7 +92,7 @@ NetworkManager
 -iprutils
 
 # Because we need networking
-dhcp-client
+NetworkManager
 
 # Minimal Cockpit web console
 cockpit-ws
@@ -138,7 +138,7 @@ rpm --import https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-mast
 dnf --repofrompath=ovirt-release-repo,{{ data["ovirtreleaserpmrepo"] }} install -y {{ data["ovirtreleaserpm"] }}
 dnf config-manager --set-enabled powertools || true
 
-dnf -y update
+dnf -y update --nobest
 
 # Use baseurl instead of repo to ensure we use the latest rpms
 find /etc/yum.repos.d -type f -name "ovirt*.repo" ! -name "*dep*" -exec sed -i "s/^mirrorlist/#mirrorlist/ ; s/^#baseurl/baseurl/" {} \;
