@@ -13,7 +13,7 @@ def main():
     args = parser.parse_args()
 
     with open(os.path.join(args.data_dir, "distro-defs.yml")) as f:
-        data = yaml.load(f)[args.DISTRO]
+        data = yaml.load(f, Loader=yaml.SafeLoader)[args.DISTRO]
 
     print(data['boot-iso-url'])
 
