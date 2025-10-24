@@ -11,6 +11,7 @@ el9stream-copr:
     appstream: --metalink=https://mirrors.centos.org/metalink?repo=centos-appstream-9-stream&arch=$basearch&protocol=https,http
   services: sshd
   firewall: cockpit
+  authselect: minimal
   packages:
     - python3
     - centos-stream-repos
@@ -25,6 +26,7 @@ el9stream-cbs:
     appstream: --metalink=https://mirrors.centos.org/metalink?repo=centos-appstream-9-stream&arch=$basearch&protocol=https,http
   services: sshd
   firewall: cockpit
+  authselect: minimal
   packages:
     - python3
     - centos-stream-repos
@@ -40,6 +42,7 @@ el10stream-copr:
     appstream: --metalink=https://mirrors.centos.org/metalink?repo=centos-appstream-10-stream&arch=$basearch&protocol=https,http
   services: sshd
   firewall: cockpit
+  authselect: local
   packages:
     - python3
     - centos-stream-repos
@@ -54,6 +57,7 @@ el10stream-cbs:
     appstream: --metalink=https://mirrors.centos.org/metalink?repo=centos-appstream-10-stream&arch=$basearch&protocol=https,http
   services: sshd
   firewall: cockpit
+  authselect: local
   packages:
     - python3
     - centos-stream-repos
@@ -69,6 +73,7 @@ almalinux9-copr:
     appstream: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/appstream?arch=$basearch&protocol=https
   services: sshd
   firewall: cockpit
+  authselect: minimal
   packages:
     - python3
     - almalinux-repos
@@ -83,6 +88,7 @@ almalinux9-cbs:
     appstream: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/appstream?arch=$basearch&protocol=https
   services: sshd
   firewall: cockpit
+  authselect: minimal
   packages:
     - python3
     - almalinux-repos
@@ -98,6 +104,7 @@ almalinux10-copr:
     appstream: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/10/appstream?arch=$basearch&protocol=https
   services: sshd
   firewall: cockpit
+  authselect: local
   packages:
     - python3
     - almalinux-repos
@@ -112,6 +119,7 @@ almalinux10-cbs:
     appstream: --mirrorlist=https://mirrors.almalinux.org/mirrorlist/10/appstream?arch=$basearch&protocol=https
   services: sshd
   firewall: cockpit
+  authselect: local
   packages:
     - python3
     - almalinux-repos
