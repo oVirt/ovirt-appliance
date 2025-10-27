@@ -1,0 +1,9 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"privileged": true,
+	"mounts": [
+		"source=/dev/,target=/dev/,type=bind,consistency=cached"
+	]
+}
