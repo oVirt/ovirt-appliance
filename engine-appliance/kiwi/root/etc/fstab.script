@@ -1,0 +1,6 @@
+sed -i '/\/dev\/ovirt\/home /s/defaults/nodev/g' /etc/fstab
+sed -i '/\/dev\/ovirt\/tmp /s/defaults/nodev,noexec,nosuid/g' /etc/fstab
+sed -i '/\/dev\/ovirt\/var /s/defaults/nodev/g' /etc/fstab
+sed -i '/\/dev\/ovirt\/vartmp /s/defaults/nodev,noexec,nosuid/g' /etc/fstab
+sed -i '/\/dev\/ovirt\/log /s/defaults/nodev/g' /etc/fstab
+sed -i '/\/dev\/ovirt\/audit /s/defaults/nodev/g' /etc/fstab

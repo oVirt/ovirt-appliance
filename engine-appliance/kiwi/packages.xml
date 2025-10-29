@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<image>    
+    <packages type="bootstrap">
+        <package name="dracut-kiwi-oem-repart"/>
+        <package name="filesystem"/>
+        <package name="basesystem"/>
+        <package name="grub2-efi-x64-modules" arch="x86_64"/>
+        <package name="grub2-efi-x64" arch="x86_64"/>
+        <package name="shim-x64" arch="x86_64"/>
+    </packages>
+    <packages type="bootstrap" profiles="centos">
+        <package name="centos-stream-repos"/>
+    </packages>
+    <packages type="bootstrap" profiles="almalinux">
+        <package name="almalinux-repos"/>
+    </packages>
+    <packages type="image">
+        <ignore name="*-firmware"/>
+        <namedCollection name="core"/>
+        <package name="glibc-langpack-en"/>
+        <package name="dnf"/>
+        <package name="grub2"/>
+        <package name="kernel"/>
+        <package name="nfs-utils"/>
+        <package name="dnf-utils"/>
+        <package name="lvm2"/>
+        <package name="cloud-init"/>
+        <package name="python3"/>
+        <package name="python3-jsonschema"/>
+        <package name="qemu-guest-agent"/>
+        <package name="cloud-utils-growpart"/>
+        <package name="dracut-config-generic"/>
+        <package name="firewalld"/>
+        <package name="tar"/>
+        <package name="tcpdump"/>
+        <package name="rsync"/>
+        <package name="NetworkManager"/>
+        <package name="cockpit"/>
+        <package name="cockpit-ws"/>
+        <package name="cockpit-system"/>
+        <package name="aide"/>
+        <package name="dracut-fips"/>
+        <package name="opensc"/>
+        <package name="openscap"/>
+        <package name="openscap-utils"/>
+        <package name="scap-security-guide"/>
+        <package name="tmux"/>
+        <package name="mod_session"/>
+        <package name="rng-tools"/>
+        <package name="rsyslog-gnutls"/>
+        <package name="usbguard"/>
+    </packages>
+</image>

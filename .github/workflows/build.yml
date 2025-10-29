@@ -12,9 +12,9 @@ on:
         description: keeps the working dir on the runner after the job is finished
         required: false
       distro-variant:
-        description: Build with CBS or COPR packages. Use "-cbs" or "-copr".
+        description: Build with CBS or COPR packages. Use "cbs" or "copr".
         required: true
-        default: "-copr"
+        default: "copr"
   push:
     branches: [master]
   schedule:
@@ -27,36 +27,52 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        num: [9]
-    name: build-el${{ matrix.num }}stream${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }}
-    runs-on: [image-builders, "el${{ matrix.num }}"]
+        build-os: ['el9', 'el10']
+        target-os: ['el9stream', 'el10stream', 'almalinux9', 'almalinux10']
+        include:
+          - build-os: el9
+            container: el9stream
+          - build-os: el10
+            container: el10stream
+          - target-os: el9stream
+            os: centos
+            num: 9
+          - target-os: el10stream
+            os: centos
+            num: 10
+          - target-os: almalinux9
+            os: almalinux
+            num: 9
+          - target-os: almalinux10
+            os: almalinux
+            num: 10
+    name: build ${{ matrix.target-os }} on ${{ matrix.build-os }} - ${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}
+    runs-on: [image-builders]
     container:
-      image: quay.io/ovirt/buildcontainer:el${{ matrix.num }}stream
+      image: quay.io/ovirt/buildcontainer:${{ matrix.container }}
       options: --privileged
+      volumes:
+        - /dev:/dev
 
     steps:
-      - name: fix loop mounts
-        run: for i in `seq 0 9`; do [[ ! -b /dev/loop$i ]] && mknod /dev/loop$i -m0660 b 7 $i; done
+      - name: Install Kiwi
+        run: |
+          dnf install -y epel-release
+          dnf install -y kiwi-cli
 
       - uses: ovirt/checkout-action@main
         with:
           fetch-depth: 0
 
-      - name: Build the OVA
+      - name: Build the qcow2 image
         run: |
           cd engine-appliance
-          make DISTRO=centos-stream-${{ matrix.num }}${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }} &
-          tail --pid=$! --retry -f virt-install.log ||:
-
-      - name: Check OVA content
-        run: |
-          cd engine-appliance
-          make check
+          make DISTRO=${{ matrix.os }} DISTRO_VERSION=${{ matrix.num }} PROFILE=${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}
 
       - name: Build RPM
         run: |
           cd engine-appliance
-          make rpm
+          make DISTRO=${{ matrix.os }} DISTRO_VERSION=${{ matrix.num }} PROFILE=${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }} rpm
 
       - name: Upload rpm to resources.ovirt.org
         uses: ovirt/ovirt-resources-upload-action@main
@@ -65,19 +81,17 @@ jobs:
           key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
           known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
           source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-          target: github-ci/ovirt-appliance${{ github.event.inputs.distro-variant == '' && '-copr' || github.event.inputs.distro-variant }}/el${{ matrix.num }}
+          target: github-ci/ovirt-appliance-${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}/${{ matrix.build-os }}
           cleanup: yes
           createrepo: yes
-          # keep 10 last builds + repodata
-          keep_files_count: 11
+          # keep 4 last builds + repodata
+          keep_files_count: 17
 
       - name: Upload manifest to github
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: "manifest-el${{ matrix.num }}"
-          path: |
-            engine-appliance/ovirt-engine-appliance-manifest-rpm
-            engine-appliance/ovirt-engine-appliance-unsigned-rpms
+          name: "manifest-${{ matrix.build-os }}-${{ matrix.target-os }}"
+          path: engine-appliance/ovirt-engine-appliance-${{ matrix.os }}${{ matrix.num}}-manifest-rpm
 
       - name: Clean up entire workdir
         if: always()

@@ -1,8 +1,8 @@
 
-Virt Virtual Appliance
+oVirt Virtual Appliance
 =======================
 
-Kickstart files to build the oVirt Engine Virtual Appliance.
+KIWI files to build the oVirt Engine Virtual Appliance.
 
 
 Cloud init support
@@ -53,27 +53,14 @@ Build
 You will need
 
 * an internet connection
-* at least Fedora 19+ or CentOS 7+
+* at least CentOS 9+
 * 5 GB of ram
-* 10 GB of disk
+* 100 GB of disk
 
 Then:
+```
+cd engine-appliance; kiwi-ng --debug --profile=qcow2 --kiwi-file=centos9.xml system build --description=kiwi/ --target-dir=build
+```
 
-    setenforce 0
-    yum install -y lorax pykickstart virt-install libguestfs-tools imagefactory
-    make
-
-This will create an ova by:
-* create the correct ks from a template
-* initiate livemedia-creator to create the runtime image
-* sysprep and sparsify the runtime image
-* finally use an imagefactory plugin to create the ova 
-
-
-Some links
-----------
-
-* [Fedora Cloud Base](https://git.fedorahosted.org/cgit/spin-kickstarts.git/tree/fedora-x86_64-cloud.ks)
-* [Docker "Appliance"](https://fedoraproject.org/wiki/Changes/Docker_Cloud_Image)
-* [Move to ImgFac](https://fedoraproject.org/wiki/Changes/Move_to_ImageFactory_For_Cloud_Image_Creation)
-
+Where you can replace centos9.xml with centos10.xml if you want to build a CentOS 10 qcow2.
+Or almalinux9.xml/almalinux10.xml for AlmaLinux 9 / AlmaLinux 10 qcow2 image.

@@ -20,7 +20,6 @@ maven-eclipse.xml
 .pydevproject
 *.pyc
 *.pyo
-*.xml
 *manifest*
 *..swp
 .index
