@@ -1,26 +1,23 @@
-# Disable compression, because the ova is already compressed
-%define _source_payload w0.gzdio
-%define _binary_payload w0.gzdio
-
-Name:       ovirt-engine-appliance
+Name:       ovirt-engine-appliance-@DISTRO@
 Version:    @VERSION@
 Release:    @RELEASE@%{?dist}%{?extra_release}
 License:    GPLv2
-Summary:    The oVirt Engine Appliance image (OVA)
+Summary:    The oVirt Engine Appliance image (qcow2)
 Group:      Applications/System
 URL:        https://www.ovirt.org/
-Source0:    @OVAFILENAME@
-Source1:    ovirt-engine-appliance-manifest-rpm
+Source0:    @QCOW2FILENAME@
+Source1:    ovirt-engine-appliance-@DISTRO@-manifest-rpm
 BuildArch:  x86_64
 
 BuildRequires: grep
 
+Provides: ovirt-engine-appliance = @VERSION@
 
 %global _he_discovery_dir /etc/ovirt-hosted-engine/
-%global _he_discovery_file %{_he_discovery_dir}/10-appliance.conf
+%global _he_discovery_file %{_he_discovery_dir}/10-appliance-@DISTRO@.conf
 
 %global _appliance_dir /usr/share/ovirt-engine-appliance
-%global _appliance_file %{_appliance_dir}/%{name}-%{version}-%{release}.ova
+%global _appliance_file %{_appliance_dir}/%{name}-%{version}-%{release}.qcow2
 
 %description
 This package contains the prebuild oVirt Engine appliance image. It is intended to
@@ -43,7 +40,7 @@ cat > %{buildroot}/%{_he_discovery_file} <<EOF
 description=%{summary}
 version=%{version}-%{release}
 path=%{_appliance_file}
-sha1sum=$(sha1sum %{buildroot}/%{_appliance_file} | egrep -o "^[0-9a-f]+")
+sha1sum=$(sha1sum %{buildroot}/%{_appliance_file} | grep -Eo "^[0-9a-f]+")
 EOF
 
 %clean
@@ -52,8 +49,13 @@ rm -rf %{buildroot}
 %files
 %{_appliance_dir}
 %{_he_discovery_file}
-%doc ovirt-engine-appliance-manifest-rpm
+%doc ovirt-engine-appliance-@DISTRO@-manifest-rpm
 
 %changelog
+* Tue Nov 04 2025 Jean-Louis Dupond <jean-louis@dupond.be> - 4.5.1
+- Update package names to include distro.
+  This way we can easily distribute different OS versions.
+  For now this is AlmaLinux 9/10 and CentOS Stream 9/10
+
 * Tue Sep 07 2021 Sandro Bonazzola <sbonazzo@redhat.com> - 4.5
 - oVirt Engine Appliance 4.5

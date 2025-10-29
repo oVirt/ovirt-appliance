@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<image>
+    <profiles>
+        <profile name="qcow2" description="QCOW2 Image"/>
+        <profile name="copr" description="Copr Repository">
+            <requires profile="qcow2"/>
+        </profile>
+        <profile name="cbs" description="CBS Repository">
+            <requires profile="qcow2"/>
+        </profile>
+        <profile name="centos-copr" description="CentOS Image COPR">
+            <requires profile="copr"/>
+        </profile>
+        <profile name="centos-cbs" description="CentOS Image CBS">
+            <requires profile="cbs"/>
+        </profile>
+        <profile name="almalinux-copr" description="AlmaLinux Image COPR">
+            <requires profile="copr"/>
+        </profile>
+        <profile name="almalinux-cbs" description="AlmaLinux Image CBS">
+            <requires profile="cbs"/>
+        </profile>
+    </profiles>
+    <preferences>
+        <version>4.5.1</version>
+        <packagemanager>dnf4</packagemanager>
+        <bootsplash-theme>charge</bootsplash-theme>
+        <locale>en_US</locale>
+        <keytable>us</keytable>
+        <timezone>UTC</timezone>
+        <rpm-check-signatures>true</rpm-check-signatures>
+        <rpm-excludedocs>true</rpm-excludedocs>
+    </preferences>
+    <preferences profiles="qcow2">
+        <type image="oem"
+            primary="true"
+            kernelcmdline="console=tty1 console=ttyS0,115200n8"
+            format="qcow2"
+            bootpartition="true"
+            bootpartsize="1024"
+            bootfilesystem="xfs"
+            filesystem="xfs"
+            firmware="efi"
+            >
+            <machine memory="16384" ncpus="4"/>
+            <bootloader name="grub2" console="serial"/>
+            <oemconfig>
+                <oem-resize>false</oem-resize>
+                <oem-swap>true</oem-swap>
+                <oem-swapname>swap</oem-swapname>
+                <oem-swapsize>8192</oem-swapsize>
+            </oemconfig>
+            <systemdisk name="ovirt" preferlvm="true">
+                <volume name="@root=root" size="all" label="root" mountpoint="/"/>
+                <volume name="home" size="1G" label="home" mountpoint="/home"/>
+                <volume name="tmp" size="2G" label="tmp" mountpoint="/tmp"/>
+                <volume name="var" size="18G" label="var" mountpoint="/var"/>
+                <volume name="vartmp" size="2G" label="vartmp" mountpoint="/var/tmp"/>
+                <volume name="log" size="10G" label="varlog" mountpoint="/var/log"/>
+                <volume name="audit" size="1G" label="audit" mountpoint="/var/log/audit"/>
+                <volume name="swap" label="SWAP"/>
+            </systemdisk>
+        </type>
+    </preferences>
+    <users>
+        <user password="" home="/root" name="root" groups="root"/>
+        <user password="" home="/home/node" name="node" groups="users"/>
+    </users>
+</image>

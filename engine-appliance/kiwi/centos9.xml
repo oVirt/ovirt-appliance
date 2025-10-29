@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<image schemaversion="8.0" name="ovirt-engine-appliance">
+    <description type="system">
+        <author>oVirt Developers</author>
+        <contact>devel@ovirt.org</contact>
+        <specification>oVirt Appliance - CentOS Stream 9</specification>
+    </description>
+    <include from="file://kiwi/default.xml"/>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.centos.org/metalink?repo=centos-baseos-9-stream&amp;arch=x86_64&amp;protocol=https,http"/>
+    </repository>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.centos.org/metalink?repo=centos-appstream-9-stream&amp;arch=x86_64&amp;protocol=https,http"/>
+    </repository>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-9-stream&amp;arch=$basearch&amp;protocol=https,http"/>
+    </repository>
+    <repository sourcetype="metalink">
+        <source path="https://mirrors.fedoraproject.org/metalink?repo=epel-9&amp;arch=x86_64"/>
+    </repository>
+    <!-- COPR -->
+    <repository alias="copr_ovirt-master-snapshot" profiles="copr">
+        <source path="https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/centos-stream-9-x86_64/">
+            <signing key="https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/pubkey.gpg"/>
+        </source>
+    </repository>
+    <packages type="image" profiles="copr">
+        <package name="ovirt-release-master"/>
+    </packages>
+    <!-- CBS -->
+    <repository alias="copr_ovirt-master-snapshot" profiles="cbs">
+        <source path="https://buildlogs.centos.org/centos/9-stream/extras/x86_64/extras-common/"/>
+    </repository>
+    <packages type="image" profiles="cbs">
+        <package name="centos-release-ovirt45-testing"/>
+    </packages>
+    <include from="file://kiwi/packages.xml"/>
+</image>

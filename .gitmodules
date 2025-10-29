@@ -1,9 +1,0 @@
-[submodule "engine-appliance/imagefactory"]
-	path = engine-appliance/imagefactory
-	url = https://github.com/redhat-imaging/imagefactory.git
-[submodule "node-appliance/image-tools"]
-	path = node-appliance/image-tools
-	url = https://github.com/fabiand/image-tools.git
-[submodule "engine-appliance/image-tools"]
-	path = engine-appliance/image-tools
-	url = https://gerrit.ovirt.org/image-tools

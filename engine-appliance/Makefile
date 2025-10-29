@@ -1,87 +1,40 @@
 
-#
-# How it worked:
-# 1. Inherit from Fedora Cloud images with modifications
-# 2. Use Fedora 19 boot iso to run lmc
-# 3. Create runtime image (qcow2)
-# 4. sysprep, sparsify and convert runtime image to ova
-#
-# TODO: update above doc
-
-
-#
-# OVA specific vars
-# #
-# This size must be full GB, in MB
-VM_DISK ?= $(shell expr 10 \* 1024)
-
-OVA_RAM ?= 16384
-OVA_CPUS ?= 4
-
 ARCH=x86_64
-DISTRO=default_distro
-ifeq ($(DISTRO),)
-	DISTRO := centos-stream-9-copr
-endif
-BOOTISOURL=$(shell scripts/get-boot-iso-url.py $(DISTRO))
-CURLOPTS=-L
-
-
-LMC ?= livemedia-creator
-LMC_RAM ?= 2048
-LMC_CPUS ?= 4
+VERSION=4.5.1
+DISTRO ?= centos
+DISTRO_VERSION ?= 9
+DISTRO_FULLNAME := $(DISTRO)$(DISTRO_VERSION)
+PROFILE ?= copr
 
 #
 # oVirt specific vars
 #
-ovirt-engine-appliance.spec: VERSION=4.5
-ovirt-engine-appliance.spec: VERSION_EXTRA=
-ovirt-engine-appliance.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
-ovirt-engine-appliance.spec: OVAFILENAME=ovirt-engine-appliance.ova
+ovirt-engine-appliance-${DISTRO_FULLNAME}.spec: VERSION_EXTRA=
+ovirt-engine-appliance-${DISTRO_FULLNAME}.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
+ovirt-engine-appliance-${DISTRO_FULLNAME}.spec: QCOW2FILENAME=ovirt-engine-appliance-${DISTRO_FULLNAME}.qcow2
 
 PYTHON ?= python3
 
-# Direct for virt-sparsify: http://libguestfs.org/guestfs.3.html#backend
 export LIBGUESTFS_BACKEND=direct
-# Workaround nest problem: https://bugzilla.redhat.com/show_bug.cgi?id=1195278
-export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
-# Debugging issues when guestfish crashes
-export LIBGUESTFS_DEBUG=1
-export LIBGUESTFS_TRACE=1
 export TMPDIR=/var/tmp/
-export TEST_ENGINE_ROOTFS_IMG=$(PWD)/ovirt-engine-appliance.qcow2
 
 .SECONDARY:
-.PHONY: $(wildcard *.ks.tpl) ovirt-engine-appliance.spec
+.PHONY: ovirt-engine-appliance.spec
 
-all: ovirt-engine-appliance.ova
+all: ovirt-engine-appliance-${DISTRO_FULLNAME}.qcow2
 	echo "$@" appliance done
 
-boot.iso:
-	curl $(CURLOPTS) -O $(BOOTISOURL)
-
-%.ks: data/%.j2
-	scripts/renderks.py $(DISTRO) > "$@"
-
-%.qcow2: SPARSE=1
-%.qcow2: %.ks boot.iso
-	$(LMC) --make-disk --ram=$(LMC_RAM) --vcpus=$(LMC_CPUS) --iso=boot.iso --ks=$< --qcow2 --image-name=$@
-	mv /var/tmp/$@ .
-	-[[ -n "$(SPARSE)" ]] && [[ "$$(virt-sparsify --help)" =~ --in-place ]] && ( virt-sparsify --in-place $@ ; ln $@ $@.sparse ; )
-	-[[ -n "$(SPARSE)" ]] && [[ ! -f $@.sparse ]] && [[ "$$(virt-sparsify --help)" =~ --check-tempdir ]] && virt-sparsify --check-tmpdir=continue $@ $@.sparse
-	-[[ -n "$(SPARSE)" ]] && [[ ! -f $@.sparse ]] && virt-sparsify $@ $@.sparse
-	-[[ -f $@.sparse ]] &&  ( mv -v $@.sparse $@ ; rm -f $@.sparse ; )
+%.qcow2:
+	$(SUDO) kiwi-ng --profile=${DISTRO}-${PROFILE} --kiwi-file=${DISTRO_FULLNAME}.xml system build --description=kiwi/ --target-dir=${TMPDIR}/${DISTRO_FULLNAME}
+	mv ${TMPDIR}/${DISTRO_FULLNAME}/ovirt-engine-appliance.${ARCH}-$(VERSION).qcow2 $@
 	ls -shal $@
 
-%.ova: %.qcow2
-	$(SUDO) $(PYTHON) scripts/create_ova.py -m $(OVA_RAM) -c $(OVA_CPUS) "$*.qcow2" "$@"
-	ls -shal $@
-
-ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
+ovirt-engine-appliance-${DISTRO_FULLNAME}.spec: data/ovirt-engine-appliance.spec.in
 	sed \
+	  -e "s/@DISTRO@/$(DISTRO_FULLNAME)/" \
 	  -e "s/@VERSION@/$(VERSION)$(VERSION_EXTRA)/" \
 	  -e "s/@RELEASE@/$(RELEASE)/" \
-	  -e "s/@OVAFILENAME@/$(OVAFILENAME)/" \
+	  -e "s/@QCOW2FILENAME@/$(QCOW2FILENAME)/" \
 	  $< > $@
 
 %.rpm: %.spec
@@ -89,7 +42,7 @@ ovirt-engine-appliance.spec: data/ovirt-engine-appliance.spec.in
 
 RPMBUILD = rpmbuild
 TMPREPOS = tmp.repos
-rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance-unsigned-rpms
+rpm srpm: ovirt-engine-appliance-${DISTRO_FULLNAME}.spec ovirt-engine-appliance-${DISTRO_FULLNAME}.qcow2 ovirt-engine-appliance-${DISTRO_FULLNAME}-manifest-rpm
 	rm -fr "$(TMPREPOS)"
 	mkdir -p $(TMPREPOS)/{SPECS,RPMS,SRPMS,SOURCES}
 	$(RPMBUILD) --define="_topdir `pwd`/$(TMPREPOS)" --define "_sourcedir `pwd`" -ba $<
@@ -98,16 +51,9 @@ rpm srpm:   ovirt-engine-appliance.spec ovirt-engine-appliance.ova ovirt-engine-
 	@echo
 
 %-manifest-rpm: %.qcow2
-	guestfish --ro -i -a $< sh 'rpm -qa | sort -u' > $@
-
-%-unsigned-rpms: %.qcow2
-	guestfish --ro -i -a $< sh "rpm -qa --qf '%{name}-%{version}-%{release}.%{arch} (%{SIGPGP:pgpsig})\n'" | grep -v "Key ID" > $@
-
-check: ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance-unsigned-rpms
-	grep ovirt-engine ovirt-engine-appliance-manifest-rpm
-#	-pyflakes tests/*.py
-#	-pep8 tests/*.py
-#	cd tests && nosetests --with-xunit -v -w .
+	mv ${TMPDIR}/${DISTRO_FULLNAME}/ovirt-engine-appliance.${ARCH}-$(VERSION).packages $@
 
 clean:
-	-rm -vf ovirt-engine-appliance.ova ovirt-engine-appliance.qcow2 ovirt-engine-appliance-manifest-rpm ovirt-engine-appliance-unsigned-rpms ovirt-engine-appliance.spec
+	rm -vf ovirt-engine-appliance-${DISTRO_FULLNAME}.qcow2 ovirt-engine-appliance-${DISTRO_FULLNAME}.spec ovirt-engine-appliance-${DISTRO_FULLNAME}-manifest-rpm
+	rm -rvf ${TMPDIR}/${DISTRO_FULLNAME}
+	rm -rvf tmp.repos

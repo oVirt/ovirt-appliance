@@ -1,4 +1,6 @@
 *.ova
+*.qcow2
 *.spec
 *.ks
 tmp.repos
+ovirt-engine-appliance-*-manifest-rpm
