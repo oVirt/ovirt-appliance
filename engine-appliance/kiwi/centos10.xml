@@ -29,7 +29,7 @@
         <package name="ovirt-release-master"/>
     </packages>
     <!-- CBS -->
-    <repository alias="copr_ovirt-master-snapshot" profiles="cbs">
+    <repository alias="centos-extras" profiles="cbs">
         <source path="https://buildlogs.centos.org/centos/10-stream/extras/x86_64/extras-common/"/>
     </repository>
     <packages type="image" profiles="cbs">
