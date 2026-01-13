@@ -29,8 +29,8 @@
         <package name="ovirt-release-master"/>
     </packages>
     <!-- CBS -->
-    <repository alias="copr_ovirt-master-snapshot" profiles="cbs">
-        <source path="https://buildlogs.centos.org/centos/9-stream/extras/x86_64/extras-common/"/>
+    <repository alias="almalinux-extras" profiles="cbs">
+        <source path="https://repo.almalinux.org/almalinux/9/extras/x86_64/os/"/>
     </repository>
     <packages type="image" profiles="cbs">
         <package name="centos-release-ovirt45-testing"/>
