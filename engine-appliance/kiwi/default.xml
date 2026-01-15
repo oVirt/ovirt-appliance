@@ -32,7 +32,7 @@
         </profile>
     </profiles>
     <preferences>
-        <version>4.5.1</version>
+        <version>4.5.7</version>
         <packagemanager>dnf4</packagemanager>
         <bootsplash-theme>charge</bootsplash-theme>
         <locale>en_US</locale>
