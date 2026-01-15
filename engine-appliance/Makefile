@@ -10,7 +10,11 @@ PROFILE ?= copr
 # oVirt specific vars
 #
 ovirt-engine-appliance-${DISTRO_FULLNAME}.spec: VERSION_EXTRA=
+ifeq (${PROFILE},cbs-release)
+ovirt-engine-appliance-${DISTRO_FULLNAME}.spec: RELEASE=1
+else
 ovirt-engine-appliance-${DISTRO_FULLNAME}.spec: RELEASE=$(shell date +%Y%m%d%H%M%S).1
+endif
 ovirt-engine-appliance-${DISTRO_FULLNAME}.spec: QCOW2FILENAME=ovirt-engine-appliance-${DISTRO_FULLNAME}.qcow2
 
 PYTHON ?= python3

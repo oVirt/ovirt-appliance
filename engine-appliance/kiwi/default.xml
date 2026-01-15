@@ -6,20 +6,29 @@
         <profile name="copr" description="Copr Repository">
             <requires profile="qcow2"/>
         </profile>
-        <profile name="cbs" description="CBS Repository">
+        <profile name="cbs-testing" description="CBS Repository Testing">
+            <requires profile="qcow2"/>
+        </profile>
+        <profile name="cbs-release" description="CBS Repository Release">
             <requires profile="qcow2"/>
         </profile>
         <profile name="centos-copr" description="CentOS Image COPR">
             <requires profile="copr"/>
         </profile>
-        <profile name="centos-cbs" description="CentOS Image CBS">
-            <requires profile="cbs"/>
+        <profile name="centos-cbs-testing" description="CentOS Image CBS Testing">
+            <requires profile="cbs-testing"/>
+        </profile>
+        <profile name="centos-cbs-release" description="CentOS Image CBS Release">
+            <requires profile="cbs-release"/>
         </profile>
         <profile name="almalinux-copr" description="AlmaLinux Image COPR">
             <requires profile="copr"/>
         </profile>
-        <profile name="almalinux-cbs" description="AlmaLinux Image CBS">
-            <requires profile="cbs"/>
+        <profile name="almalinux-cbs-testing" description="AlmaLinux Image CBS Testing">
+            <requires profile="cbs-testing"/>
+        </profile>
+        <profile name="almalinux-cbs-release" description="AlmaLinux Image CBS Release">
+            <requires profile="cbs-release"/>
         </profile>
     </profiles>
     <preferences>
