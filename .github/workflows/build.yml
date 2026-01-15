@@ -12,18 +12,37 @@ on:
         description: keeps the working dir on the runner after the job is finished
         required: false
       distro-variant:
-        description: Build with CBS or COPR packages. Use "cbs" or "copr".
+        description: Build with CBS or COPR packages. Use "cbs-(testing|release)" or "copr".
         required: true
         default: "copr"
   push:
     branches: [master]
+    tags:
+      - 'ovirt-engine-appliance*'
   schedule:
     # Running every morning in EMEA timezone
     - cron: '0 6 * * *'
 
 jobs:
+  distro-variant:
+    name: Set environment variables
+    runs-on: ubuntu-latest
+    outputs:
+      DISTRO_VARIANT: ${{ steps.set_distro_variant.outputs.DISTRO_VARIANT }}
+    steps:
+      - name: Set distro-variant
+        id: set_distro_variant
+        run: |
+          if [ "${{ github.event.inputs.distro-variant }}" != "" ]; then
+            echo "DISTRO_VARIANT=${{ github.event.inputs.distro-variant }}" >> "$GITHUB_OUTPUT"
+          fi
+          if [ "${{ startsWith(github.ref, 'refs/tags/ovirt-engine-appliance') }}" == "true" ]; then
+            echo "DISTRO_VARIANT=cbs-release" >> "$GITHUB_OUTPUT"
+          fi
+
   build-matrix:
     timeout-minutes: 80
+    needs: distro-variant
     strategy:
       fail-fast: false
       matrix:
@@ -46,13 +65,15 @@ jobs:
           - target-os: almalinux10
             os: almalinux
             num: 10
-    name: build ${{ matrix.target-os }} on ${{ matrix.build-os }} - ${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}
+    name: build ${{ matrix.target-os }} on ${{ matrix.build-os }} - ${{ needs.distro-variant.outputs.DISTRO_VARIANT }}
     runs-on: [image-builders]
     container:
       image: quay.io/ovirt/buildcontainer:${{ matrix.container }}
       options: --privileged
       volumes:
         - /dev:/dev
+    env:
+      DISTRO_VARIANT: ${{ needs.distro-variant.outputs.DISTRO_VARIANT }}
 
     steps:
       - name: Install Kiwi
@@ -67,12 +88,12 @@ jobs:
       - name: Build the qcow2 image
         run: |
           cd engine-appliance
-          make DISTRO=${{ matrix.os }} DISTRO_VERSION=${{ matrix.num }} PROFILE=${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}
+          make DISTRO=${{ matrix.os }} DISTRO_VERSION=${{ matrix.num }} PROFILE=${{ env.DISTRO_VARIANT }}
 
       - name: Build RPM
         run: |
           cd engine-appliance
-          make DISTRO=${{ matrix.os }} DISTRO_VERSION=${{ matrix.num }} PROFILE=${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }} rpm
+          make DISTRO=${{ matrix.os }} DISTRO_VERSION=${{ matrix.num }} PROFILE=${{ env.DISTRO_VARIANT }} rpm
 
       - name: Upload rpm to resources.ovirt.org
         uses: ovirt/ovirt-resources-upload-action@main

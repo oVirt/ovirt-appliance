@@ -52,7 +52,8 @@ rm -rf %{buildroot}
 %doc ovirt-engine-appliance-@DISTRO@-manifest-rpm
 
 %changelog
-* Tue Nov 04 2025 Jean-Louis Dupond <jean-louis@dupond.be> - 4.5.1
+* Tue Nov 04 2025 Jean-Louis Dupond <jean-louis@dupond.be> - 4.5.7-@RELEASE@
+- Build Appliance via kiwi
 - Update package names to include distro.
   This way we can easily distribute different OS versions.
   For now this is AlmaLinux 9/10 and CentOS Stream 9/10

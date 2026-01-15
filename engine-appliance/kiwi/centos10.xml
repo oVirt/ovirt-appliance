@@ -28,12 +28,16 @@
     <packages type="image" profiles="copr">
         <package name="ovirt-release-master"/>
     </packages>
-    <!-- CBS -->
-    <repository alias="centos-extras" profiles="cbs">
+    <!-- CBS Testing -->
+    <repository alias="centos-extras" profiles="cbs-testing">
         <source path="https://buildlogs.centos.org/centos/10-stream/extras/x86_64/extras-common/"/>
     </repository>
-    <packages type="image" profiles="cbs">
+    <packages type="image" profiles="cbs-testing">
         <package name="centos-release-ovirt45-testing"/>
+    </packages>
+    <!-- CBS Release -->
+    <packages type="image" profiles="cbs-release">
+        <package name="centos-release-ovirt45"/>
     </packages>
     <include from="file://kiwi/packages.xml"/>
 </image>

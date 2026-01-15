@@ -11,7 +11,7 @@ systemctl enable cockpit.socket
 systemctl enable qemu-guest-agent
 firewall-offline-cmd --add-service=cockpit
 
-if [[ "$kiwi_profiles" == *"cbs"* ]]; then
+if [[ "$kiwi_profiles" == *"cbs-testing"* ]]; then
     # Enable oVirt Testing Repository
     dnf config-manager --set-enabled centos-ovirt45-testing
     dnf config-manager --set-enabled ovirt-45-upstream-testing
