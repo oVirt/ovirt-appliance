@@ -95,6 +95,15 @@ jobs:
           cd engine-appliance
           make DISTRO=${{ matrix.os }} DISTRO_VERSION=${{ matrix.num }} PROFILE=${{ env.DISTRO_VARIANT }} rpm
 
+      - name: Upload srpm to resources.ovirt.org
+        uses: ovirt/ovirt-resources-upload-action@main
+        with:
+          username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
+          key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
+          source: engine-appliance/tmp.repos/SRPMS/*.rpm
+          target: github-ci/ovirt-appliance-${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}/${{ matrix.build-os }}
+
       - name: Upload rpm to resources.ovirt.org
         uses: ovirt/ovirt-resources-upload-action@main
         with:
@@ -105,7 +114,7 @@ jobs:
           target: github-ci/ovirt-appliance-${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}/${{ matrix.build-os }}
           cleanup: yes
           # keep 4 last builds + repodata
-          keep_files_count: 17
+          keep_files_count: 33
 
       - name: Upload manifest to github
         uses: actions/upload-artifact@v4
