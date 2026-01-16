@@ -33,6 +33,7 @@ jobs:
       - name: Set distro-variant
         id: set_distro_variant
         run: |
+          echo "DISTRO_VARIANT=copr" >> "$GITHUB_OUTPUT"
           if [ "${{ github.event.inputs.distro-variant }}" != "" ]; then
             echo "DISTRO_VARIANT=${{ github.event.inputs.distro-variant }}" >> "$GITHUB_OUTPUT"
           fi
@@ -102,7 +103,7 @@ jobs:
           key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
           known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
           source: engine-appliance/tmp.repos/SRPMS/*.rpm
-          target: github-ci/ovirt-appliance-${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}/${{ matrix.build-os }}
+          target: github-ci/ovirt-appliance-${{ env.DISTRO_VARIANT }}/${{ matrix.build-os }}
 
       - name: Upload rpm to resources.ovirt.org
         uses: ovirt/ovirt-resources-upload-action@main
@@ -111,7 +112,7 @@ jobs:
           key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
           known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
           source: engine-appliance/tmp.repos/RPMS/x86_64/*.rpm
-          target: github-ci/ovirt-appliance-${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}/${{ matrix.build-os }}
+          target: github-ci/ovirt-appliance-${{ env.DISTRO_VARIANT }}/${{ matrix.build-os }}
           cleanup: yes
           # keep 4 last builds + repodata
           keep_files_count: 33
@@ -134,7 +135,10 @@ jobs:
         build-os: ['el9', 'el10']
     runs-on: ubuntu-latest
     needs:
+      - distro-variant
       - build-matrix
+    env:
+      DISTRO_VARIANT: ${{ needs.distro-variant.outputs.DISTRO_VARIANT }}
     steps:
       - name: Create or update repository metadata
         uses: ovirt/ovirt-resources-upload-action@main
@@ -142,7 +146,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME_FOR_RESOURCES_OVIRT_ORG }}
           key: ${{ secrets.SSH_KEY_FOR_RESOURCES_OVIRT_ORG }}
           known_hosts: ${{ secrets.KNOWN_HOSTS_FOR_RESOURCES_OVIRT_ORG }}
-          target: github-ci/ovirt-appliance-${{ github.event.inputs.distro-variant == '' && 'copr' || github.event.inputs.distro-variant }}/${{ matrix.build-os }}
+          target: github-ci/ovirt-appliance-${{ env.DISTRO_VARIANT }}/${{ matrix.build-os }}
           createrepo: yes
 
   close-build-issue-on-success:
