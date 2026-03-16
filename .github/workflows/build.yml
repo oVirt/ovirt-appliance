@@ -80,7 +80,7 @@ jobs:
       - name: Install Kiwi
         run: |
           dnf install -y epel-release
-          dnf install -y kiwi-cli
+          dnf install -y kiwi-cli kiwi-systemdeps-disk-images
 
       - uses: ovirt/checkout-action@main
         with:
