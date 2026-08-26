@@ -12,9 +12,9 @@ on:
         description: keeps the working dir on the runner after the job is finished
         required: false
       distro-variant:
-        description: Build with CBS or COPR packages. Use "cbs-(testing|release)" or "copr".
+        description: Build with CBS or Master/Snapshot packages. Use "cbs-(testing|release)" or "snapshot".
         required: true
-        default: "copr"
+        default: "snapshot"
   push:
     branches: [master]
     tags:
@@ -33,7 +33,7 @@ jobs:
       - name: Set distro-variant
         id: set_distro_variant
         run: |
-          echo "DISTRO_VARIANT=copr" >> "$GITHUB_OUTPUT"
+          echo "DISTRO_VARIANT=snapshot" >> "$GITHUB_OUTPUT"
           if [ "${{ github.event.inputs.distro-variant }}" != "" ]; then
             echo "DISTRO_VARIANT=${{ github.event.inputs.distro-variant }}" >> "$GITHUB_OUTPUT"
           fi
@@ -118,7 +118,7 @@ jobs:
           keep_files_count: 33
 
       - name: Upload manifest to github
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "manifest-${{ matrix.build-os }}-${{ matrix.target-os }}"
           path: engine-appliance/ovirt-engine-appliance-${{ matrix.os }}${{ matrix.num}}-manifest-rpm
