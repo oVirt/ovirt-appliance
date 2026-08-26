@@ -19,13 +19,11 @@
     <repository sourcetype="metalink">
         <source path="https://mirrors.fedoraproject.org/metalink?repo=epel-10&amp;arch=x86_64"/>
     </repository>
-    <!-- COPR -->
-    <repository alias="copr_ovirt-master-snapshot" profiles="copr">
-        <source path="https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/rhel-10-x86_64/">
-            <signing key="https://download.copr.fedorainfracloud.org/results/ovirt/ovirt-master-snapshot/pubkey.gpg"/>
-        </source>
+    <!-- oVirt Master Snapshot -->
+    <repository alias="ovirt-master-snapshot" profiles="snapshot">
+        <source path="https://resources.ovirt.org/pub/ovirt-master-snapshot/rpm/el10/x86_64/"/>
     </repository>
-    <packages type="image" profiles="copr">
+    <packages type="image" profiles="snapshot">
         <package name="ovirt-release-master"/>
     </packages>
     <!-- CBS Testing -->

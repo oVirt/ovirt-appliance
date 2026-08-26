@@ -4,7 +4,7 @@ VERSION=4.5.7
 DISTRO ?= centos
 DISTRO_VERSION ?= 9
 DISTRO_FULLNAME := $(DISTRO)$(DISTRO_VERSION)
-PROFILE ?= copr
+PROFILE ?= snapshot
 
 #
 # oVirt specific vars

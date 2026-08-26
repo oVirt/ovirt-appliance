@@ -3,7 +3,7 @@
 <image>
     <profiles>
         <profile name="qcow2" description="QCOW2 Image"/>
-        <profile name="copr" description="Copr Repository">
+        <profile name="snapshot" description="oVirt Master Snapshot Repository">
             <requires profile="qcow2"/>
         </profile>
         <profile name="cbs-testing" description="CBS Repository Testing">
@@ -12,8 +12,8 @@
         <profile name="cbs-release" description="CBS Repository Release">
             <requires profile="qcow2"/>
         </profile>
-        <profile name="centos-copr" description="CentOS Image COPR">
-            <requires profile="copr"/>
+        <profile name="centos-snapshot" description="CentOS Image Snapshot">
+            <requires profile="snapshot"/>
         </profile>
         <profile name="centos-cbs-testing" description="CentOS Image CBS Testing">
             <requires profile="cbs-testing"/>
@@ -21,8 +21,8 @@
         <profile name="centos-cbs-release" description="CentOS Image CBS Release">
             <requires profile="cbs-release"/>
         </profile>
-        <profile name="almalinux-copr" description="AlmaLinux Image COPR">
-            <requires profile="copr"/>
+        <profile name="almalinux-snapshot" description="AlmaLinux Image Snapshot">
+            <requires profile="snapshot"/>
         </profile>
         <profile name="almalinux-cbs-testing" description="AlmaLinux Image CBS Testing">
             <requires profile="cbs-testing"/>
