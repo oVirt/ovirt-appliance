@@ -17,7 +17,7 @@
         <source path="https://mirrors.almalinux.org/mirrorlist/10/extras?arch=$basearch&amp;protocol=https"/>
     </repository>
     <repository sourcetype="metalink">
-        <source path="https://mirrors.fedoraproject.org/metalink?repo=epel-10&amp;arch=x86_64"/>
+        <source path="https://mirrors.fedoraproject.org/metalink?repo=epel-z-10&amp;arch=x86_64"/>
     </repository>
     <!-- oVirt Master Snapshot -->
     <repository alias="ovirt-master-snapshot" profiles="snapshot">
